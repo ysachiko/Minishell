@@ -6,36 +6,12 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/06 13:25:20 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/01 17:16:17 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/02 19:52:13 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/parser.h"
-// #include "libft/libft.h"
 #include "string.h"
-
-// void	lexer(char *line) // берет линию сплитит по вайтспейсам потом по аргументам делает односвязный список
-// {
-// 	char		**str;
-// 	int			i;
-// 	t_list		*arg_list;
-
-// 	i = 1;
-// 	str = split_args(line);
-// 	arg_list = ft_lstnew(str[0]);
-// 	while (str[i])
-// 	{
-// 		ft_lstadd_back(&arg_list, ft_lstnew(str[i]));
-// 		i++;
-// 	}
-// 	t_list	*temp;
-// 	temp = arg_list;
-// 	while (temp != NULL)
-// 	{
-// 		printf("%s\n", temp->content);
-// 		temp = temp->next;
-// 	}
-// }
 
 int main(int argc, char **argv, char **env)
 {
@@ -48,6 +24,12 @@ int main(int argc, char **argv, char **env)
 	//signal(SIGINT, handler);
 	//signal(SIGQUIT, SIG_IGN);
 	main = malloc(sizeof(t_main));
+	init_env(main, env);
+	printf("\n\n*****ENV_TEST*******\n\n");
+	DEBUG_PRINT_LIST_2(main->env_list);
+	printf("\n\n*****ENV_TEST*******\n\n");
+	printf("%s", find_path(main->env_list));
+	printf("\n*****ENV_PATH_TEST*******\n");
 	while(1)
 	{
 		main->line = readline("\e[1;32mbash$ \e[0;37m");

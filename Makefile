@@ -6,7 +6,7 @@
 #    By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/06/01 17:55:47 by ysachiko          #+#    #+#              #
-#    Updated: 2022/06/01 18:26:26 by ysachiko         ###   ########.fr        #
+#    Updated: 2022/06/02 19:22:54 by ysachiko         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,8 @@ CFLAGS =
 
 INC = includes/parser.h libft/libft.h
 
-SRC	   = src/parser/lexer.c src/parser/parser.c  src/parser/list/list_head.c
+SRC	   = src/parser/lexer.c src/parser/parser.c  src/parser/list/list_head.c src/parser/usage/check_add_realloc.c \
+		 src/parser/usage/debug_shit.c	src/parser/usage/lexer_main_usage.c	src/env/init_env.c
 
 OBJ = $(patsubst %.c,%.o,$(SRC))
 

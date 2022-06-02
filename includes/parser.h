@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 16:36:19 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/01 19:28:14 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/02 19:50:16 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,14 +42,48 @@ typedef struct s_hash
 	struct s_hash *prev;
 }	t_hash;
 
+typedef struct s_env
+{
+	char	*arg;
+	struct s_env	*next;
+}	t_env;
+
 typedef struct s_main
 {
 	char	*line;
 	int		current_symbol;
-} t_main;
-
+	t_env	*env_list;
+}	t_main;
 
 void	parser(t_main *main);
-t_hash	*ft_lstnew_head(void *key, void *value);
+/*
+LISTS
+*/
+t_hash	*ft_lstnew_hash(void *key, void *value);
+t_hash	*ft_lstlast_hash(t_hash *lst);
+void	ft_lstadd_back_hash(t_hash **lst, t_hash *new);
+/*
+ USAGE FUNCTIONS
+*/
+int		is_space(char c);
+int 	is_single_quote(char c);
+int		is_double_quote(char c);
+char	*str_realloc(char *str);
+void	str_add_new_symbol(char *str, char symbol);
+/*
+DEBUG_SHIT
+*/
+void	DEBUG_PRINT_LIST(t_hash *head);
+void	DEBUG_PRINT_LIST_2(t_env *head);
+/*
+LEXER_MAIN_USAGE
+*/
+void	scip_space(t_main *main, int counter);
+int		extend_string(char **argument, char symbol, int counter);
+/*
+ENV_INIT
+*/
+int		init_env(t_main *env_list_head, char **env);
+char	*find_path(t_env *head);
 
 #endif

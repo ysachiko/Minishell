@@ -6,62 +6,98 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 16:36:08 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/01 19:27:20 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/02 18:43:47 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/parser.h"
 
-int	is_space(char c)
+char *take_single_quote_arg(t_main *main, int counter)
 {
-	if (c == ' ' || c == '	' || c == '\t' || c == '\n' || c == '\r' || c == '\v')
-		return (1);
-	return (0);
-}
+	char	*argument;
 
-int is_single_quote(char c)
-{
-	if (c == 39)
-		return (1);
-	return (0);
-}
-
-int	is_double_quote(char c)
-{
-	if (c == '"')
-		return (1);
-	return (0);
-}
-
-char	*str_realloc(char *str)
-{
-	char	*new_str;
-	int		len;
-
-	if (!str)
+	argument = NULL;
+	if (is_single_quote(main->line[counter + 1]) || main->line[counter + 1] == '\0')
 	{
-		new_str = malloc(sizeof(char) * 2);
-		new_str[0] ='\0';
-		return (new_str);
+		if (main->line[counter + 1])
+			main->current_symbol = counter + 2;
+		else
+			main->current_symbol = counter + 1;
+		return ("");
 	}
-	len = ft_strlen(str);
-	new_str = malloc(sizeof(char) * len + 2);
-	ft_strlcpy(new_str, str, len + 1);
-	return (new_str);
+	while (main->line[counter])
+	{
+		counter = extend_string(&argument, main->line[counter], counter);
+		if (is_single_quote(main->line[counter]))
+		{
+			counter = extend_string(&argument, main->line[counter], counter);
+			main->current_symbol = counter;
+			return (argument);
+		}
+	}
+	main->current_symbol = extend_string(&argument, 39, counter);
+	return (argument);
 }
 
-void	str_add_new_symbol(char *str, char symbol)
+char	*take_double_quote_args(t_main *main,int counter)
 {
-	int	i;
+	char	*argument;
 
-	i = 0;
-	while (str[i])
-		i++;
-	str[i] = symbol;
-	str[i + 1] = '\0';
+	argument = NULL;
+	if (is_double_quote(main->line[counter + 1]) || main->line[counter  + 1] == '\0')
+	{
+		if (main->line[counter])
+			main->current_symbol = counter + 2;
+		else
+			main->current_symbol = counter + 1;
+		return ("");
+	}
+	while (main->line[counter])
+	{
+		counter = extend_string(&argument, main->line[counter], counter);
+		if (is_double_quote(main->line[counter]))
+		{
+			counter = extend_string(&argument, main->line[counter], counter);
+			main->current_symbol = counter;
+			return (argument);
+		}
+	}
+	main->current_symbol = extend_string(&argument, '"', counter);
+	return (argument);
 }
 
-void make_head_token(t_main *main, t_hash **head)
+char *take_simple_argument(t_main *main, int counter)
+{
+	char	*argument;
+
+	argument = NULL;
+	while (main->line[counter] && !is_double_quote(main->line[counter]) \
+		&& !is_single_quote(main->line[counter]) && !is_space(main->line[counter]))
+	{
+		argument = str_realloc(argument);
+		str_add_new_symbol(argument, main->line[counter]);
+		counter++;
+	}
+	main->current_symbol = counter;
+	return (argument);
+}
+
+void	make_lexer_list(char *argument, t_hash **head)
+{
+	t_hash	*new;
+
+	if (!*head)
+	{
+		*head = ft_lstnew_hash(NULL, argument);
+	}
+	else
+	{
+		new = ft_lstnew_hash(NULL, argument);
+		ft_lstadd_back_hash(head, new);
+	}
+}
+
+void	lexer(t_main *main, t_hash **head)
 {
 	int		counter;
 	char	*buf;
@@ -70,19 +106,30 @@ void make_head_token(t_main *main, t_hash **head)
 	buf = NULL;
 	while (main->line[counter] != '\0')
 	{
-		if (!(is_space(main->line[counter]) || is_double_quote(main->line[counter]) || is_single_quote(main->line[counter])))
+		if (is_space(main->line[counter]))
 		{
-			buf = str_realloc(buf);
-			str_add_new_symbol(buf, main->line[counter]);
+			scip_space(main, counter);
+			counter = main->current_symbol;
 		}
-		else if ((is_space(main->line[counter]) || is_double_quote(main->line[counter]) || is_single_quote(main->line[counter]) || main->line[counter] == '\0'))
+		if (is_single_quote(main->line[counter]))
 		{
-			*head = ft_lstnew_head(buf, buf);
-
-			printf("%s", buf);
-			return ;
+			buf = take_single_quote_arg(main, counter);
+			make_lexer_list(buf, head);
+			counter = main->current_symbol;
 		}
-		counter++;
+		if (is_double_quote(main->line[counter]))
+		{
+			buf = take_double_quote_args(main, counter);
+			make_lexer_list(buf, head);
+			counter = main->current_symbol;
+		}
+		if (!is_single_quote(main->line[counter]) && !is_double_quote(main->line[counter]) \
+			&& main->line[counter] && !is_space(main->line[counter]))
+		{
+			buf = take_simple_argument(main, counter);
+			make_lexer_list(buf, head);
+			counter = main->current_symbol;
+		}
 	}
 
 }
@@ -93,6 +140,6 @@ void	parser(t_main *main)
 	char	*line;
 
 	main->current_symbol = 0;
-	make_head_token(main, &head);
-	printf("%s, %s", head->key, head->value);
+	lexer(main, &head);
+	DEBUG_PRINT_LIST(head);
 }
