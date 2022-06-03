@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 16:54:16 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/02 16:57:03 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/03 15:14:56 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,13 @@
 
 int	is_space(char c)
 {
-	if (c == ' ' || c == '	' || c == '\t' || c == '\n' || c == '\r' || c == '\v')
+	if (c == ' ' || c == '	' || c == '\t' || \
+		c == '\n' || c == '\r' || c == '\v')
 		return (1);
 	return (0);
 }
 
-int is_single_quote(char c)
+int	is_single_quote(char c)
 {
 	if (c == 39)
 		return (1);
@@ -41,7 +42,7 @@ char	*str_realloc(char *str)
 	if (!str)
 	{
 		new_str = malloc(sizeof(char) * 2);
-		new_str[0] ='\0';
+		new_str[0] = '\0';
 		free(str);
 		return (new_str);
 	}

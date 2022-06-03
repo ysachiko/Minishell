@@ -1,42 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   debug_shit.c                                       :+:      :+:    :+:   */
+/*   parse_env_usage.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/06/02 18:41:28 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/03 18:53:49 by ysachiko         ###   ########.fr       */
+/*   Created: 2022/06/03 20:37:37 by ysachiko          #+#    #+#             */
+/*   Updated: 2022/06/03 20:38:11 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/parser.h"
 
-void	DEBUG_PRINT_LIST(t_hash *head)
+int		env_arg_len(char *str, int i)
 {
-	t_hash	*tmp;
+	int	start;
+	int	end;
 
-	tmp = head;
-	while (tmp)
-	{
-		printf("%d %s\n", tmp->key, tmp->value);
-		tmp = tmp->next;
-	}
+	i++;
+	start = i;
+	while (str[i] && !is_spec_symbol(str[i]))
+		i++;
+	end = i;
+	return (end - start);
 }
 
-void	DEBUG_PRINT_LIST_2(t_env *head)
+void	str_delete_symbol(t_hash *hash, int i)
 {
-	t_env	*tmp;
-	t_env	*tmp_2;
-
-	tmp = head;
-	while (tmp->next != NULL)
+	while (hash->value[i])
 	{
-		tmp_2 = tmp->next;
-		printf("%s=", tmp->key);
-		printf("%s\n", tmp->value);
-		tmp = tmp_2;
+		hash->value[i] = hash->value[i + 1];
+		i++;
 	}
-	printf("%s =", tmp->key);
-	printf("%s\n", tmp->value);
 }

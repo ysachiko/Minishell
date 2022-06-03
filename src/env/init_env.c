@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 19:11:21 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/02 19:50:06 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/03 16:17:10 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,15 @@ int	init_env(t_main *main, char **env)
 	i = 0;
 	env_head = malloc(sizeof(t_env));
 	env_head->next = NULL;
-	env_head->arg = ft_strdup(env[0]);
+	env_head->key = take_env_key(env[0]);
+	env_head->value = take_env_value(env[0]);
 	i++;
 	main->env_list = env_head;
 	while (env && env[0] && env[i])
 	{
 		new = malloc(sizeof(t_env));
-		new->arg = ft_strdup(env[i]);
+		new->key = take_env_key(env[i]);
+		new->value = take_env_value(env[i]);
 		new->next = NULL;
 		env_head->next = new;
 		env_head = new;
@@ -36,27 +38,50 @@ int	init_env(t_main *main, char **env)
 	return (0);
 }
 
-char	*find_path(t_env *head)
+t_env	*find_key_node(char *str, t_env *head)
 {
 	t_env	*tmp;
-	char	*path_line;
-	int		i;
 
 	tmp = head;
-	i = 5;
-	path_line = NULL;
-	while (tmp)
-	{
-		if (tmp->arg[0] == 'P' && tmp->arg[1] == 'A' && tmp->arg[2] == 'T' \
-			&& tmp->arg[3] == 'H' && tmp->arg[4] == '=')
-			break;
+	while (tmp && ft_strcmp(tmp->key, str))
 		tmp = tmp->next;
-	}
-	path_line = malloc(sizeof(char) * (ft_strlen(tmp->arg) - 3));
-	while (tmp->arg[i])
+	return (tmp);
+}
+
+char	*take_env_key(char *str)
+{
+	int		i;
+	char	*key;
+
+	key = NULL;
+	i = 0;
+	while (str[i] && str[i] != '=')
+		i++;
+	key = malloc(sizeof(char) * i);
+	ft_strlcpy(key, str, i + 1);
+	return (key);
+}
+
+char	*take_env_value(char *str)
+{
+	int		i;
+	int		j;
+	int		size;
+	char	*value;
+
+	i = 0;
+	j = 0;
+	while (str[i] && str[i] != '=')
+		i++;
+	i++;
+	size = ft_strlen(str) - i;
+	value = malloc(sizeof(char) * size + 1);
+	while (str[i])
 	{
-		path_line[i - 5] = tmp->arg[i];
+		value[j] = str[i];
+		j++;
 		i++;
 	}
-	return (path_line);
+	value[j] = '\0';
+	return (value);
 }
