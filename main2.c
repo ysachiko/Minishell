@@ -1,23 +1,17 @@
-#include "libft/libft.h"
-#include <stdlib.h>
-#include <sys/types.h>
-#include <sys/wait.h>
-#include <stdio.h>
-#include <readline/readline.h>
-#include <readline/history.h>
-#include <unistd.h>
-#include <errno.h>
-#include <string.h>
-#include <signal.h>
+#include "includes/parser.h"
 
-int sh_cd(char **args);
-int sh_exit(char **args);
-int sh_pwd(char **args);
-int launch(char **args);
+t_env	*sort_env(t_env *copy);
+int sh_unset(char **args, t_main *all);
+int sh_export(char **args, t_main *all);
+int sh_cd(char **args, t_main *all);
+int sh_exit(char **args, t_main *all);
+int sh_pwd(char **args, t_main *all);
+int sh_env(char **args, t_main *all);
+int launch(char **args, t_main *all);
 
 //PUT IT INTO STRUCT
-char *builtins[] = {"cd", "exit", "pwd"};
-int (*built[]) (char **) = {&sh_cd, &sh_exit, &sh_pwd};
+char *builtins[] = {"cd", "exit", "pwd", "env", "export", "unset"};
+int (*built[]) (char **, t_main *) = {&sh_cd, &sh_exit, &sh_pwd, &sh_env, &sh_export, &sh_unset};
 
 //SIGNALS
 void handler(int sig)
@@ -52,7 +46,83 @@ int num_builtins()
 	return sizeof(builtins) / sizeof(char *);
 }
 
-int sh_pwd(char **args)
+// INCORRECT
+int sh_export(char **args, t_main *all)
+{
+	t_env *tmp;
+	tmp = sort_env(all->env_list);
+	
+	t_env	*tmp_2;
+
+	while (tmp->next != NULL)
+	{
+		tmp_2 = tmp->next;
+		printf("%s=", tmp->key);
+		printf("%s\n", tmp->value);
+		tmp = tmp_2;
+	}
+	printf("%s =", tmp->key);
+	printf("%s\n", tmp->value);
+	return (0);
+
+}
+
+int	sh_unset(char **args, t_main *all)
+{
+	t_env *tmp;
+	t_env *curr = all->env_list;
+
+	if (args[1] == NULL)
+		printf("unset: not enough arguments\n");
+	if (curr->key == args[1])
+	{
+		tmp = curr;
+		curr = curr->next;
+		free(tmp->key);
+		free(tmp->value);
+		free(tmp);
+	}
+	else
+	{
+		t_env *curr = all->env_list;
+		while (curr->next != NULL)
+		{
+			if (curr->key == args[1])
+			{
+				tmp = curr->next;
+				curr->next = curr->next->next;
+				free(tmp->key);
+				free(tmp->value);
+				free(tmp);
+				return 0;
+			}
+			else
+				curr = curr->next;
+		}
+	}
+	return 0;
+}
+
+int	sh_env(char **args, t_main *all)
+{
+	(void)args;
+	t_env	*tmp;
+	t_env	*tmp_2;
+
+	tmp = all->env_list;
+	while (tmp->next != NULL)
+	{
+		tmp_2 = tmp->next;
+		printf("%s=", tmp->key);
+		printf("%s\n", tmp->value);
+		tmp = tmp_2;
+	}
+	printf("%s =", tmp->key);
+	printf("%s\n", tmp->value);
+	return (0);
+}
+
+int sh_pwd(char **args, t_main *all)
 {
 	(void) args;
 	char dir[1024];
@@ -62,7 +132,7 @@ int sh_pwd(char **args)
 	return 1;
 }
 
-int sh_cd(char **args)
+int sh_cd(char **args, t_main *all)
 {
 	if (args[1] == NULL)
 		printf("expected argument: cd <dir_path>");
@@ -76,7 +146,7 @@ int sh_cd(char **args)
 	return 1;
 }
 
-int sh_exit(char **args)
+int sh_exit(char **args, t_main *all)
 {
 	(void)args;
 	exit(EXIT_SUCCESS);
@@ -84,7 +154,7 @@ int sh_exit(char **args)
 }
 
 //EXEC
-int execute(char **args)
+int execute(char **args, t_main *all)
 {
 	int i = 0;
 
@@ -93,17 +163,16 @@ int execute(char **args)
 
 	while(i < num_builtins())
 	{
-		if (strcmp(args[0], builtins[i]) == 0)
-			return (*built[i])(args);
+		if (ft_strcmp(args[0], builtins[i]) == 0)
+			return (*built[i])(args,all);
 		i++;
 	}
-
-	
-	return launch(args);
+		
+	return launch(args, all);
 }
 
 //EXEC
-int launch(char **args)
+int launch(char **args, t_main *all)
 {
 	pid_t pid, wpid;
 	int status;
@@ -111,6 +180,7 @@ int launch(char **args)
 	signal(SIGINT, SIG_IGN);
 	signal(SIGINT, SIG_IGN);
 	pid = fork();
+	rl_on_new_line();
 	if (pid == 0)
 	{
 		//CHILD
@@ -131,28 +201,62 @@ int launch(char **args)
 	return 1;
 }
 
-int main(void)
+// UTILS (MAKE A COPY)
+t_env	*sort_env(t_env *copy)
+{
+	t_env *curr = copy;
+	t_env *tmp;
+	char *tmp_key;
+	char *tmp_value;
+
+
+	if (curr == NULL)
+		return NULL;
+	while (curr->next != NULL)
+	{
+		tmp = curr->next;
+		while (tmp->next != NULL)
+		{	
+			if (ft_strcmp(curr->key, tmp->key) > 0)
+			{
+				tmp_key = curr->key;
+				tmp_value = curr->value;
+				curr->key = tmp->key;
+				curr->value = tmp->value;
+				tmp->key = tmp_key;
+				tmp->value = tmp_value;
+			}
+			tmp = tmp->next;
+		}
+		curr = curr->next;
+	}
+	return curr;
+}
+
+int main(int ac, char **av, char **env)
 {
 	char *line;
 	char **args;
-	//int status;
+	t_main	*main;
 
 	
+	main = malloc(sizeof(t_main));
+	init_env(main, env);
 	signal(SIGQUIT, SIG_IGN);
 	while(1)
 	{
 		signal(SIGINT, handler);
-		line = readline("\e[1;32mbash$ \e[0;37m");
-		add_history(line);
-		if (!line)
+		main->line = readline("\e[1;32mbash$ \e[0;37m");
+		add_history(main->line);
+		if (!main->line)
 			exit(EXIT_FAILURE);
-		args = ft_split(line, ' ');
-		execute(args);
+		args = ft_split(main->line, ' ');
+		execute(args, main);
 		/*printf("\n");
 		rl_on_new_line();
 		rl_replace_line("",0);
 		rl_redisplay();*/
-		free(line);
+		free(main->line);
 		free(args);
 	}
 }
