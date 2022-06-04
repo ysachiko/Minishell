@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 16:36:19 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/03 20:38:18 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/04 15:43:18 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ PARSE_ENV
 int		parse_env(t_main *main, t_hash *head);
 void	env_str_refactor(t_main *main,t_hash *hash);
 int		str_refactor(t_main *main, t_hash *hash, int i);
-void	arg_str_refactor(t_main *main, t_hash *hash, int i);
+int		arg_str_refactor(t_main *main, t_hash *hash, int i);
 char	*find_env(char *str, int i);
 /*
 PARSE ENV USAGE

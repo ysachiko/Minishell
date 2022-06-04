@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 18:42:54 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/03 19:20:31 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/04 14:22:41 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,8 @@ int		is_empty(char *str)
 	if (!ft_strcmp(str, "\"\"") )
 		return (1);
 	if (!ft_strcmp(str, "''"))
+		return (1);
+	if (str[0] == '\0')
 		return (1);
 	return (0);
 }

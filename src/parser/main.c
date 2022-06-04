@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lexer.c                                            :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/06 13:25:20 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/03 16:35:53 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/04 15:55:38 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int main(int argc, char **argv, char **env)
 	// if (PATH)
 	// 	printf("%s=%s", PATH->key, PATH->value);
 	// printf("\n\n*****ENV_TEST*******\n\n");
-	// DEBUG_PRINT_LIST_2(main->env_list);
+	// DEBUG_PRINT_LIST_2(main->env_list);ы
 	while(1)
 	{
 		main->line = readline("\e[1;32mbash$ \e[0;37m");
