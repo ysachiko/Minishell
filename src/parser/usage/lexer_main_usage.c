@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 18:42:54 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/04 14:22:41 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/05 19:50:40 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	extend_string(char **argument, char symbol, int counter)
 	return (counter + 1);
 }
 
-int		is_builtin(char *str)
+int	is_builtin(char *str)
 {
 	if (!ft_strcmp(str, "cd"))
 		return (1);
@@ -45,9 +45,9 @@ int		is_builtin(char *str)
 	return (0);
 }
 
-int		is_empty(char *str)
+int	is_empty(char *str)
 {
-	if (!ft_strcmp(str, "\"\"") )
+	if (!ft_strcmp(str, "\"\""))
 		return (1);
 	if (!ft_strcmp(str, "''"))
 		return (1);
@@ -56,7 +56,7 @@ int		is_empty(char *str)
 	return (0);
 }
 
-int	parse_lexer_list(t_main *main, t_hash *head)
+int	parse_lexer_list(t_hash *head)
 {
 	t_hash	*hash;
 
@@ -69,13 +69,5 @@ int	parse_lexer_list(t_main *main, t_hash *head)
 			hash->key = EMPTY;
 		hash = hash->next;
 	}
-	return (0);
-}
-
-int	is_spec_symbol(char c)
-{
-	if (c == '"' || c == '/' || c == '\'' || c == '$' || \
-		c == '.' || c == '|' || c == '>' || c == '<')
-		return (1);
 	return (0);
 }

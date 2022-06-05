@@ -1,42 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   debug_shit.c                                       :+:      :+:    :+:   */
+/*   parse_str_env.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/06/02 18:41:28 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/05 19:55:51 by ysachiko         ###   ########.fr       */
+/*   Created: 2022/06/05 18:52:59 by ysachiko          #+#    #+#             */
+/*   Updated: 2022/06/05 20:33:59 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/parser.h"
 
-void	debug_print_list(t_hash *head)
+void	str_env_pars(t_main *main, char **str)
 {
-	t_hash	*tmp;
+	int	i;
 
-	tmp = head;
-	while (tmp)
+	i = 0;
+	main->tmp = malloc(sizeof(t_hash));
+	main->tmp->value = *str;
+	while (main->tmp->value[i])
 	{
-		printf("%d %s\n", tmp->key, tmp->value);
-		tmp = tmp->next;
+		if (main->tmp->value[i] == '$')
+		{
+			i = str_refactor(main, main->tmp, i);
+			i--;
+		}
+		i++;
 	}
-}
-
-void	debug_print_list_2(t_env *head)
-{
-	t_env	*tmp;
-	t_env	*tmp_2;
-
-	tmp = head;
-	while (tmp->next != NULL)
-	{
-		tmp_2 = tmp->next;
-		printf("%s=", tmp->key);
-		printf("%s\n", tmp->value);
-		tmp = tmp_2;
-	}
-	printf("%s =", tmp->key);
-	printf("%s\n", tmp->value);
+	*str = main->tmp->value;
+	free(main->tmp);
 }
