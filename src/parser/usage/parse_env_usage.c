@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/03 20:37:37 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/05 19:55:10 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/08 16:13:09 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ void	set_empty_arg(t_hash *hash, int i, char *arg)
 		j++;
 	}
 	str_delete_symbol(hash, i);
-	printf("\n");
 }
 
 char	*get_str_after_arg(t_hash *hash, int i, char *arg)

@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 16:36:08 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/05 20:32:29 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/08 17:35:05 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 void	refactor_simple_arg(t_main *main, int counter, char **argument)
 {
 	char	*tmp;
+	char	*tmp_2;
 
 	tmp = malloc(sizeof(char));
 	tmp[0] = '\0';
@@ -27,8 +28,12 @@ void	refactor_simple_arg(t_main *main, int counter, char **argument)
 		counter++;
 	}
 	str_env_pars(main, &tmp);
-	*argument = ft_strjoin(*argument, tmp);
+	tmp_2 = ft_strjoin(*argument, tmp);
+	free(*argument);
+	*argument = ft_strdup(tmp_2);
 	main->current_symbol = counter;
+	free(tmp_2);
+	free (tmp);
 }
 
 char	*take_simple_argument(t_main *main, int counter)
@@ -50,9 +55,7 @@ char	*take_simple_argument(t_main *main, int counter)
 			refactor_single_quote_arg(main, counter, &argument);
 			counter = main->current_symbol;
 		}
-		if (!is_space(main->line[counter]) && main->line[counter] && \
-			!is_double_quote(main->line[counter]) \
-				&& !is_single_quote(main->line[counter]))
+		if (symbol_check(main, counter))
 		{
 			refactor_simple_arg(main, counter, &argument);
 			counter = main->current_symbol;
@@ -83,7 +86,6 @@ void	lexer(t_main *main, t_hash **head)
 	char	*buf;
 
 	counter = 0;
-	buf = NULL;
 	while (main->line[counter] != '\0')
 	{
 		if (is_space(main->line[counter]))
@@ -93,27 +95,12 @@ void	lexer(t_main *main, t_hash **head)
 		}
 		if (main->line[counter] && !is_space(main->line[counter]))
 		{
-			buf = take_simple_argument(main, counter);
-			make_lexer_list(buf, head);
+			buf = (take_simple_argument(main, counter));
+			make_lexer_list(ft_strdup(buf), head);
+			free (buf);
 			counter = main->current_symbol;
 		}
 	}
-}
-
-void	set_double_quote_flag_value(t_main *main)
-{
-	if (main->in_double_quots)
-		main->in_double_quots = 0;
-	else
-		main->in_double_quots = 1;
-}
-
-void	set_single_quote_flag_value(t_main *main)
-{
-	if (main->in_single_quots)
-		main->in_single_quots = 0;
-	else
-		main->in_single_quots = 1;
 }
 
 void	parser(t_main *main)
