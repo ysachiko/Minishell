@@ -1,6 +1,12 @@
 #include "includes/parser.h"
 
-t_env	*sort_env(t_env *copy);
+t_env	*env_last(t_env *head);
+void	add_env(t_env **env, t_env *new);
+t_env	*new_env(char *key, char *value);
+t_env	*copy_env(t_env *head);
+void	sort_env(t_env *copy);
+t_env		*search_env(t_env *head, char *key);
+
 int sh_unset(char **args, t_main *all);
 int sh_export(char **args, t_main *all);
 int sh_cd(char **args, t_main *all);
@@ -46,14 +52,29 @@ int num_builtins()
 	return sizeof(builtins) / sizeof(char *);
 }
 
-// INCORRECT
 int sh_export(char **args, t_main *all)
 {
 	t_env *tmp;
-	tmp = sort_env(all->env_list);
-	
 	t_env	*tmp_2;
-
+	char **vals = ft_split(args[1], '=');
+	
+	if (args[1])
+	{
+		tmp = search_env(all->env_list, vals[0]);
+		if (tmp)
+		{
+			tmp->value = vals[1];
+			return (0);
+		}	
+		add_env(&(all->env_list), new_env(vals[0], vals[1]));
+		//free_split(vals);
+		return (0);
+	}
+	
+	// PUT IT IN SEPARATE FUNC ↓
+	tmp = all->env_list; 
+	tmp = copy_env(all->env_list); 
+	sort_env(tmp);
 	while (tmp->next != NULL)
 	{
 		tmp_2 = tmp->next;
@@ -61,10 +82,10 @@ int sh_export(char **args, t_main *all)
 		printf("%s\n", tmp->value);
 		tmp = tmp_2;
 	}
-	printf("%s =", tmp->key);
+	printf("%s=", tmp->key);
 	printf("%s\n", tmp->value);
+	//clean_env(&tmp);
 	return (0);
-
 }
 
 int	sh_unset(char **args, t_main *all)
@@ -117,7 +138,7 @@ int	sh_env(char **args, t_main *all)
 		printf("%s\n", tmp->value);
 		tmp = tmp_2;
 	}
-	printf("%s =", tmp->key);
+	printf("%s=", tmp->key);
 	printf("%s\n", tmp->value);
 	return (0);
 }
@@ -201,8 +222,77 @@ int launch(char **args, t_main *all)
 	return 1;
 }
 
-// UTILS (MAKE A COPY)
-t_env	*sort_env(t_env *copy)
+// UTILS 
+t_env	*search_env(t_env *head, char *key)
+{
+	t_env	*tmp;
+
+	tmp = head;
+	while (tmp)
+	{
+		if (ft_strcmp(tmp->key, key) == 0) // FIX THIS
+			return (tmp);
+		tmp = tmp->next;
+	}
+	return NULL;
+}
+
+t_env	*new_env(char *key, char *value)
+{
+	t_env	*new;
+
+	new = malloc(sizeof(t_env));
+	if (new)
+	{
+		new->key = key;
+		new->value = value;
+		new->next = NULL;
+	}
+	return (new);
+}
+
+void	add_env(t_env **env, t_env *new)
+{
+	t_env	*tmp;
+
+	if (*env != NULL && env != NULL)
+	{
+		tmp = *env;
+		tmp = env_last(*env);
+		tmp->next = new;
+		return;
+	}
+	*env = new;
+}
+
+t_env	*env_last(t_env *head)
+{
+	t_env	*tmp;
+
+	if (head == NULL)
+		return (NULL);
+
+	tmp = head;
+	while (tmp->next)
+		tmp = tmp->next;
+	return (tmp);
+}
+
+t_env	*copy_env(t_env *head)
+{
+	if (head == NULL)
+		return NULL;
+	t_env *node = malloc(sizeof(t_env));
+
+	node->key = head->key;
+	node->value = head->value;
+
+	node->next = copy_env(head->next);
+
+	return node;
+}
+
+void	sort_env(t_env *copy)
 {
 	t_env *curr = copy;
 	t_env *tmp;
@@ -211,7 +301,7 @@ t_env	*sort_env(t_env *copy)
 
 
 	if (curr == NULL)
-		return NULL;
+		return;
 	while (curr->next != NULL)
 	{
 		tmp = curr->next;
@@ -230,7 +320,6 @@ t_env	*sort_env(t_env *copy)
 		}
 		curr = curr->next;
 	}
-	return curr;
 }
 
 int main(int ac, char **av, char **env)
@@ -238,7 +327,6 @@ int main(int ac, char **av, char **env)
 	char *line;
 	char **args;
 	t_main	*main;
-
 	
 	main = malloc(sizeof(t_main));
 	init_env(main, env);
@@ -257,6 +345,8 @@ int main(int ac, char **av, char **env)
 		rl_replace_line("",0);
 		rl_redisplay();*/
 		free(main->line);
-		free(args);
+		free_split(args);
 	}
+	clean_env(&(main->env_list));
+	//clean_up();
 }
