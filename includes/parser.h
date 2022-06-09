@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 16:36:19 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/08 17:35:22 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/09 19:28:01 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,13 @@
 # include <stdlib.h>
 # include <sys/types.h>
 # include <sys/wait.h>
-# include <readline/readline.h>
-# include <readline/history.h>
 # include <stdio.h>
 # include <unistd.h>
 # include <errno.h>
 # include <string.h>
 # include <signal.h>
+# include <readline/readline.h>
+# include <readline/history.h>
 
 # define EMPTY 0
 # define CMD 1
@@ -86,7 +86,6 @@ LEXER_MAIN_USAGE
 */
 void	scip_space(t_main *main, int counter);
 int		extend_string(char **argument, char symbol, int counter);
-int		is_builtin(char *str);
 int		parse_lexer_list(t_hash *head);
 /*
 ENV_INIT
@@ -129,9 +128,18 @@ char	*take_double_quote_args(t_main *main, int counter);
 void	refactor_double_quote_arg(t_main *main, int counter, char **argument);
 void	refactor_single_quote_arg(t_main *main, int counter, char **argument);
 /*
+LIST REFACTOR
+*/
+void	refactor_list(t_hash *hash, t_main *main);
+void	refactor_double_quote_arg_2(t_main *main, int counter, char **argument);
+void	refactor_single_quote_arg_2(t_main *main, int counter, char **argument);
+char	*take_simple_argument_2(t_main *main, int counter);
+void	refactor_simple_arg_2(t_main *main, int counter, char **argument);
+/*
 PARSE_STR_ENV
 */
 void	realloc_argument(char **arg, char *tmp);
 void	str_env_pars(t_main *main, char **str);
+void	ft_return_quots(char *tmp, char **argument, t_main *main);
 
 #endif

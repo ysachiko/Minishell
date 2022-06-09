@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 18:42:54 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/05 19:50:40 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/09 19:24:30 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,25 +26,6 @@ int	extend_string(char **argument, char symbol, int counter)
 	return (counter + 1);
 }
 
-int	is_builtin(char *str)
-{
-	if (!ft_strcmp(str, "cd"))
-		return (1);
-	if (!ft_strcmp(str, "echo"))
-		return (1);
-	if (!ft_strcmp(str, "exit"))
-		return (1);
-	if (!ft_strcmp(str, "pwd"))
-		return (1);
-	if (!ft_strcmp(str, "export"))
-		return (1);
-	if (!ft_strcmp(str, "unset"))
-		return (1);
-	if (!ft_strcmp(str, "env"))
-		return (1);
-	return (0);
-}
-
 int	is_empty(char *str)
 {
 	if (!ft_strcmp(str, "\"\""))
@@ -56,6 +37,31 @@ int	is_empty(char *str)
 	return (0);
 }
 
+void	quote_refactor(t_hash *hash)
+{
+	int	in_single_quots;
+	int	in_double_quots;
+	int	i;
+
+	in_double_quots = 0;
+	in_single_quots = 0;
+	i = 0;
+	if (!ft_strchr(hash->value, '\'') && !ft_strchr(hash->value, '"'))
+		return ;
+	while (hash->value[i])
+	{
+		if (is_double_quote(hash->value[i]))
+		{
+			in_double_quots = 1;
+			str_delete_symbol(hash, i);
+			while (is_double_quote(hash->value[i]))
+				i++;
+			str_delete_symbol(hash, i);
+		}
+		i++;
+	}
+}
+
 int	parse_lexer_list(t_hash *head)
 {
 	t_hash	*hash;
@@ -63,10 +69,20 @@ int	parse_lexer_list(t_hash *head)
 	hash = head;
 	while (hash)
 	{
-		if (is_builtin(hash->value))
-			hash->key = CMD;
 		if (is_empty(hash->value))
 			hash->key = EMPTY;
+		else if (!ft_strcmp(hash->value, "|"))
+			hash->key = PIPE;
+		else if (!ft_strcmp(hash->value, ">"))
+			hash->key = TRUNC;
+		else if (!ft_strcmp(hash->value, "<"))
+			hash->key = INPUT;
+		else if (!ft_strcmp(hash->value, ">>"))
+			hash->key = APPEND;
+		else if (hash->prev == NULL || hash->prev->key >= TRUNC)
+			hash->key = CMD;
+		else
+			hash->key = ARG;
 		hash = hash->next;
 	}
 	return (0);

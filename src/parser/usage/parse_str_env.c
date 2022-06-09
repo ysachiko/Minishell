@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/05 18:52:59 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/08 17:30:06 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/09 19:56:19 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,4 +42,11 @@ void	realloc_argument(char **arg, char *tmp)
 	free(*arg);
 	*arg = ft_strdup(tmp_2);
 	free(tmp_2);
+}
+
+void	ft_return_quots(char *tmp, char **argument, t_main *main)
+{
+	realloc_argument(argument, "\0");
+	if (main->free_quote_flag)
+		free (tmp);
 }
