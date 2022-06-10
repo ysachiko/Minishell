@@ -17,6 +17,13 @@ void	free_split(char **split)
 		free(split);
 }
 
+void	clean_env_node(t_env *envp)
+{
+	free(envp->key);
+	free(envp->value);
+	free(envp);
+}
+
 void	clean_env(t_env **envp)
 {
 	t_env	*tmp;
