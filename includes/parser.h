@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 16:36:19 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/10 15:58:28 by kezekiel         ###   ########.fr       */
+/*   Updated: 2022/06/10 17:48:29 by kezekiel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,6 +149,7 @@ FREE
 void	clean_env_node(t_env *envp);
 void	free_split(char **split);
 void	clean_env(t_env **envp);
+void	free_hash(t_main *main);
 
 /*
 UTILS

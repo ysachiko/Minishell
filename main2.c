@@ -43,7 +43,6 @@ int main(int ac, char **av, char **env)
 		if (!main->line)
 			exit(EXIT_FAILURE);
 		add_history(main->line);
-		//args = ft_split(main->line, ' ');
 		parser(main);
 		args = hash_parser(main->hash_head);
 		execute(args, main);
@@ -51,6 +50,7 @@ int main(int ac, char **av, char **env)
 		rl_on_new_line();
 		rl_replace_line("",0);
 		rl_redisplay();*/
+		free_hash(main);
 		free(main->line);
 		free(args);
 	}

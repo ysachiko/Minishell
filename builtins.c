@@ -58,7 +58,6 @@ int sh_export(char **args, t_main *all)
 {
 	t_env *tmp;
 	t_env	*tmp_2;
-	//char **vals = ft_split(args[1], '=');
 	
 	// CHECK FOR MULTIPLE VARS
 	// CHECK VARS
@@ -154,28 +153,52 @@ int sh_pwd(char **args, t_main *all)
 }
 
 // DOPILIT'
+int	oldpwd(t_main *all)
+{
+	char	*pwd;
+	t_env	*tmp;
+
+	tmp = search_env(all->env_list, "OLDPWD");
+	pwd = getcwd(NULL, 0);
+	free(tmp->value);
+	tmp->value = ft_strdup(pwd);
+	free(pwd);
+	return 0;
+}
+
 int sh_cd(char **args, t_main *all)
 {
 	t_env	*tmp;
-	
-	if (!args[1] || !ft_strcmp(args[1], "~")) 
+
+	if (!args[1] || !ft_strcmp(args[1], "~") || !ft_strcmp(args[1], "-")) 
 	{
-		tmp = search_env(all->env_list, "HOME");
-		if (tmp)
+		if (!args[1] || !ft_strcmp(args[1], "~"))
 		{
-			chdir(tmp->value);
-			return 0;
+			tmp = search_env(all->env_list, "HOME");
+			if (tmp)
+			{
+				oldpwd(all);
+				chdir(tmp->value);
+				return 0;
+			}
+			printf("HOME not set\n");
+			return 1;
 		}
-		printf("HOME not set\n");
-		return 1;
-	}
-	else
-	{
-		if (chdir(args[1]) != 0)	
+		if (!ft_strcmp(args[1], "-"))
 		{
+			tmp = search_env(all->env_list, "OLDPWD");
+			if (tmp)
+			{
+				chdir(tmp->value);
+				return 0;
+			}
+			printf("OLDPWD not set\n");
+			return 1;
+		}
+	}
+	oldpwd(all);
+	if (chdir(args[1]) != 0)	
 			perror("cd");
-		}
-	}
 	return 0;
 }
 

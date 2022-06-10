@@ -40,6 +40,21 @@ void	clean_env(t_env **envp)
 	free(envp);
 }
 
+void    free_hash(t_main *main)
+{
+    t_hash  *head;
+    t_hash  *tmp;
+    head = main->hash_head;
+    while (head)
+    {
+        if (head->value)
+            free (head->value);
+        tmp = head;
+        head = head->next;
+        free(tmp);
+    }
+}
+
 /*void	clean_up(t_main all)
 {
 	
