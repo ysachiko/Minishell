@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 16:36:19 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/10 14:47:56 by kezekiel         ###   ########.fr       */
+/*   Updated: 2022/06/10 15:38:27 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ typedef struct s_main
 	t_env	*env_list;
 }	t_main;
 
+void	rl_replace_line (const char *text, int clear_undo);
 void	parser(t_main *main);
 /*
 LISTS
