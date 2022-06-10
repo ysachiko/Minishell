@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+         #
+#    By: ysachiko <ysachiko@student.21-school.ru    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/06/01 17:55:47 by kezekiel          #+#    #+#              #
-#    Updated: 2022/06/10 18:29:58 by ysachiko         ###   ########.fr        #
+#    Updated: 2022/06/10 22:35:49 by ysachiko         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME = minihell
 
 CC = gcc
 
-CFLAGS = -fsanitize=address
+CFLAGS = 
 
 INC = includes/parser.h libft/libft.h
 
@@ -30,7 +30,7 @@ LIBFT = libft
 
 FLAGS = -L $(LIBFT) -lft
 
-RDLN = -L /Users/ysachiko/.brew/Cellar/readline/8.1.2/lib -I /Users/ysachiko/.brew/Cellar/readline/8.1.2/include/ -lreadline
+RDLN = -L /Users/yurakovalev/.brew/Cellar/readline/8.1.2/lib -I /Users/yurakovalev/.brew/Cellar/readline/8.1.2/include/ -lreadline
 
 all : $(NAME)
 
