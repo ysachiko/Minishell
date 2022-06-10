@@ -82,18 +82,14 @@ int sh_export(char **args, t_main *all)
 	}
 	
 	// PUT IT IN SEPARATE FUNC ↓
-	tmp = all->env_list; 
 	tmp = copy_env(all->env_list); 
 	sort_env(tmp);
-	while (tmp->next)
+	while (tmp)
 	{
-		tmp_2 = tmp->next;
 		printf("%s=", tmp->key);
 		printf("%s\n", tmp->value);
-		tmp = tmp_2;
+		tmp = tmp->next;
 	}
-	printf("%s=", tmp->key);
-	printf("%s\n", tmp->value);
 	//clean_env(&tmp);
 	return (0);
 }
@@ -132,18 +128,14 @@ int	sh_env(char **args, t_main *all)
 {
 	(void)args;
 	t_env	*tmp;
-	t_env	*tmp_2;
 
 	tmp = all->env_list;
-	while (tmp->next != NULL)
+	while (tmp)
 	{
-		tmp_2 = tmp->next;
 		printf("%s=", tmp->key);
 		printf("%s\n", tmp->value);
-		tmp = tmp_2;
+		tmp = tmp->next;
 	}
-	printf("%s=", tmp->key);
-	printf("%s\n", tmp->value);
 	return (0);
 }
 

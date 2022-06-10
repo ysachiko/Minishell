@@ -5,13 +5,8 @@
 #                                                     +:+ +:+         +:+      #
 #    By: kezekiel <ysachiko@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-<<<<<<< HEAD
 #    Created: 2022/06/01 17:55:47 by kezekiel          #+#    #+#              #
-#    Updated: 2022/06/10 15:57:35 by kezekiel         ###   ########.fr        #
-=======
-#    Created: 2022/06/01 17:55:47 by ysachiko          #+#    #+#              #
-#    Updated: 2022/06/10 15:39:31 by ysachiko         ###   ########.fr        #
->>>>>>> fad3a788bb73865f5e9d1bc3be38aa1157d6d730
+#    Updated: 2022/06/10 17:20:12 by kezekiel         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +14,7 @@ NAME = minihell
 
 CC = gcc
 
-CFLAGS =
+CFLAGS = -g3 #-fsanitize=address 
 
 INC = includes/parser.h libft/libft.h
 
@@ -35,11 +30,7 @@ LIBFT = libft
 
 FLAGS = -L $(LIBFT) -lft
 
-<<<<<<< HEAD
 RDLN = -L /Users/kezekiel/.brew/Cellar/readline/8.1.2/lib -I /Users/ysachiko/.brew/Cellar/readline/8.1.2/include/ -lreadline
-=======
-RDLN = -L /Users/ysachiko/.brew/Cellar/readline/8.1.2/lib -I /Users/ysachiko/.brew/Cellar/readline/8.1.2/include/ -lreadline
->>>>>>> fad3a788bb73865f5e9d1bc3be38aa1157d6d730
 
 all : $(NAME)
 

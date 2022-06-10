@@ -132,17 +132,19 @@ char	**hash_parser(t_hash *head)
 	int		i;
 
 	
-	args = malloc(sizeof(char *) * lst_size(head));
+	args = malloc(sizeof(char *) * lst_size(head) + 1);
 
+	tmp = head;
 	i = 0;
-	while (head)
+	while (tmp)
 	{
-		if (head->key == 1 || head->key == 2)
+		if (tmp->key == 1 || tmp->key == 2)
 		{
-			args[i] = head->value;
+			args[i] = tmp->value;
 			i++;
 		}
-		head = head->next;
+		tmp = tmp->next;
 	}
+	args[i] = NULL;
 	return (args);
 }
