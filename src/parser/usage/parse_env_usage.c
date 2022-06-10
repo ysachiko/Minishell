@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/03 20:37:37 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/05 19:55:10 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/09 19:57:08 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,11 @@ int	env_arg_len(char *str, int i)
 	i++;
 	start = i;
 	while (str[i] && !is_spec_symbol(str[i]))
+	{
 		i++;
+		if (str[i - 1] == '?')
+			break ;
+	}
 	end = i;
 	return (end - start);
 }
@@ -41,6 +45,8 @@ char	*find_env(char *str, int i)
 		arg[k] = str[j];
 		k++;
 		j++;
+		if (str[j] == '?')
+			break ;
 	}
 	arg[k] = '\0';
 	return (arg);
@@ -57,7 +63,6 @@ void	set_empty_arg(t_hash *hash, int i, char *arg)
 		j++;
 	}
 	str_delete_symbol(hash, i);
-	printf("\n");
 }
 
 char	*get_str_after_arg(t_hash *hash, int i, char *arg)

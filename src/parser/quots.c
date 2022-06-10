@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/05 19:56:55 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/05 20:07:40 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/09 19:24:05 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,20 +81,8 @@ void	refactor_double_quote_arg(t_main *main, int counter, char **argument)
 	i = 0;
 	tmp = take_double_quote_args(main, counter);
 	if (!ft_strcmp(tmp, "\"\""))
-	{
-		*argument = ft_strjoin(*argument, "\0");
-		if (main->free_quote_flag)
-			free (tmp);
-		return ;
-	}
-	while (tmp[i])
-	{
-		tmp[i] = tmp[i + 1];
-		i++;
-	}
-	tmp[ft_strlen(tmp) - 1] = '\0';
-	str_env_pars(main, &tmp);
-	*argument = ft_strjoin(*argument, tmp);
+		return (ft_return_quots(tmp, argument, main));
+	realloc_argument(argument, tmp);
 	if (main->free_quote_flag)
 		free (tmp);
 }
@@ -107,19 +95,8 @@ void	refactor_single_quote_arg(t_main *main, int counter, char **argument)
 	i = 0;
 	tmp = take_single_quote_arg(main, counter);
 	if (!ft_strcmp(tmp, "''"))
-	{
-		*argument = ft_strjoin(*argument, "\0");
-		if (main->free_quote_flag)
-			free (tmp);
-		return ;
-	}
-	while (tmp[i])
-	{
-		tmp[i] = tmp[i + 1];
-		i++;
-	}
-	tmp[ft_strlen(tmp) - 1] = '\0';
-	*argument = ft_strjoin(*argument, tmp);
+		return (ft_return_quots(tmp, argument, main));
+	realloc_argument(argument, tmp);
 	if (main->free_quote_flag)
 		free (tmp);
 }

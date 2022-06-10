@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/03 20:35:45 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/05 20:30:00 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/09 19:58:44 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,14 +17,18 @@ int	extend_str_arg(t_hash *hash, int i, char *arg, t_env *node)
 	char	*after_arg;
 	char	*before_arg;
 	char	*new_str;
+	char	*tmp;
 
 	after_arg = get_str_after_arg(hash, i, arg);
 	before_arg = get_str_before_arg(hash, i);
-	new_str = ft_strjoin(ft_strjoin(before_arg, node->value), after_arg);
+	tmp = ft_strjoin(before_arg, node->value);
+	new_str = ft_strjoin(tmp, after_arg);
 	free(hash->value);
-	hash->value = new_str;
+	hash->value = ft_strdup(new_str);
+	free(new_str);
 	free(after_arg);
 	free(before_arg);
+	free(tmp);
 	return (ft_strlen(node->value));
 }
 
@@ -32,6 +36,7 @@ int	arg_str_refactor(t_main *main, t_hash *hash, int i)
 {
 	t_env	*node;
 	char	*arg;
+	int		pos;
 
 	arg = find_env(hash->value, i);
 	node = find_key_node(arg, main->env_list);
@@ -43,8 +48,9 @@ int	arg_str_refactor(t_main *main, t_hash *hash, int i)
 	}
 	else
 	{
-		// free(arg);
-		return (extend_str_arg(hash, i, arg, node));
+		pos = extend_str_arg(hash, i, arg, node);
+		free(arg);
+		return (pos);
 	}
 }
 

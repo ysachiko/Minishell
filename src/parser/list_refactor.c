@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser.c                                           :+:      :+:    :+:   */
+/*   list_refactor.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/06/01 16:36:08 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/09 19:22:45 by ysachiko         ###   ########.fr       */
+/*   Created: 2022/06/09 19:21:57 by ysachiko          #+#    #+#             */
+/*   Updated: 2022/06/09 19:26:02 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/parser.h"
 
-void	refactor_simple_arg(t_main *main, int counter, char **argument)
+void	refactor_simple_arg_2(t_main *main, int counter, char **argument)
 {
 	char	*tmp;
 	char	*tmp_2;
@@ -27,6 +27,7 @@ void	refactor_simple_arg(t_main *main, int counter, char **argument)
 		str_add_new_symbol(tmp, main->line[counter]);
 		counter++;
 	}
+	str_env_pars(main, &tmp);
 	tmp_2 = ft_strjoin(*argument, tmp);
 	free(*argument);
 	*argument = ft_strdup(tmp_2);
@@ -35,7 +36,7 @@ void	refactor_simple_arg(t_main *main, int counter, char **argument)
 	free (tmp);
 }
 
-char	*take_simple_argument(t_main *main, int counter)
+char	*take_simple_argument_2(t_main *main, int counter)
 {
 	char	*argument;
 
@@ -46,17 +47,17 @@ char	*take_simple_argument(t_main *main, int counter)
 		main->free_quote_flag = 1;
 		if (is_double_quote(main->line[counter]))
 		{
-			refactor_double_quote_arg(main, counter, &argument);
+			refactor_double_quote_arg_2(main, counter, &argument);
 			counter = main->current_symbol;
 		}
 		if (is_single_quote(main->line[counter]))
 		{
-			refactor_single_quote_arg(main, counter, &argument);
+			refactor_single_quote_arg_2(main, counter, &argument);
 			counter = main->current_symbol;
 		}
 		if (symbol_check(main, counter))
 		{
-			refactor_simple_arg(main, counter, &argument);
+			refactor_simple_arg_2(main, counter, &argument);
 			counter = main->current_symbol;
 		}
 	}
@@ -64,53 +65,57 @@ char	*take_simple_argument(t_main *main, int counter)
 	return (argument);
 }
 
-void	make_lexer_list(char *argument, t_hash **head)
-{
-	t_hash	*new;
-
-	if (!*head)
-	{
-		*head = ft_lstnew_hash(-1, argument);
-	}
-	else
-	{
-		new = ft_lstnew_hash(-1, argument);
-		ft_lstadd_back_hash(head, new);
-	}
-}
-
-void	lexer(t_main *main, t_hash **head)
-{
-	int		counter;
-	char	*buf;
-
-	counter = 0;
-	while (main->line[counter] != '\0')
-	{
-		if (is_space(main->line[counter]))
-		{
-			scip_space(main, counter);
-			counter = main->current_symbol;
-		}
-		if (main->line[counter] && !is_space(main->line[counter]))
-		{
-			buf = (take_simple_argument(main, counter));
-			make_lexer_list(ft_strdup(buf), head);
-			free (buf);
-			counter = main->current_symbol;
-		}
-	}
-}
-
-void	parser(t_main *main)
+void	refactor_list(t_hash *hash, t_main *main)
 {
 	t_hash	*head;
+	char	*buf;
 
-	main->current_symbol = 0;
-	main->free_quote_flag = 1;
-	lexer(main, &head);
-	parse_lexer_list(head);
-	refactor_list(head, main);
-	debug_print_list(head);
-	main->hash_head = head;
+	head = hash;
+	while (head)
+	{
+		free (main->line);
+		main->line = ft_strdup(head->value);
+		buf = (take_simple_argument_2(main, 0));
+		free (head->value);
+		head->value = ft_strdup(buf);
+		free (buf);
+		head = head->next;
+	}
+}
+
+void	refactor_single_quote_arg_2(t_main *main, int counter, char **argument)
+{
+	int		i;
+	char	*tmp;
+
+	i = 0;
+	tmp = take_single_quote_arg(main, counter);
+	while (tmp[i])
+	{
+		tmp[i] = tmp[i + 1];
+		i++;
+	}
+	tmp[ft_strlen(tmp) - 1] = '\0';
+	realloc_argument(argument, tmp);
+	if (main->free_quote_flag)
+		free(tmp);
+}
+
+void	refactor_double_quote_arg_2(t_main *main, int counter, char **argument)
+{
+	int		i;
+	char	*tmp;
+
+	i = 0;
+	tmp = take_double_quote_args(main, counter);
+	while (tmp[i])
+	{
+		tmp[i] = tmp[i + 1];
+		i++;
+	}
+	tmp[ft_strlen(tmp) - 1] = '\0';
+	str_env_pars(main, &tmp);
+	realloc_argument(argument, tmp);
+	if (main->free_quote_flag)
+		free (tmp);
 }
