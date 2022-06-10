@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 16:36:19 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/10 15:58:28 by kezekiel         ###   ########.fr       */
+/*   Updated: 2022/06/10 18:06:28 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,8 +175,8 @@ int launch(char **args, t_main *all);
 BUILT-INS
 */
 /*
-char *builtins[] = {"cd", "exit", "pwd", "env", "export", "unset"};
-int (*built[]) (char **, t_main *) = {&sh_cd, &sh_exit, &sh_pwd, &sh_env, &sh_export, &sh_unset};
+char *builtins[] = {"cd", "exit", "pwd", "env", "export", "unset", "echo"};
+int (*built[]) (char **, t_main *) = {&sh_cd, &sh_exit, &sh_pwd, &sh_env, &sh_export, &sh_unset, &sh_echo};
 */
 int	num_builtins();
 int sh_unset(char **args, t_main *all);
@@ -186,5 +186,8 @@ int sh_exit(char **args, t_main *all);
 int sh_pwd(char **args, t_main *all);
 int sh_env(char **args, t_main *all);
 int launch(char **args, t_main *all);
-
+/*
+ECHO
+*/
+int		sh_echo(char **argv, t_main *all);
 #endif

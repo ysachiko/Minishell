@@ -1,7 +1,7 @@
 #include "includes/parser.h"
 
-char *builtins[] = {"cd", "exit", "pwd", "env", "export", "unset"};
-int (*built[]) (char **, t_main *) = {&sh_cd, &sh_exit, &sh_pwd, &sh_env, &sh_export, &sh_unset};
+char *builtins[] = {"cd", "exit", "pwd", "env", "export", "unset", "echo"};
+int (*built[]) (char **, t_main *) = {&sh_cd, &sh_exit, &sh_pwd, &sh_env, &sh_export, &sh_unset, &sh_echo};
 
 //EXECUTE
 int execute(char **args, t_main *all)
@@ -17,7 +17,7 @@ int execute(char **args, t_main *all)
 			return (*built[i])(args,all);
 		i++;
 	}
-			
+
 	return launch(args, all);
 }
 
@@ -59,7 +59,7 @@ int sh_export(char **args, t_main *all)
 	t_env *tmp;
 	t_env	*tmp_2;
 	//char **vals = ft_split(args[1], '=');
-	
+
 	// CHECK FOR MULTIPLE VARS
 	// CHECK VARS
 	/*if (check_export(args[0]))
@@ -75,14 +75,14 @@ int sh_export(char **args, t_main *all)
 		{
 			tmp->value = vals[1];
 			return (0);
-		}	
+		}
 		add_env(&(all->env_list), new_env(ft_strdup(vals[0]), ft_strdup(vals[1])));
 		free_split(vals);
 		return (0);
 	}
-	
+
 	// PUT IT IN SEPARATE FUNC ↓
-	tmp = copy_env(all->env_list); 
+	tmp = copy_env(all->env_list);
 	sort_env(tmp);
 	while (tmp)
 	{
@@ -104,7 +104,7 @@ int	sh_unset(char **args, t_main *all)
 		printf("unset: not enough arguments\n");	// ERROR
 		return (1);
 	}
-	
+
 	prev = NULL;
 	cpy = all->env_list;
 	while (cpy)
@@ -157,8 +157,8 @@ int sh_pwd(char **args, t_main *all)
 int sh_cd(char **args, t_main *all)
 {
 	t_env	*tmp;
-	
-	if (!args[1] || !ft_strcmp(args[1], "~")) 
+
+	if (!args[1] || !ft_strcmp(args[1], "~"))
 	{
 		tmp = search_env(all->env_list, "HOME");
 		if (tmp)
@@ -171,7 +171,7 @@ int sh_cd(char **args, t_main *all)
 	}
 	else
 	{
-		if (chdir(args[1]) != 0)	
+		if (chdir(args[1]) != 0)
 		{
 			perror("cd");
 		}

@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 16:36:08 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/09 19:22:45 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/10 18:08:41 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,6 @@ void	parser(t_main *main)
 	lexer(main, &head);
 	parse_lexer_list(head);
 	refactor_list(head, main);
-	debug_print_list(head);
+	// debug_print_list(head);
 	main->hash_head = head;
 }

@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 16:47:48 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/03 16:40:15 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/10 18:34:22 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,9 @@ t_hash	*ft_lstlast_hash(t_hash *lst)
 {
 	t_hash	*tmp;
 
-	if (lst == NULL)
-		return (NULL);
 	tmp = lst;
+	if (tmp == NULL)
+		return (NULL);
 	while (tmp->next)
 		tmp = tmp->next;
 	return (tmp);
