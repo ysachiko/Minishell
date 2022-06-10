@@ -1,7 +1,7 @@
 #include "includes/parser.h"
 
-char *builtins[] = {"cd", "exit", "pwd", "env", "export", "unset"};
-int (*built[]) (char **, t_main *) = {&sh_cd, &sh_exit, &sh_pwd, &sh_env, &sh_export, &sh_unset};
+char *builtins[] = {"cd", "exit", "pwd", "env", "export", "unset", "echo"};
+int (*built[]) (char **, t_main *) = {&sh_cd, &sh_exit, &sh_pwd, &sh_env, &sh_export, &sh_unset, &sh_echo};
 
 //EXECUTE
 int execute(char **args, t_main *all)
@@ -17,7 +17,7 @@ int execute(char **args, t_main *all)
 			return (*built[i])(args,all);
 		i++;
 	}
-			
+
 	return launch(args, all);
 }
 
@@ -74,14 +74,14 @@ int sh_export(char **args, t_main *all)
 		{
 			tmp->value = vals[1];
 			return (0);
-		}	
+		}
 		add_env(&(all->env_list), new_env(ft_strdup(vals[0]), ft_strdup(vals[1])));
 		free_split(vals);
 		return (0);
 	}
-	
+
 	// PUT IT IN SEPARATE FUNC ↓
-	tmp = copy_env(all->env_list); 
+	tmp = copy_env(all->env_list);
 	sort_env(tmp);
 	while (tmp)
 	{
@@ -103,7 +103,7 @@ int	sh_unset(char **args, t_main *all)
 		printf("unset: not enough arguments\n");	// ERROR
 		return (1);
 	}
-	
+
 	prev = NULL;
 	cpy = all->env_list;
 	while (cpy)
