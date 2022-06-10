@@ -108,3 +108,41 @@ void	sort_env(t_env *copy)
 		curr = curr->next;
 	}
 }
+
+int		lst_size(t_hash *lst)
+{
+	int	i;
+
+	i = 0;
+	if (lst == NULL)
+		return (i);
+	while (lst)
+	{
+		if (lst->key == 1 || lst->key == 2)
+			i++;
+		lst = lst->next;
+	}
+	return (i);
+}
+
+char	**hash_parser(t_hash *head)
+{
+	char	**args;
+	t_hash	*tmp;
+	int		i;
+
+	
+	args = malloc(sizeof(char *) * lst_size(head));
+
+	i = 0;
+	while (head)
+	{
+		if (head->key == 1 || head->key == 2)
+		{
+			args[i] = head->value;
+			i++;
+		}
+		head = head->next;
+	}
+	return (args);
+}

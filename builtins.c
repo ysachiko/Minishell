@@ -58,7 +58,7 @@ int sh_export(char **args, t_main *all)
 {
 	t_env *tmp;
 	t_env	*tmp_2;
-	char **vals = ft_split(args[1], '=');
+	//char **vals = ft_split(args[1], '=');
 	
 	// CHECK FOR MULTIPLE VARS
 	// CHECK VARS
@@ -69,8 +69,8 @@ int sh_export(char **args, t_main *all)
 	}*/
 	if (args[1])
 	{
-		tmp = search_env(all->env_list, vals[0]);
 		char **vals = ft_split(args[1], '=');
+		tmp = search_env(all->env_list, vals[0]);
 		if (tmp)
 		{
 			tmp->value = vals[1];

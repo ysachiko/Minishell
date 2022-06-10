@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 16:36:19 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/10 14:47:56 by kezekiel         ###   ########.fr       */
+/*   Updated: 2022/06/10 15:58:28 by kezekiel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ typedef struct s_main
 	t_env	*env_list;
 }	t_main;
 
+void	rl_replace_line (const char *text, int clear_undo);
 void	parser(t_main *main);
 /*
 LISTS
@@ -153,13 +154,16 @@ void	clean_env(t_env **envp);
 UTILS
 */
 
-int	check_export(char *s);
+char	**list_parser(t_hash *head);
+int		check_export(char *s);
 t_env	*search_env(t_env *head, char *key);
 t_env	*new_env(char *key, char *value);
 void	add_env(t_env **env, t_env *new);
 t_env	*env_last(t_env *head);
 t_env	*copy_env(t_env *head);
 void	sort_env(t_env *copy);
+char	**hash_parser(t_hash *head);
+int		lst_size(t_hash *lst);
 
 /*
 EXECUTE

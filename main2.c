@@ -43,14 +43,16 @@ int main(int ac, char **av, char **env)
 		if (!main->line)
 			exit(EXIT_FAILURE);
 		add_history(main->line);
-		args = ft_split(main->line, ' ');
+		//args = ft_split(main->line, ' ');
+		parser(main);
+		args = hash_parser(main->hash_head);
 		execute(args, main);
 		/*printf("\n");
 		rl_on_new_line();
 		rl_replace_line("",0);
 		rl_redisplay();*/
 		free(main->line);
-		free_split(args);
+		free(args);
 	}
 	clean_env(&(main->env_list));
 	//clean_up();
