@@ -35,7 +35,6 @@ int main(int ac, char **av, char **env)
 	
 	main = malloc(sizeof(t_main));
 	init_env(main, env);
-	debug_print_list_2(main->env_list);
 	signal(SIGQUIT, SIG_IGN);
 	while(1)
 	{
