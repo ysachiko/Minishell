@@ -85,7 +85,7 @@ int sh_export(char **args, t_main *all)
 	sort_env(tmp);
 	while (tmp)
 	{
-		printf("%s=", tmp->key);
+		printf("%s=", tmp->key);		
 		printf("%s\n", tmp->value);
 		tmp = tmp->next;
 	}

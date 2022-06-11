@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_env.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ysachiko <ysachiko@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 19:11:21 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/03 16:17:10 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/11 22:25:08 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ char	*take_env_key(char *str)
 	i = 0;
 	while (str[i] && str[i] != '=')
 		i++;
-	key = malloc(sizeof(char) * i);
+	key = malloc(sizeof(char) * (i + 1));
 	ft_strlcpy(key, str, i + 1);
 	return (key);
 }
