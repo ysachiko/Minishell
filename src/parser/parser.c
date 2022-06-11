@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ysachiko <ysachiko@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 16:36:08 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/10 17:42:32 by kezekiel         ###   ########.fr       */
+/*   Updated: 2022/06/11 12:55:35 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,7 @@ void	parser(t_main *main)
 
 	main->current_symbol = 0;
 	main->free_quote_flag = 1;
+	head = NULL;
 	lexer(main, &head);
 	parse_lexer_list(head);
 	refactor_list(head, main);
