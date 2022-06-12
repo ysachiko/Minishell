@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 16:36:19 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/10 17:48:29 by kezekiel         ###   ########.fr       */
+/*   Updated: 2022/06/12 14:45:22 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ typedef struct s_main
 	t_env	*env_list;
 }	t_main;
 
-void	rl_replace_line (const char *text, int clear_undo);
+void	rl_replace_line(const char *text, int clear_undo);
 void	parser(t_main *main);
 /*
 LISTS
@@ -142,7 +142,6 @@ PARSE_STR_ENV
 void	realloc_argument(char **arg, char *tmp);
 void	str_env_pars(t_main *main, char **str);
 void	ft_return_quots(char *tmp, char **argument, t_main *main);
-
 /*
 FREE
 */
@@ -150,11 +149,9 @@ void	clean_env_node(t_env *envp);
 void	free_split(char **split);
 void	clean_env(t_env **envp);
 void	free_hash(t_main *main);
-
 /*
 UTILS
 */
-
 char	**list_parser(t_hash *head);
 int		check_export(char *s);
 t_env	*search_env(t_env *head, char *key);
@@ -165,13 +162,11 @@ t_env	*copy_env(t_env *head);
 void	sort_env(t_env *copy);
 char	**hash_parser(t_hash *head);
 int		lst_size(t_hash *lst);
-
 /*
 EXECUTE
 */
-int execute(char **args, t_main *all);
-int launch(char **args, t_main *all);
-
+int		execute(char **args, t_main *all);
+int		launch(char **args, t_main *all);
 /*
 BUILT-INS
 */
@@ -179,16 +174,17 @@ BUILT-INS
 char *builtins[] = {"cd", "exit", "pwd", "env", "export", "unset", "echo"};
 int (*built[]) (char **, t_main *) = {&sh_cd, &sh_exit, &sh_pwd, &sh_env, &sh_export, &sh_unset, &sh_echo};
 */
-int	num_builtins();
-int sh_unset(char **args, t_main *all);
-int sh_export(char **args, t_main *all);
-int sh_cd(char **args, t_main *all);
-int sh_exit(char **args, t_main *all);
-int sh_pwd(char **args, t_main *all);
-int sh_env(char **args, t_main *all);
-int launch(char **args, t_main *all);
+int		num_builtins();
+int		sh_unset(char **args, t_main *all);
+int		sh_export(char **args, t_main *all);
+int		sh_cd(char **args, t_main *all);
+int		sh_exit(char **args, t_main *all);
+int		sh_pwd(char **args, t_main *all);
+int		sh_env(char **args, t_main *all);
+int		launch(char **args, t_main *all);
 /*
 ECHO
 */
 int		sh_echo(char **argv, t_main *all);
+
 #endif

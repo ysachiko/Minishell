@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   free.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/06/12 14:42:51 by ysachiko          #+#    #+#             */
+/*   Updated: 2022/06/12 14:44:06 by ysachiko         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "includes/parser.h"
 
 void	free_split(char **split)
@@ -40,22 +52,23 @@ void	clean_env(t_env **envp)
 	free(envp);
 }
 
-void    free_hash(t_main *main)
+void	free_hash(t_main *main)
 {
-    t_hash  *head;
-    t_hash  *tmp;
-    head = main->hash_head;
-    while (head)
-    {
-        if (head->value)
-            free (head->value);
-        tmp = head;
-        head = head->next;
-        free(tmp);
-    }
+	t_hash	*head;
+	t_hash	*tmp;
+
+	head = main->hash_head;
+	while (head)
+	{
+		if (head->value)
+			free (head->value);
+		tmp = head;
+		head = head->next;
+		free(tmp);
+	}
 }
 
 /*void	clean_up(t_main all)
 {
-	
+
 }*/
