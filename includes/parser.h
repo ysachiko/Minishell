@@ -25,6 +25,11 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 
+// ERRORS
+# define ERROR_EXEC_BIN_INIT "Error: malloc in execute binaty cmd\n"
+# define ERROR_PARS_ENVP_PATH "Error: parsing ENVP PATH\n"
+# define ERROR_NO_BINARY_FILE "Error: binary file not exist\n"
+
 # define EMPTY 0
 # define CMD 1
 # define ARG 2
@@ -149,6 +154,7 @@ void	clean_env_node(t_env *envp);
 void	free_split(char **split);
 void	clean_env(t_env **envp);
 void	free_hash(t_main *main);
+void	end_prog(char *err, int code, int mode);
 /*
 UTILS
 */
@@ -165,8 +171,11 @@ int		lst_size(t_hash *lst);
 /*
 EXECUTE
 */
-int		execute(char **args, t_main *all);
-int		launch(char **args, t_main *all);
+int		execute(char **args, t_main *all, char **env);
+int		launch(char **args, t_main *all, char **env);
+char	**path_parser(t_env *all);
+char	*env_path(char **paths, char *cmd);
+char	*search_paths(char **paths, char *cmd);
 /*
 BUILT-INS
 */
@@ -181,7 +190,6 @@ int		sh_cd(char **args, t_main *all);
 int		sh_exit(char **args, t_main *all);
 int		sh_pwd(char **args, t_main *all);
 int		sh_env(char **args, t_main *all);
-int		launch(char **args, t_main *all);
 /*
 ECHO
 */

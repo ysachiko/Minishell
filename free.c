@@ -12,6 +12,16 @@
 
 #include "includes/parser.h"
 
+void	end_prog(char *err, int code, int mode)
+{
+	//clear_exit
+	if (mode == 0 && err)
+		ft_putstr_fd(err, STDERR_FILENO);
+	else if (mode == 1)
+		perror(err);
+	exit(code);
+}
+
 void	free_split(char **split)
 {
 	int	i;

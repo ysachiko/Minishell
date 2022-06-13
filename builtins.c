@@ -16,7 +16,7 @@ char	*builtins[] = {"cd", "exit", "pwd", "env", "export", "unset", "echo"};
 int		(*built[])(char **, t_main *) = {&sh_cd, &sh_exit, &sh_pwd, &sh_env, &sh_export, &sh_unset, &sh_echo};
 
 //EXECUTE
-int	execute(char **args, t_main *all)
+int	execute(char **args, t_main *all, char **env)
 {
 	int	i;
 
@@ -29,14 +29,18 @@ int	execute(char **args, t_main *all)
 			return (*built[i])(args,all);
 		i++;
 	}
-	return (launch(args, all));
+	return (launch(args, all, env));
 }
 
-int launch(char **args, t_main *all)
+int launch(char **args, t_main *all, char **env)
 {
-	pid_t pid, wpid;
-	int status;
-
+	pid_t	pid, wpid;
+	int	status;
+	char	**path;
+	char	*cmd;
+	
+	path = path_parser(all->env_list);
+	cmd = search_paths(path, args[0]);
 	signal(SIGINT, SIG_IGN);
 	signal(SIGINT, SIG_IGN);
 	pid = fork();
@@ -45,7 +49,7 @@ int launch(char **args, t_main *all)
 		//CHILD
 		signal(SIGINT, SIG_DFL);
 		signal(SIGINT, SIG_DFL);
-		if (execvp(args[0], args) == -1)
+		if (execve(cmd, args, env) == -1)
 			perror("exec failure");
 		exit(EXIT_FAILURE);
 	}

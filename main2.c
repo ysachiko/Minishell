@@ -45,7 +45,7 @@ int main(int ac, char **av, char **env)
 		add_history(main->line);
 		parser(main);
 		args = hash_parser(main->hash_head);
-		execute(args, main);
+		execute(args, main, env);
 		/*printf("\n");
 		rl_on_new_line();
 		rl_replace_line("",0);
