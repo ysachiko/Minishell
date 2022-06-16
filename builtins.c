@@ -61,6 +61,7 @@ int launch(char **args, t_main *all, char **env)
 		while (!WIFEXITED(status) && !WIFSIGNALED(status))
 			wpid = waitpid(pid, &status, WUNTRACED);
 	}
+	free_split(path);
 	return (1);
 }
 
@@ -69,30 +70,49 @@ int	num_builtins()
 	return (sizeof(builtins) / sizeof(char *));
 }
 
+int arg_count(char **args)
+{
+	int i;
+
+	i = 0;
+	while (args[i])
+		i++;
+	return (i);
+}
+
 int	sh_export(char **args, t_main *all)
 {
 	t_env	*tmp;
 	t_env	*tmp_2;
+	int	i;
 
-	// CHECK FOR MULTIPLE VARS
-	// CHECK VARS
-	/*if (check_export(args[0]))
-	{
-		printf("export: '%s': not a valid identifier", args[0]);
-		return (1);
-	}*/
 	if (args[1])
-	{
-		char **vals = ft_split(args[1], '=');
-		tmp = search_env(all->env_list, vals[0]);
-		if (tmp)
+	{	
+		i = 0;
+		while (args[++i])
 		{
-			tmp->value = vals[1];
-			return (0);
+			if (check_export(args[i]))
+			{	
+				printf("export: '%s': not a valid identifier\n", args[i]);
+				continue;
+			}
+			char **vals = ft_split(args[i], '=');
+			if (!vals[1])
+			{
+				free_split(vals);
+				continue;
+			}
+			tmp = search_env(all->env_list, vals[0]);
+			if (tmp)
+			{
+				tmp->value = vals[1];
+				free_split(vals);
+				continue;
+			}
+			add_env(&(all->env_list), new_env(ft_strdup(vals[0]), \
+				ft_strdup(vals[1])));
+			free_split(vals);
 		}
-		add_env(&(all->env_list), new_env(ft_strdup(vals[0]), \
-			ft_strdup(vals[1])));
-		free_split(vals);
 		return (0);
 	}
 	// PUT IT IN SEPARATE FUNC ↓
@@ -173,11 +193,15 @@ int	oldpwd(t_main *all)
 	t_env	*tmp;
 
 	tmp = search_env(all->env_list, "OLDPWD");
-	pwd = getcwd(NULL, 0);
-	free(tmp->value);
-	tmp->value = ft_strdup(pwd);
-	free(pwd);
-	return (0);
+	if (tmp)
+	{
+		pwd = getcwd(NULL, 0);
+		free(tmp->value);
+		tmp->value = ft_strdup(pwd);
+		free(pwd);
+		return (0);
+	}
+	return (1);
 }
 
 int	sh_cd(char **args, t_main *all)
@@ -198,7 +222,7 @@ int	sh_cd(char **args, t_main *all)
 			printf("HOME not set\n");
 			return (1);
 		}
-		if (!ft_strcmp(args[1], "-"))
+		else if (!ft_strcmp(args[1], "-"))
 		{
 			tmp = search_env(all->env_list, "OLDPWD");
 			if (tmp)

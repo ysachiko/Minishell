@@ -3,12 +3,14 @@
 char	**path_parser(t_env *all)
 {
 	char	**paths;
+	char	*val;
 	t_env	*tmp;
 
 	tmp = search_env(all, "PATH");
 	if (tmp)
 	{	
-		paths = ft_split(tmp->value, ':');
+		val = tmp->value;
+		paths = ft_split(val, ':');
 		return (paths);
 	}
 	return (NULL);

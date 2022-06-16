@@ -27,6 +27,14 @@ void handler2(int sig)
 	}
 }
 
+/*int	check_input(char *line)
+{
+	int	i;
+
+	i = 0;
+	while (line)
+}*/
+
 int main(int ac, char **av, char **env)
 {
 	char *line;
@@ -42,6 +50,8 @@ int main(int ac, char **av, char **env)
 		main->line = readline("\e[1;32mbash$ \e[0;37m");
 		if (!main->line)
 			exit(EXIT_FAILURE);
+		/*if ()
+			continue;*/
 		add_history(main->line);
 		parser(main);
 		args = hash_parser(main->hash_head);
