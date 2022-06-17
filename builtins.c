@@ -70,16 +70,6 @@ int	num_builtins()
 	return (sizeof(builtins) / sizeof(char *));
 }
 
-int arg_count(char **args)
-{
-	int i;
-
-	i = 0;
-	while (args[i])
-		i++;
-	return (i);
-}
-
 int	sh_export(char **args, t_main *all)
 {
 	t_env	*tmp;
@@ -124,7 +114,7 @@ int	sh_export(char **args, t_main *all)
 		printf("%s\n", tmp->value);
 		tmp = tmp->next;
 	}
-	//clean_env(&tmp);
+	clean_env(&tmp);
 	return (0);
 }
 

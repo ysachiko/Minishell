@@ -27,16 +27,10 @@ void	free_split(char **split)
 	int	i;
 
 	i = 0;
-	if (split)
-	{
-		while (split[i])
-		{
-			free(split[i]);
-			i++;
-		}
-	}
-	if (split)
-		free(split);
+	while (split && split[i])
+		free (split[i++]);
+	free (split);
+	split = NULL;
 }
 
 void	clean_env_node(t_env *envp)
@@ -48,18 +42,20 @@ void	clean_env_node(t_env *envp)
 
 void	clean_env(t_env **envp)
 {
+	t_env	*curr;
 	t_env	*tmp;
 
-	tmp = *envp;
-	while (*envp)
+	curr = *envp;
+	while (curr)
 	{
-		tmp = *envp;
-		*envp = (*envp)->next;
-		free(tmp->key);
-		free(tmp->value);
-		free(tmp);
+		tmp = curr->next;
+		free(curr->key);
+		free(curr->value);
+		free(curr);
+		curr = tmp;
 	}
-	free(envp);
+	free(curr);
+	*envp = NULL;
 }
 
 void	free_hash(t_main *main)

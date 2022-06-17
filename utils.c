@@ -76,16 +76,41 @@ t_env	*env_last(t_env *head)
 	return (tmp);
 }
 
+void	push_node(t_env **head, char *key, char *value)
+{
+	t_env	*new;
+	
+	new = (t_env *)malloc(sizeof(t_env));
+	new->key = key;
+	new->value = value;
+	new->next = *head;
+	*head = new;
+}
+
 t_env	*copy_env(t_env *head)
 {
-	if (head == NULL)
-		return NULL;
-	t_env *node = malloc(sizeof(t_env));
+	t_env	*curr;
+	t_env	*new;
+	t_env	*tail;
 
-	node->key = head->key;
-	node->value = head->value;
-	node->next = copy_env(head->next);
-	return (node);
+	curr = head;
+	new = NULL;
+	tail = NULL;
+	while (curr)
+	{
+		if (!new)
+		{
+			push_node(&new, curr->key, curr->value);
+			tail = new;
+		}
+		else
+		{
+			push_node(&(tail->next), curr->key, curr->value);
+			tail = tail->next;
+		}
+		curr = curr->next;
+	}
+	return (new);
 }
 
 void	sort_env(t_env *copy)
@@ -95,7 +120,7 @@ void	sort_env(t_env *copy)
 	char	*tmp_key;
 	char	*tmp_value;
 
-	if (curr == NULL)
+	if (!curr)
 		return ;
 	while (curr->next != NULL)
 	{
