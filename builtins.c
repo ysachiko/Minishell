@@ -34,33 +34,27 @@ int	execute(char **args, t_main *all, char **env)
 
 int launch(char **args, t_main *all, char **env)
 {
-	pid_t	pid, wpid;
+	pid_t	child;
 	int	status;
 	char	**path;
 	char	*cmd;
 	
 	path = path_parser(all->env_list);
 	cmd = search_paths(path, args[0]);
-	signal(SIGINT, SIG_IGN);
-	signal(SIGINT, SIG_IGN);
-	pid = fork();
-	if (pid == 0)
+	child = fork();
+	if (!child)
 	{
-		//CHILD
 		signal(SIGINT, SIG_DFL);
 		signal(SIGINT, SIG_DFL);
 		if (execve(cmd, args, env) == -1)
 			perror("exec failure");
 		exit(EXIT_FAILURE);
 	}
-	else if (pid < 0)
+	else if (child < 0)
 		perror("error forking");
 	else
-	{
-		//PARENT
-		while (!WIFEXITED(status) && !WIFSIGNALED(status))
-			wpid = waitpid(pid, &status, WUNTRACED);
-	}
+		waitpid(child, &status, WUNTRACED);
+	//CHANGE EXIT STATUS
 	free_split(path);
 	return (1);
 }
