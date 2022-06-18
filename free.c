@@ -40,12 +40,12 @@ void	clean_env_node(t_env *envp)
 	free(envp);
 }
 
-void	clean_env(t_env **envp)
+void	clean_env(t_env *envp)
 {
 	t_env	*curr;
 	t_env	*tmp;
 
-	curr = *envp;
+	curr = envp;
 	while (curr)
 	{
 		tmp = curr->next;
@@ -55,7 +55,7 @@ void	clean_env(t_env **envp)
 		curr = tmp;
 	}
 	free(curr);
-	*envp = NULL;
+	envp = NULL;
 }
 
 void	free_hash(t_main *main)

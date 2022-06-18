@@ -18,6 +18,7 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <stdio.h>
+# include <termios.h>
 # include <unistd.h>
 # include <errno.h>
 # include <string.h>
@@ -152,7 +153,7 @@ FREE
 */
 void	clean_env_node(t_env *envp);
 void	free_split(char **split);
-void	clean_env(t_env **envp);
+void	clean_env(t_env *envp);
 void	free_hash(t_main *main);
 void	end_prog(char *err, int code, int mode);
 /*

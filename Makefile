@@ -14,7 +14,7 @@ NAME = minihell
 
 CC = gcc
 
-CFLAGS = -fsanitize=address
+CFLAGS = -g3 #-fsanitize=address
 
 INC = includes/parser.h libft/libft.h
 

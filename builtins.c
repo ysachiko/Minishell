@@ -32,6 +32,15 @@ int	execute(char **args, t_main *all, char **env)
 	return (launch(args, all, env));
 }
 
+void	sig_handler_child(int signum)
+{
+	if (signum == SIGINT)
+		ft_putstr_fd("\n", STDOUT_FILENO);
+	else if (signum == SIGQUIT)
+		ft_putstr_fd("Quit: 3\n", STDOUT_FILENO);
+	exit(130);
+}
+
 int launch(char **args, t_main *all, char **env)
 {
 	pid_t	child;
@@ -44,8 +53,8 @@ int launch(char **args, t_main *all, char **env)
 	child = fork();
 	if (!child)
 	{
-		signal(SIGINT, SIG_DFL);
-		signal(SIGINT, SIG_DFL);
+		signal(SIGINT, sig_handler_child);
+		signal(SIGQUIT, sig_handler_child);
 		if (execve(cmd, args, env) == -1)
 			perror("exec failure");
 		exit(EXIT_FAILURE);
@@ -108,7 +117,7 @@ int	sh_export(char **args, t_main *all)
 		printf("%s\n", tmp->value);
 		tmp = tmp->next;
 	}
-	clean_env(&tmp);
+	clean_env(tmp);
 	return (0);
 }
 
@@ -228,6 +237,7 @@ int	sh_exit(char **args, t_main *all)
 {
 	(void)args;
 
+	// STATUS == int(args[1])
 	exit(EXIT_SUCCESS);
 	return (0);
 }
