@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/06/12 14:46:37 by ysachiko          #+#    #+#             */
+/*   Updated: 2022/06/12 14:48:12 by ysachiko         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "includes/parser.h"
 
 int	check_export(char *s)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	if (ft_isdigit(s[i]))
@@ -21,7 +33,7 @@ t_env	*search_env(t_env *head, char *key)
 			return (tmp);
 		tmp = tmp->next;
 	}
-	return NULL;
+	return (NULL);
 }
 
 t_env	*new_env(char *key, char *value)
@@ -47,7 +59,7 @@ void	add_env(t_env **env, t_env *new)
 		tmp = *env;
 		tmp = env_last(*env);
 		tmp->next = new;
-		return;
+		return ;
 	}
 	*env = new;
 }
@@ -58,42 +70,63 @@ t_env	*env_last(t_env *head)
 
 	if (head == NULL)
 		return (NULL);
-
 	tmp = head;
 	while (tmp->next)
 		tmp = tmp->next;
 	return (tmp);
 }
 
+void	push_node(t_env **head, char *key, char *value)
+{
+	t_env	*new;
+	
+	new = (t_env *)malloc(sizeof(t_env));
+	new->key = key;
+	new->value = value;
+	new->next = *head;
+	*head = new;
+}
+
 t_env	*copy_env(t_env *head)
 {
-	if (head == NULL)
-		return NULL;
-	t_env *node = malloc(sizeof(t_env));
+	t_env	*curr;
+	t_env	*new;
+	t_env	*tail;
 
-	node->key = head->key;
-	node->value = head->value;
-
-	node->next = copy_env(head->next);
-
-	return node;
+	curr = head;
+	new = NULL;
+	tail = NULL;
+	while (curr)
+	{
+		if (!new)
+		{
+			push_node(&new, curr->key, curr->value);
+			tail = new;
+		}
+		else
+		{
+			push_node(&(tail->next), curr->key, curr->value);
+			tail = tail->next;
+		}
+		curr = curr->next;
+	}
+	return (new);
 }
 
 void	sort_env(t_env *copy)
 {
-	t_env *curr = copy;
-	t_env *tmp;
-	char *tmp_key;
-	char *tmp_value;
+	t_env	*curr = copy;
+	t_env	*tmp;
+	char	*tmp_key;
+	char	*tmp_value;
 
-
-	if (curr == NULL)
-		return;
+	if (!curr)
+		return ;
 	while (curr->next != NULL)
 	{
 		tmp = curr->next;
 		while (tmp->next != NULL)
-		{	
+		{
 			if (ft_strcmp(curr->key, tmp->key) > 0)
 			{
 				tmp_key = curr->key;
@@ -109,7 +142,7 @@ void	sort_env(t_env *copy)
 	}
 }
 
-int		lst_size(t_hash *lst)
+int	lst_size(t_hash *lst)
 {
 	int	i;
 
@@ -131,9 +164,7 @@ char	**hash_parser(t_hash *head)
 	t_hash	*tmp;
 	int		i;
 
-	
-	args = malloc(sizeof(char *) * lst_size(head) + 1);
-
+	args = malloc(sizeof(char *) * (lst_size(head) + 1));
 	tmp = head;
 	i = 0;
 	while (tmp)
