@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 16:36:19 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/12 14:45:22 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/24 12:49:19 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,9 @@ typedef struct s_main
 	int		free_quote_flag;
 	int		in_double_quots;
 	int		in_single_quots;
+	int		end_flag;
+	t_hash	*current_cmd;
+	t_hash	*tmp2;
 	t_hash	*hash_head;
 	t_hash	*tmp;
 	t_env	*env_list;
@@ -69,6 +72,7 @@ typedef struct s_main
 
 void	rl_replace_line(const char *text, int clear_undo);
 void	parser(t_main *main);
+void	make_lexer(t_main	*main);
 /*
 LISTS
 */

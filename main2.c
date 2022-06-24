@@ -57,12 +57,27 @@ void	display_ctrl_c(int display)
 	tcsetattr(0, TCSANOW, &t);
 }
 
+int	execute_cycle(t_main *main, char **env)
+{
+	char	**args;
+
+	main->end_flag = 1;
+	while(main->end_flag)
+	{
+		parser(main);
+		args = hash_parser(main->current_cmd);
+		execute(args, main, env);
+		free(args);
+	}
+	return (0);
+}
+
 int main(int ac, char **av, char **env)
 {
 	char *line;
 	char **args;
 	t_main	*main;
-	
+
 	main = malloc(sizeof(t_main));
 	init_env(main, env);
 	signal(SIGQUIT, SIG_IGN);
@@ -80,17 +95,16 @@ int main(int ac, char **av, char **env)
 		if (!main->line)
 			exit(EXIT_FAILURE);
 		display_ctrl_c(0);
+		make_lexer(main);
 		add_history(main->line);
-		parser(main);
-		args = hash_parser(main->hash_head);
-		execute(args, main, env);
+		execute_cycle(main, env);
 		/*printf("\n");
 		rl_on_new_line();
 		rl_replace_line("",0);
 		rl_redisplay();*/
+		// debug_print_list(main->hash_head);
 		free_hash(main);
 		free(main->line);
-		free(args);
 	}
 	clean_env(main->env_list);
 	//clean_up();

@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/03 20:35:45 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/09 19:58:44 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/24 14:54:31 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int	str_refactor(t_main *main, t_hash *hash, int i)
 
 	arg_length = env_arg_len(hash->value, i);
 	if (arg_length == 0)
-		str_delete_symbol(hash, i);
+		i ++;
 	if (arg_length)
 		i += arg_str_refactor(main, hash, i);
 	return (i);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysachiko <ysachiko@student.21-school.ru    +#+  +:+       +#+        */
+/*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 16:36:08 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/11 13:05:41 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/24 15:29:27 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ void	lexer(t_main *main, t_hash **head)
 	}
 }
 
-void	parser(t_main *main)
+void	make_lexer(t_main	*main)
 {
 	t_hash	*head;
 
@@ -111,6 +111,48 @@ void	parser(t_main *main)
 	head = NULL;
 	lexer(main, &head);
 	parse_lexer_list(head);
-	refactor_list(head, main);
 	main->hash_head = head;
+	main->tmp2 = head;
+}
+
+t_hash	*make_current_cmd(t_main *main)
+{
+	t_hash	*head;
+	t_hash	*tmp;
+
+	tmp = main->tmp2;
+	if (tmp)
+	{
+		head = ft_lstnew_hash(tmp->key, ft_strdup(tmp->value));
+		tmp = tmp->next;
+		while (tmp)
+		{
+			ft_lstadd_back_hash(&head, ft_lstnew_hash(tmp->key, ft_strdup(tmp->value)));
+			tmp = tmp->next;
+			if (tmp)
+			{
+				if (tmp->key > ARG)
+				{
+					ft_lstadd_back_hash(&head, ft_lstnew_hash(tmp->key, ft_strdup(tmp->value)));
+					tmp = tmp->next;
+					break ;
+				}
+			}
+		}
+	}
+	if (!tmp)
+		main->end_flag = 0;
+	main->tmp2 = tmp;
+	return	(head);
+}
+
+void	parser(t_main *main)
+{
+	t_hash	*head;
+
+	main->current_symbol = 0;
+	main->free_quote_flag = 1;
+	head = make_current_cmd(main);
+	main->current_cmd = head;
+	refactor_list(main->current_cmd, main);
 }
