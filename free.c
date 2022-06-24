@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/12 14:42:51 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/12 14:44:06 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/24 16:59:55 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,18 +58,18 @@ void	clean_env(t_env *envp)
 	envp = NULL;
 }
 
-void	free_hash(t_main *main)
+void	free_hash(t_hash *head)
 {
-	t_hash	*head;
+	t_hash	*head_tmp;
 	t_hash	*tmp;
 
-	head = main->hash_head;
-	while (head)
+	head_tmp = head;
+	while (head_tmp)
 	{
-		if (head->value)
-			free (head->value);
-		tmp = head;
-		head = head->next;
+		if (head_tmp->value)
+			free (head_tmp->value);
+		tmp = head_tmp;
+		head_tmp = head_tmp->next;
 		free(tmp);
 	}
 }

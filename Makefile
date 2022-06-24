@@ -6,7 +6,7 @@
 #    By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/06/01 17:55:47 by kezekiel          #+#    #+#              #
-#    Updated: 2022/06/12 14:56:19 by ysachiko         ###   ########.fr        #
+#    Updated: 2022/06/24 16:57:51 by ysachiko         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME = minihell
 
 CC = gcc
 
-CFLAGS = -g3 #-fsanitize=address
+CFLAGS = #-g3 -fsanitize=address
 
 INC = includes/parser.h libft/libft.h
 
@@ -37,7 +37,7 @@ all : $(NAME)
 $(NAME) : $(OBJ)
 	@make -C $(LIBFT)
 	@echo "\033[0;33m\n\nCompiling minishell..."
-	@$(CC) $(CFLAGS) $(OBJ) $(RDLN) $(FLAGS) -o $(NAME) 
+	@$(CC) $(CFLAGS) $(OBJ) $(RDLN) $(FLAGS) -o $(NAME)
 	@echo "\n\033[0;36mDone."
 
 %.o : %.c $(INC)

@@ -68,6 +68,7 @@ int	execute_cycle(t_main *main, char **env)
 		args = hash_parser(main->current_cmd);
 		execute(args, main, env);
 		free(args);
+		free_hash(main->current_cmd);
 	}
 	return (0);
 }
@@ -103,7 +104,7 @@ int main(int ac, char **av, char **env)
 		rl_replace_line("",0);
 		rl_redisplay();*/
 		// debug_print_list(main->hash_head);
-		free_hash(main);
+		free_hash(main->hash_head);
 		free(main->line);
 	}
 	clean_env(main->env_list);

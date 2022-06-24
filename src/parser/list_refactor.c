@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 19:21:57 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/24 14:57:12 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/24 16:10:09 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ char	*take_simple_argument_2(t_main *main, int counter)
 {
 	char	*argument;
 
-	argument = malloc(sizeof(char) * 1);
+	argument = malloc(sizeof(char));
 	argument[0] = '\0';
 	while (main->line[counter] && !is_space(main->line[counter]))
 	{
