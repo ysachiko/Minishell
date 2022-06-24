@@ -6,7 +6,7 @@
 #    By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/06/01 17:55:47 by kezekiel          #+#    #+#              #
-#    Updated: 2022/06/24 16:57:51 by ysachiko         ###   ########.fr        #
+#    Updated: 2022/06/24 17:13:53 by ysachiko         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME = minihell
 
 CC = gcc
 
-CFLAGS = #-g3 -fsanitize=address
+CFLAGS = #-fsanitize=address
 
 INC = includes/parser.h libft/libft.h
 

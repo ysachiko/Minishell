@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/03 20:35:45 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/24 15:39:07 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/24 17:37:56 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,21 @@ int	extend_str_arg(t_hash *hash, int i, char *arg, t_env *node)
 	return (ft_strlen(node->value));
 }
 
+int	extend_exit_status(char *arg, t_hash *hash, int i)
+{
+	t_env	*tmp;
+	int		res;
+
+	tmp = malloc(sizeof(t_env));
+	tmp->key = "?";
+	tmp->value = ft_itoa(g_exit_status);
+	tmp->next = NULL;
+	res = extend_str_arg(hash, i, arg, tmp);
+	free(tmp->value);
+	free (tmp);
+	return (res);
+}
+
 int	arg_str_refactor(t_main *main, t_hash *hash, int i)
 {
 	t_env	*node;
@@ -39,6 +54,12 @@ int	arg_str_refactor(t_main *main, t_hash *hash, int i)
 	int		pos;
 
 	arg = find_env(hash->value, i);
+	if (!ft_strcmp("?", arg))
+	{
+		pos = extend_exit_status(arg, hash, i);
+		free(arg);
+		return (pos);
+	}
 	node = find_key_node(arg, main->env_list);
 	if (!node)
 	{

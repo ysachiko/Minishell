@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 16:36:19 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/24 17:00:46 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/24 17:20:54 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@
 # define INPUT 5
 # define PIPE 6
 # define END 7
+
+int	g_exit_status;
 
 typedef struct s_hash
 {

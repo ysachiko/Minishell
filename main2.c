@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main2.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/06/24 17:14:21 by ysachiko          #+#    #+#             */
+/*   Updated: 2022/06/24 17:20:52 by ysachiko         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "includes/parser.h"
 
 //SIGNALS
@@ -79,6 +91,7 @@ int main(int ac, char **av, char **env)
 	char **args;
 	t_main	*main;
 
+	g_exit_status = 0;
 	main = malloc(sizeof(t_main));
 	init_env(main, env);
 	signal(SIGQUIT, SIG_IGN);
