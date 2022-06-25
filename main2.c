@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 17:14:21 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/25 17:19:54 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/25 18:58:17 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,51 @@ void	display_ctrl_c(int display)
 	tcsetattr(0, TCSANOW, &t);
 }
 
+int	current_sep(t_main *main)
+{
+	t_hash	*tmp;
+
+	tmp = main->current_cmd;
+	while (tmp->next)
+		tmp = tmp->next;
+	if (tmp->key == PIPE)
+		return (PIPE);
+	if (tmp->key == TRUNC)
+		return (TRUNC);
+	if (tmp->key == APPEND)
+		return (APPEND);
+	if (tmp->key == INPUT)
+		return (INPUT);
+	return (0);
+}
+
+void	redir(t_main *main, char **env)
+{
+	int		fd[2];
+	int		pid;
+	char	**args;
+
+	pipe(fd);
+	pid = fork();
+	if (pid == 0)
+	{
+		dup2(fd[1], STDOUT);
+		close(fd[0]);
+		args = hash_parser(main->current_cmd);
+		execute(args, main, env);
+		close(fd[1]);
+		return ;
+	}
+	else
+	{
+		dup2(fd[0], STDIN);
+		close(fd[1]);
+		wait(&pid);
+		close(fd[0]);
+		return ;
+	}
+}
+
 int	execute_cycle(t_main *main, char **env)
 {
 	char	**args;
@@ -77,9 +122,20 @@ int	execute_cycle(t_main *main, char **env)
 	while(main->end_flag)
 	{
 		parser(main);
-		args = hash_parser(main->current_cmd);
-		execute(args, main, env);
-		free(args);
+		if (current_sep(main))
+			redir(main, env);
+		else if (!current_sep(main) && main->prev_sep)
+		{
+			dup2(STDIN, main->fd_in);
+			dup2(STDOUT, main->fd_out);
+		}
+		else
+		{
+			args = hash_parser(main->current_cmd);
+			execute(args, main, env);
+			free(args);
+		}
+		main->prev_sep = current_sep(main);
 		free_hash(main->current_cmd);
 	}
 	return (0);
@@ -93,6 +149,8 @@ int main(int ac, char **av, char **env)
 
 	g_exit_status = 0;
 	main = malloc(sizeof(t_main));
+	main->fd_in = dup(STDIN);
+	main->fd_out = dup(STDOUT);
 	init_env(main, env);
 	signal(SIGQUIT, SIG_IGN);
 	while(1)

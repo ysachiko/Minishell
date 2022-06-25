@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 17:48:46 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/25 17:00:03 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/25 18:03:22 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,10 +172,10 @@ t_hash	*make_current_cmd(t_main *main)
 	{
 		head = ft_lstnew_hash(tmp->key, ft_strdup(tmp->value));
 		tmp = tmp->next;
-		while (tmp)
+		while (tmp && tmp->prev->key != PIPE)
 		{
 			add_new_value(&head, &tmp);
-			if (tmp)
+			if (tmp && tmp->prev->key != PIPE)
 			{
 				if (tmp->key > ARG)
 				{

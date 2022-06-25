@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 16:36:19 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/24 17:53:53 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/25 18:42:09 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,10 @@
 # define PIPE 6
 # define END 7
 
+# define STDIN 0
+# define STDOUT 1
+# define STDERR 2
+
 int	g_exit_status;
 
 typedef struct s_hash
@@ -65,6 +69,9 @@ typedef struct s_main
 	int		in_double_quots;
 	int		in_single_quots;
 	int		end_flag;
+	int		fd_in;
+	int		fd_out;
+	int		prev_sep;
 	t_hash	*current_cmd;
 	t_hash	*tmp2;
 	t_hash	*hash_head;
