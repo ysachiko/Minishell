@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 17:14:21 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/24 17:20:52 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/25 17:19:54 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,9 +108,9 @@ int main(int ac, char **av, char **env)
 		signal(SIGINT, SIG_IGN);
 		if (!main->line)
 			exit(EXIT_FAILURE);
+		add_history(main->line);
 		display_ctrl_c(0);
 		make_lexer(main);
-		add_history(main->line);
 		execute_cycle(main, env);
 		/*printf("\n");
 		rl_on_new_line();

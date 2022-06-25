@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/03 20:35:45 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/24 17:37:56 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/24 17:54:19 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,21 +114,4 @@ void	env_str_refactor(t_main *main, t_hash *hash)
 		}
 		i++;
 	}
-}
-
-int	parse_env(t_main *main, t_hash *head)
-{
-	t_hash	*hash;
-	int		i;
-
-	hash = head;
-	i = 0;
-	while (hash)
-	{
-		main->in_double_quots = 0;
-		main->in_single_quots = 0;
-		env_str_refactor(main, hash);
-		hash = hash->next;
-	}
-	return (0);
 }
