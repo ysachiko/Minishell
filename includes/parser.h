@@ -44,7 +44,7 @@
 # define STDOUT 1
 # define STDERR 2
 
-int	g_exit_status;
+extern int	g_exit_status;
 
 typedef struct s_hash
 {

@@ -10,9 +10,9 @@
 #                                                                              #
 # **************************************************************************** #
 
-NAME = minihell
+NAME = minishell
 
-CC = gcc
+CC = clang
 
 CFLAGS =  #-fsanitize=address -g
 

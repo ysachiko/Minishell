@@ -12,6 +12,9 @@
 
 #include "includes/parser.h"
 
+
+int	g_exit_status;
+
 //SIGNALS
 void handler(int sig)
 {
