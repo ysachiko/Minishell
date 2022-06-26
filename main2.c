@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main2.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ysachiko <ysachiko@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 17:14:21 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/25 18:58:17 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/26 17:06:15 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,9 +109,9 @@ void	redir(t_main *main, char **env)
 	}
 	else
 	{
+		wait(&pid);
 		dup2(fd[0], STDIN);
 		close(fd[1]);
-		wait(&pid);
 		close(fd[0]);
 		return ;
 	}
@@ -129,8 +129,11 @@ int	execute_cycle(t_main *main, char **env)
 			redir(main, env);
 		else if (!current_sep(main) && main->prev_sep)
 		{
-			dup2(STDIN, main->fd_in);
-			dup2(STDOUT, main->fd_out);
+			args = hash_parser(main->current_cmd);
+			execute(args, main, env);
+			dup2(main->fd_out, STDOUT);
+			// dup2(main->fd_in, STDIN);
+			free(args);
 		}
 		else
 		{
