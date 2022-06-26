@@ -180,18 +180,15 @@ int	sh_pwd(char **args, t_main *all)
 }
 
 // DOPILIT'
-int	oldpwd(t_main *all)
+int	oldpwd(t_main *all, char *pwd)
 {
-	char	*pwd;
 	t_env	*tmp;
 
 	tmp = search_env(all->env_list, "OLDPWD");
 	if (tmp)
 	{
-		pwd = getcwd(NULL, 0);
 		free(tmp->value);
 		tmp->value = ft_strdup(pwd);
-		free(pwd);
 		return (0);
 	}
 	return (1);
@@ -200,7 +197,12 @@ int	oldpwd(t_main *all)
 int	sh_cd(char **args, t_main *all)
 {
 	t_env	*tmp;
+	t_env	*tmp2;
+	char	*pwd;
 
+
+	tmp2 = search_env(all->env_list, "PWD");
+	pwd = getcwd(NULL, 0);
 	if (!args[1] || !ft_strcmp(args[1], "~") || !ft_strcmp(args[1], "-"))
 	{
 		if (!args[1] || !ft_strcmp(args[1], "~"))
@@ -208,8 +210,10 @@ int	sh_cd(char **args, t_main *all)
 			tmp = search_env(all->env_list, "HOME");
 			if (tmp)
 			{
-				oldpwd(all);
-				chdir(tmp->value);
+				oldpwd(all, pwd);
+				chdir(getenv("HOME"));
+				free(tmp2->value);
+				tmp2->value = getcwd(NULL, 0);
 				return (0);
 			}
 			printf("HOME not set\n");
@@ -221,15 +225,20 @@ int	sh_cd(char **args, t_main *all)
 			if (tmp)
 			{
 				chdir(tmp->value);
+				oldpwd(all, pwd);
+				free(tmp2->value);
+				tmp2->value = getcwd(NULL, 0);
 				return (0);
 			}
 			printf("OLDPWD not set\n");
 			return (1);
 		}
 	}
-	oldpwd(all);
+	oldpwd(all, pwd);
 	if (chdir(args[1]) != 0)
 		perror("cd");
+	tmp2->value = getcwd(NULL, 0);
+	free(pwd);
 	return (0);
 }
 

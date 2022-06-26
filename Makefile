@@ -14,7 +14,7 @@ NAME = minishell
 
 CC = clang
 
-CFLAGS =  #-fsanitize=address -g
+CFLAGS = -g3 #-fsanitize=address -g
 
 INC = includes/parser.h libft/libft.h
 
