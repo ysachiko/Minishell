@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/05 19:56:55 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/09 19:24:05 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/24 16:18:07 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ char	*take_single_quote_arg(t_main *main, int counter)
 			return (argument);
 		}
 	}
-	main->current_symbol = extend_string(&argument, 39, counter);
+	main->current_symbol = extend_string(&argument, 39, counter) - 1;
 	return (argument);
 }
 
@@ -69,7 +69,7 @@ char	*take_double_quote_args(t_main *main, int counter)
 			return (argument);
 		}
 	}
-	main->current_symbol = extend_string(&argument, '"', counter);
+	main->current_symbol = extend_string(&argument, '"', counter) - 1;
 	return (argument);
 }
 

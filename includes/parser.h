@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 16:36:19 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/12 14:45:22 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/25 18:42:09 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,12 @@
 # define PIPE 6
 # define END 7
 
+# define STDIN 0
+# define STDOUT 1
+# define STDERR 2
+
+extern int	g_exit_status;
+
 typedef struct s_hash
 {
 	int				key;
@@ -62,13 +68,25 @@ typedef struct s_main
 	int		free_quote_flag;
 	int		in_double_quots;
 	int		in_single_quots;
+	int		end_flag;
+	int		fd_in;
+	int		fd_out;
+	int		prev_sep;
+	t_hash	*current_cmd;
+	t_hash	*tmp2;
 	t_hash	*hash_head;
 	t_hash	*tmp;
 	t_env	*env_list;
 }	t_main;
 
 void	rl_replace_line(const char *text, int clear_undo);
-void	parser(t_main *main);
+/*
+PARSER.C
+*/
+void	refactor_simple_arg(t_main *main, int counter, char **argument);
+char	*take_simple_argument(t_main *main, int counter);
+void	make_lexer_list(char *argument, t_hash **head);
+void	lexer(t_main *main, t_hash **head);
 /*
 LISTS
 */
@@ -105,7 +123,6 @@ t_env	*find_key_node(char *str, t_env *head);
 /*
 PARSE_ENV
 */
-int		parse_env(t_main *main, t_hash *head);
 void	env_str_refactor(t_main *main, t_hash *hash);
 int		str_refactor(t_main *main, t_hash *hash, int i);
 int		arg_str_refactor(t_main *main, t_hash *hash, int i);
@@ -154,7 +171,7 @@ FREE
 void	clean_env_node(t_env *envp);
 void	free_split(char **split);
 void	clean_env(t_env *envp);
-void	free_hash(t_main *main);
+void	free_hash(t_hash *head);
 void	end_prog(char *err, int code, int mode);
 /*
 UTILS
@@ -195,5 +212,12 @@ int		sh_env(char **args, t_main *all);
 ECHO
 */
 int		sh_echo(char **argv, t_main *all);
+/*
+CURRENT_CMD
+*/
+void	make_lexer(t_main	*main);
+t_hash	*make_current_cmd(t_main *main);
+void	parser(t_main *main);
+int		parse_env(t_main *main, t_hash *head);
 
 #endif

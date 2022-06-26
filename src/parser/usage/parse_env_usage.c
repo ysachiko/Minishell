@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/03 20:37:37 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/12 14:55:46 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/24 19:32:09 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ char	*get_str_after_arg(t_hash *hash, int i, char *arg)
 		counter++;
 		len++;
 	}
-	after_arg = malloc(sizeof(char) * len - ft_strlen(arg) + 1);
+	after_arg = malloc(sizeof(char) * (len - ft_strlen(arg) + 1));
 	counter = 0;
 	while (hash->value[i + ft_strlen(arg) + 1])
 	{
