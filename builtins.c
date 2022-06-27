@@ -92,13 +92,20 @@ int	sh_export(char **args, t_main *all)
 		i = 0;
 		while (args[++i])
 		{
-			if (check_export(args[i]))
+			
+			char **vals = ft_split(args[i], '=');
+			if (!check_export(vals[0]))
 			{	
-				printf("export: '%s': not a valid identifier\n", args[i]);
+				if (!vals[0])
+				{
+					printf("export: '=': not a valid identifier\n");
+					ret = 1;
+					continue;	
+				}
+				printf("export: '%s': not a valid identifier\n", vals[0]);
 				ret = 1;
 				continue;
 			}
-			char **vals = ft_split(args[i], '=');
 			if (!vals[1])
 			{
 				free_split(vals);
@@ -107,7 +114,7 @@ int	sh_export(char **args, t_main *all)
 			tmp = search_env(all->env_list, vals[0]);
 			if (tmp)
 			{
-				tmp->value = vals[1];
+				tmp->value = ft_strdup(vals[1]);
 				free_split(vals);
 				continue;
 			}
@@ -136,10 +143,7 @@ int	sh_unset(char **args, t_main *all)
 	t_env	*prev;
 
 	if (!args[1])
-	{
-		printf("unset: not enough arguments\n");	// ERROR
-		return (1);
-	}
+		return (0);
 	prev = NULL;
 	cpy = all->env_list;
 	while (cpy)

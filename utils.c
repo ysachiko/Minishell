@@ -12,14 +12,22 @@
 
 #include "includes/parser.h"
 
-int	check_export(char *s)
+int	check_export(char *name)
 {
 	int	i;
 
+	if (!name)
+		return (0);
+	if (name && ft_isdigit(name[0]))
+		return (0);
 	i = 0;
-	if (ft_isdigit(s[i]))
-		return (1);
-	return (0);
+	while (name && name[i])
+	{
+		if (!ft_isalnum(name[i]) && name[i] != '_')
+			return (0);
+		i++;
+	}
+	return (1);
 }
 
 t_env	*search_env(t_env *head, char *key)
