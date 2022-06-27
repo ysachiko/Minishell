@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ysachiko <ysachiko@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/12 14:37:23 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/12 14:46:06 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/26 23:30:50 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -242,11 +242,51 @@ int	sh_cd(char **args, t_main *all)
 	return (0);
 }
 
-int	sh_exit(char **args, t_main *all)
+int	ft_strisnum(const char *str)
+{
+	int	i;
+
+	i = 0;
+	if (str == NULL)
+		return (0);
+	if (str[0] == '-')
+		i++;
+	while (str[i])
+	{
+		if (str[i] < '0' || str[i] > '9')
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+int	sh_exit(char **args, t_main *main)
 {
 	(void)args;
 
 	// STATUS == int(args[1])
-	exit(EXIT_SUCCESS);
+	// printf("\n %s %s %s \n", args[0], args[1], args[2]);
+	if (args[1] && args[2])
+	{
+		g_exit_status = 1;
+		printf("bash: exit: too many arguments\n");
+	}
+	else if (args[1] && ft_strisnum(args[1]) == 0)
+	{
+		g_exit_status = 255;
+		ft_putstr_fd("bash: exit: ", STDERR);
+		ft_putstr_fd(args[1], STDERR);
+		ft_putendl_fd(": numeric argument required", STDERR);
+	}
+	else if (args[1])
+	{
+		main->exit_flag = 0;
+		g_exit_status = ft_atoi(args[1]);
+	}
+	else
+	{
+		g_exit_status = 0;
+		main->exit_flag = 0;
+	}
 	return (0);
 }

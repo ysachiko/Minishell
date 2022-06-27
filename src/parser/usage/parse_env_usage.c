@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_env_usage.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ysachiko <ysachiko@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/03 20:37:37 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/24 19:32:09 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/26 23:07:57 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	env_arg_len(char *str, int i)
 
 	i++;
 	start = i;
-	while (str[i] && !is_spec_symbol(str[i]))
+	while (str[i] && !is_spec_symbol(str[i]) && !is_space(str[i]))
 	{
 		i++;
 		if (str[i - 1] == '?')
@@ -44,9 +44,9 @@ char	*find_env(char *str, int i)
 	{
 		arg[k] = str[j];
 		k++;
-		j++;
 		if (str[j] == '?')
 			break ;
+		j++;
 	}
 	arg[k] = '\0';
 	return (arg);

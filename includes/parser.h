@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ysachiko <ysachiko@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 16:36:19 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/25 18:42:09 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/26 23:25:43 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ typedef struct s_main
 	int		fd_in;
 	int		fd_out;
 	int		prev_sep;
+	int		exit_flag;
 	t_hash	*current_cmd;
 	t_hash	*tmp2;
 	t_hash	*hash_head;

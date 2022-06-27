@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 17:14:21 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/26 17:06:15 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/26 23:26:55 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,7 +159,8 @@ int main(int ac, char **av, char **env)
 	main->fd_out = dup(STDOUT);
 	init_env(main, env);
 	signal(SIGQUIT, SIG_IGN);
-	while(1)
+	main->exit_flag = 1;
+	while(main->exit_flag)
 	{
 		signal(SIGINT, handler);
 		display_ctrl_c(1);
@@ -186,4 +187,5 @@ int main(int ac, char **av, char **env)
 	}
 	clean_env(main->env_list);
 	//clean_up();
+	return(g_exit_status);
 }
