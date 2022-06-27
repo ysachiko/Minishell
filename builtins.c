@@ -16,6 +16,12 @@ char	*builtins[] = {"cd", "exit", "pwd", "env", "export", "unset", "echo"};
 int		(*built[])(char **, t_main *) = {&sh_cd, &sh_exit, &sh_pwd, &sh_env, &sh_export, &sh_unset, &sh_echo};
 
 //EXECUTE
+
+static int	ft_wexitstatus(int x)
+{
+	return ((x >> 8) & 0x000000ff);
+}
+
 int	execute(char **args, t_main *all, char **env)
 {
 	int	i;
@@ -26,13 +32,13 @@ int	execute(char **args, t_main *all, char **env)
 	while (i < num_builtins())
 	{
 		if (ft_strcmp(args[0], builtins[i]) == 0)
-			return (*built[i])(args,all);
+			return  g_exit_status = (*built[i])(args,all);
 		i++;
 	}
 	return (launch(args, all, env));
 }
 
-void	sig_handler_child(int signum)
+void	child_handler(int signum)
 {
 	if (signum == SIGINT)
 		ft_putstr_fd("\n", STDOUT_FILENO);
@@ -53,8 +59,8 @@ int launch(char **args, t_main *all, char **env)
 	child = fork();
 	if (!child)
 	{
-		signal(SIGINT, sig_handler_child);
-		signal(SIGQUIT, sig_handler_child);
+		signal(SIGINT, child_handler);
+		signal(SIGQUIT, child_handler);
 		if (execve(cmd, args, env) == -1)
 			perror("exec failure");
 		exit(EXIT_FAILURE);
@@ -63,9 +69,9 @@ int launch(char **args, t_main *all, char **env)
 		perror("error forking");
 	else
 		waitpid(child, &status, WUNTRACED);
-	//CHANGE EXIT STATUS
+	g_exit_status = ft_wexitstatus(status);
 	free_split(path);
-	return (1);
+	return (g_exit_status);
 }
 
 int	num_builtins()
@@ -78,7 +84,9 @@ int	sh_export(char **args, t_main *all)
 	t_env	*tmp;
 	t_env	*tmp_2;
 	int	i;
+	int	ret;
 
+	ret = 0;
 	if (args[1])
 	{	
 		i = 0;
@@ -87,6 +95,7 @@ int	sh_export(char **args, t_main *all)
 			if (check_export(args[i]))
 			{	
 				printf("export: '%s': not a valid identifier\n", args[i]);
+				ret = 1;
 				continue;
 			}
 			char **vals = ft_split(args[i], '=');
@@ -106,7 +115,7 @@ int	sh_export(char **args, t_main *all)
 				ft_strdup(vals[1])));
 			free_split(vals);
 		}
-		return (0);
+		return (ret);
 	}
 	// PUT IT IN SEPARATE FUNC ↓
 	tmp = copy_env(all->env_list);
@@ -262,8 +271,6 @@ int	ft_strisnum(const char *str)
 
 int	sh_exit(char **args, t_main *main)
 {
-	(void)args;
-
 	// STATUS == int(args[1])
 	// printf("\n %s %s %s \n", args[0], args[1], args[2]);
 	if (args[1] && args[2])

@@ -177,10 +177,6 @@ int main(int ac, char **av, char **env)
 		display_ctrl_c(0);
 		make_lexer(main);
 		execute_cycle(main, env);
-		/*printf("\n");
-		rl_on_new_line();
-		rl_replace_line("",0);
-		rl_redisplay();*/
 		// debug_print_list(main->hash_head);
 		free_hash(main->hash_head);
 		free(main->line);
