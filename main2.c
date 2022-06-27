@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main2.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ysachiko <ysachiko@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 17:14:21 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/25 18:58:17 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/26 23:26:55 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,9 +109,9 @@ void	redir(t_main *main, char **env)
 	}
 	else
 	{
+		wait(&pid);
 		dup2(fd[0], STDIN);
 		close(fd[1]);
-		wait(&pid);
 		close(fd[0]);
 		return ;
 	}
@@ -129,8 +129,11 @@ int	execute_cycle(t_main *main, char **env)
 			redir(main, env);
 		else if (!current_sep(main) && main->prev_sep)
 		{
-			dup2(STDIN, main->fd_in);
-			dup2(STDOUT, main->fd_out);
+			args = hash_parser(main->current_cmd);
+			execute(args, main, env);
+			dup2(main->fd_out, STDOUT);
+			// dup2(main->fd_in, STDIN);
+			free(args);
 		}
 		else
 		{
@@ -156,7 +159,8 @@ int main(int ac, char **av, char **env)
 	main->fd_out = dup(STDOUT);
 	init_env(main, env);
 	signal(SIGQUIT, SIG_IGN);
-	while(1)
+	main->exit_flag = 1;
+	while(main->exit_flag)
 	{
 		signal(SIGINT, handler);
 		display_ctrl_c(1);
@@ -173,14 +177,11 @@ int main(int ac, char **av, char **env)
 		display_ctrl_c(0);
 		make_lexer(main);
 		execute_cycle(main, env);
-		/*printf("\n");
-		rl_on_new_line();
-		rl_replace_line("",0);
-		rl_redisplay();*/
 		// debug_print_list(main->hash_head);
 		free_hash(main->hash_head);
 		free(main->line);
 	}
 	clean_env(main->env_list);
 	//clean_up();
+	return(g_exit_status);
 }
