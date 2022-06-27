@@ -47,5 +47,5 @@ int	sh_echo(char **args, t_main *main)
 	}
 	if (n_flag == 0)
 		printf("\n");
-	return (1);
+	return (0);
 }

@@ -179,7 +179,7 @@ int	sh_pwd(char **args, t_main *all)
 	char	*pwd;
 
 	if (*args == NULL)
-		return (0);
+		return (1);
 	pwd = getcwd(NULL, 0);
 	if (pwd == NULL)
 		return (50); // ERROR CODE AN STUFF
