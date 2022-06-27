@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/12 14:37:23 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/26 23:30:50 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/27 17:14:00 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -262,7 +262,7 @@ int	ft_strisnum(const char *str)
 	i = 0;
 	if (str == NULL)
 		return (0);
-	if (str[0] == '-')
+	if (str[0] == '-' || str[0] == '+')
 		i++;
 	while (str[i])
 	{
@@ -299,5 +299,5 @@ int	sh_exit(char **args, t_main *main)
 		g_exit_status = 0;
 		main->exit_flag = 0;
 	}
-	return (0);
+	return (g_exit_status);
 }
