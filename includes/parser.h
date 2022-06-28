@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 16:36:19 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/28 16:21:06 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/28 17:22:15 by kezekiel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,11 +81,11 @@ typedef struct s_main
 	t_env	*env_list;
 }	t_main;
 
-/*typedef struct	s_bt
+typedef struct	s_bt
 {
-	char	*builtins[] = {"cd", "exit", "pwd", "env", "export", "unset", "echo"};
-	int		(*built[])(char **, t_main *) = {&sh_cd, &sh_exit, &sh_pwd, &sh_env, &sh_export, &sh_unset, &sh_echo};
-}	t_bt;*/
+	char	*builtins[7];
+	int		(*built[7])(char **, t_main *);
+}	t_bt;
 
 void	rl_replace_line(const char *text, int clear_undo);
 /*
@@ -197,7 +197,7 @@ int		lst_size(t_hash *lst);
 /*
 EXECUTE
 */
-int		execute(char **args, t_main *all, char **env);
+int		execute(char **args, t_main *all, char **env, t_bt *bts);
 int		launch(char **args, t_main *all, char **env);
 char	**path_parser(t_env *all);
 char	*env_path(char **paths, char *cmd);
@@ -212,9 +212,6 @@ int		sh_cd(char **args, t_main *all);
 int		sh_exit(char **args, t_main *all);
 int		sh_pwd(char **args, t_main *all);
 int		sh_env(char **args, t_main *all);
-/*
-ECHO
-*/
 int		sh_echo(char **argv, t_main *all);
 /*
 CURRENT_CMD

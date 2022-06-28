@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 17:14:21 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/28 16:21:46 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/28 17:23:15 by kezekiel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,7 +143,7 @@ void	input(t_main *mini)
 	dup2(mini->fd_in, STDIN);
 }
 
-int	execute_cycle(t_main *main, char **env)
+int	execute_cycle(t_main *main, char **env, t_bt *bts)
 {
 	char	**args;
 
@@ -158,7 +158,7 @@ int	execute_cycle(t_main *main, char **env)
 			close(STDOUT);
 			dup2(main->fd_out, STDOUT);
 			args = hash_parser(main->current_cmd);
-			execute(args, main, env);
+			execute(args, main, env, bts);
 			close(STDIN);
 			dup2(main->fd_in, STDIN);
 			free(args);
@@ -166,7 +166,7 @@ int	execute_cycle(t_main *main, char **env)
 		else
 		{
 			args = hash_parser(main->current_cmd);
-			execute(args, main, env);
+			execute(args, main, env, bts);
 			free(args);
 		}
 		main->prev_sep = current_sep(main);
@@ -175,17 +175,38 @@ int	execute_cycle(t_main *main, char **env)
 	return (0);
 }
 
+void	init_bts(t_bt *bts)
+{
+	bts->builtins[0] = ft_strdup("cd");
+	bts->builtins[1] = ft_strdup("export");
+	bts->builtins[2] = ft_strdup("unset");
+	bts->builtins[3] = ft_strdup("env");
+	bts->builtins[4] = ft_strdup("pwd");
+	bts->builtins[5] = ft_strdup("exit");
+	bts->builtins[6] = ft_strdup("echo");
+	bts->built[0] = &sh_cd;
+	bts->built[1] = &sh_export;
+	bts->built[2] = &sh_unset;
+	bts->built[3] = &sh_env;
+	bts->built[4] = &sh_pwd;
+	bts->built[5] = &sh_exit;
+	bts->built[6] = &sh_echo;
+}
+
 int	main(int ac, char **av, char **env)
 {
 	(void)ac;
 	(void)av;
 	char	**args;
 	t_main	*main;
+	t_bt	*bts;
 
 	g_exit_status = 0;
 	main = malloc(sizeof(t_main));
 	main->fd_in = dup(STDIN);
 	main->fd_out = dup(STDOUT);
+	bts = malloc(sizeof(t_bt));
+	init_bts(bts);
 	init_env(main, env);
 	signal(SIGQUIT, SIG_IGN);
 	main->exit_flag = 1;
@@ -205,7 +226,7 @@ int	main(int ac, char **av, char **env)
 		add_history(main->line);
 		display_ctrl_c(0);
 		make_lexer(main);
-		execute_cycle(main, env);
+		execute_cycle(main, env, bts);
 		free_hash(main->hash_head);
 		free(main->line);
 	}

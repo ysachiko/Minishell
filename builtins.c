@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/12 14:37:23 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/28 16:02:11 by kezekiel         ###   ########.fr       */
+/*   Updated: 2022/06/28 17:22:29 by kezekiel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,19 +19,17 @@ static int	ft_wexitstatus(int x)
 	return ((x >> 8) & 0x000000ff);
 }
 
-int	execute(char **args, t_main *all, char **env)
+int	execute(char **args, t_main *all, char **env, t_bt *bts)
 {
 	int	i;
-	char	*builtins[] = {"cd", "exit", "pwd", "env", "export", "unset", "echo"};
-	int		(*built[])(char **, t_main *) = {&sh_cd, &sh_exit, &sh_pwd, &sh_env, &sh_export, &sh_unset, &sh_echo};
 	
 	i = 0;
 	if (args[0] == NULL)
 		return (1);
 	while (i < 7)
 	{
-		if (ft_strcmp(args[0], builtins[i]) == 0)
-			return (g_exit_status = (*built[i])(args,all));
+		if (ft_strcmp(args[0], bts->builtins[i]) == 0)
+			return (g_exit_status = (bts->built[i])(args,all));
 		i++;
 	}
 	return (launch(args, all, env));
@@ -73,11 +71,6 @@ int	launch(char **args, t_main *all, char **env)
 	return (g_exit_status);
 }
 
-/*int	num_builtins(void)
-{
-	return (sizeof(builtins) / sizeof(char *));
-}*/
-
 int	sh_export(char **args, t_main *all)
 {
 	t_env	*tmp;
@@ -92,13 +85,19 @@ int	sh_export(char **args, t_main *all)
 		i = 0;
 		while (args[++i])
 		{
-			if (check_export(args[i]))
-			{	
-				printf("export: '%s': not a valid identifier\n", args[i]);
-				ret = 1;
-				continue ;
-			}
 			vals = ft_split(args[i], '=');
+			if (!check_export(vals[0]))
+			{	
+				if (!vals[0])
+				{
+					printf("export: '=': not a valid identifier\n");
+					ret = 1;
+					continue;	
+				}
+				printf("export: '%s': not a valid identifier\n", vals[0]);
+				ret = 1;
+				continue;
+			}
 			if (!vals[1])
 			{
 				free_split(vals);
@@ -107,7 +106,7 @@ int	sh_export(char **args, t_main *all)
 			tmp = search_env(all->env_list, vals[0]);
 			if (tmp)
 			{
-				tmp->value = vals[1];
+				tmp->value = ft_strdup(vals[1]);
 				free_split(vals);
 				continue ;
 			}
