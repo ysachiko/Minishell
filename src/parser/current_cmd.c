@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 17:48:46 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/25 18:03:22 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/28 18:56:05 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,7 +177,7 @@ t_hash	*make_current_cmd(t_main *main)
 			add_new_value(&head, &tmp);
 			if (tmp && tmp->prev->key != PIPE)
 			{
-				if (tmp->key > ARG)
+				if (tmp->key == PIPE)
 				{
 					add_new_value(&head, &tmp);
 					break ;

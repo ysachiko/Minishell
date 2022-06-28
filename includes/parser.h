@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysachiko <ysachiko@student.21-school.ru    +#+  +:+       +#+        */
+/*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 16:36:19 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/26 23:25:43 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/28 19:40:19 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 # include <signal.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <fcntl.h>
 
 // ERRORS
 # define ERROR_EXEC_BIN_INIT "Error: malloc in execute binaty cmd\n"
@@ -37,8 +38,8 @@
 # define TRUNC 3
 # define APPEND 4
 # define INPUT 5
-# define PIPE 6
-# define END 7
+# define HER 6
+# define PIPE 7
 
 # define STDIN 0
 # define STDOUT 1
@@ -73,12 +74,19 @@ typedef struct s_main
 	int		fd_out;
 	int		prev_sep;
 	int		exit_flag;
+	int		no_exec;
 	t_hash	*current_cmd;
 	t_hash	*tmp2;
 	t_hash	*hash_head;
 	t_hash	*tmp;
 	t_env	*env_list;
 }	t_main;
+
+typedef struct s_bt
+{
+	char	*builtins[7];
+	int		(*built[7])(char **, t_main *);
+}	t_bt;
 
 void	rl_replace_line(const char *text, int clear_undo);
 /*
@@ -177,6 +185,7 @@ void	end_prog(char *err, int code, int mode);
 /*
 UTILS
 */
+int		check_input(char *input);
 char	**list_parser(t_hash *head);
 int		check_export(char *s);
 t_env	*search_env(t_env *head, char *key);
@@ -190,7 +199,7 @@ int		lst_size(t_hash *lst);
 /*
 EXECUTE
 */
-int		execute(char **args, t_main *all, char **env);
+int		execute(char **args, t_main *all, char **env, t_bt *bts);
 int		launch(char **args, t_main *all, char **env);
 char	**path_parser(t_env *all);
 char	*env_path(char **paths, char *cmd);
@@ -198,21 +207,18 @@ char	*search_paths(char **paths, char *cmd);
 /*
 BUILT-INS
 */
-/*
-char *builtins[] = {"cd", "exit", "pwd", "env", "export", "unset", "echo"};
-int (*built[]) (char **, t_main *) = {&sh_cd, &sh_exit, &sh_pwd, &sh_env, &sh_export, &sh_unset, &sh_echo};
-*/
-int		num_builtins();
+int		num_builtins(void);
 int		sh_unset(char **args, t_main *all);
 int		sh_export(char **args, t_main *all);
 int		sh_cd(char **args, t_main *all);
 int		sh_exit(char **args, t_main *all);
 int		sh_pwd(char **args, t_main *all);
 int		sh_env(char **args, t_main *all);
-/*
-ECHO
-*/
 int		sh_echo(char **argv, t_main *all);
+/*
+INITS
+*/
+void	init_bts(t_bt *bts);
 /*
 CURRENT_CMD
 */
@@ -220,5 +226,16 @@ void	make_lexer(t_main	*main);
 t_hash	*make_current_cmd(t_main *main);
 void	parser(t_main *main);
 int		parse_env(t_main *main, t_hash *head);
-
+/*
+SIGNALS
+*/
+void	handler(int sig);
+void	handler2(int sig);
+void	child_handler(int signum);
+void	display_ctrl_c(int display);
+/*
+REDIR
+*/
+void	redir(t_main *main, char **env, t_bt *bts);
+int	is_redir(t_main *main);
 #endif
