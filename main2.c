@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 17:14:21 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/28 17:23:15 by kezekiel         ###   ########.fr       */
+/*   Updated: 2022/06/28 18:57:48 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ int	current_sep(t_main *main)
 	return (0);
 }
 
-void	minipipe(t_main *main, char **env)
+void	minipipe(t_main *main, char **env, t_bt *bts)
 {
 	int		fd[2];
 	int		pid;
@@ -99,14 +99,13 @@ void	minipipe(t_main *main, char **env)
 	args = hash_parser(main->current_cmd);
 	path = path_parser(main->env_list);
 	cmd = search_paths(path, args[0]);
-	printf("\n%s\n", cmd);
+	// printf("\n%s\n", cmd);
 	pipe(fd);
 	pid = fork();
 	if (pid == 0)
 	{
 		dup2(fd[1], STDOUT);
 		close(fd[0]);
-
 		if (execve(cmd, args, env) == -1)
 			perror("exec failure");
 		close(fd[1]);
@@ -122,27 +121,6 @@ void	minipipe(t_main *main, char **env)
 	}
 }
 
-void	input(t_main *mini)
-{
-	char	**args;
-
-	args = hash_parser(mini->current_cmd);
-	close(mini->fd_in);
-	mini->fd_in = open(args[1], O_RDONLY, S_IRWXU);
-	if (mini->fd_in == -1)
-	{
-		ft_putstr_fd("minishell: ", STDERR);
-		ft_putstr_fd(args[1], STDERR);
-		ft_putendl_fd(": No such file or directory", STDERR);
-		// mini->ret = 1;
-		// mini->no_exec = 1;
-		free(args);
-		return ;
-	}
-	free(args);
-	dup2(mini->fd_in, STDIN);
-}
-
 int	execute_cycle(t_main *main, char **env, t_bt *bts)
 {
 	char	**args;
@@ -151,8 +129,11 @@ int	execute_cycle(t_main *main, char **env, t_bt *bts)
 	while(main->end_flag)
 	{
 		parser(main);
+		debug_print_list(main->current_cmd);
 		if (current_sep(main) == PIPE)
-			minipipe(main, env);
+			minipipe(main, env, bts);
+		// else if (is_redir(main))
+		// 	redir(main);
 		else if (!current_sep(main) && main->prev_sep)
 		{
 			close(STDOUT);
@@ -177,13 +158,13 @@ int	execute_cycle(t_main *main, char **env, t_bt *bts)
 
 void	init_bts(t_bt *bts)
 {
-	bts->builtins[0] = ft_strdup("cd");
-	bts->builtins[1] = ft_strdup("export");
-	bts->builtins[2] = ft_strdup("unset");
-	bts->builtins[3] = ft_strdup("env");
-	bts->builtins[4] = ft_strdup("pwd");
-	bts->builtins[5] = ft_strdup("exit");
-	bts->builtins[6] = ft_strdup("echo");
+	bts->builtins[0] = "cd";
+	bts->builtins[1] = "export";
+	bts->builtins[2] = "unset";
+	bts->builtins[3] = "env";
+	bts->builtins[4] = "pwd";
+	bts->builtins[5] = "exit";
+	bts->builtins[6] = "echo";
 	bts->built[0] = &sh_cd;
 	bts->built[1] = &sh_export;
 	bts->built[2] = &sh_unset;
@@ -210,6 +191,7 @@ int	main(int ac, char **av, char **env)
 	init_env(main, env);
 	signal(SIGQUIT, SIG_IGN);
 	main->exit_flag = 1;
+	main->no_exec = 0;
 	while (main->exit_flag)
 	{
 		signal(SIGINT, handler);
@@ -232,5 +214,7 @@ int	main(int ac, char **av, char **env)
 	}
 	clean_env(main->env_list);
 	//clean_up();
+	free(main);
+	free(bts);
 	return (g_exit_status);
 }

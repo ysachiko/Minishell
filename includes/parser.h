@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 16:36:19 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/28 17:22:15 by kezekiel         ###   ########.fr       */
+/*   Updated: 2022/06/28 18:19:46 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,8 @@
 # define TRUNC 3
 # define APPEND 4
 # define INPUT 5
-# define PIPE 6
-# define END 7
+# define HER 6
+# define PIPE 7
 
 # define STDIN 0
 # define STDOUT 1
@@ -74,6 +74,7 @@ typedef struct s_main
 	int		fd_out;
 	int		prev_sep;
 	int		exit_flag;
+	int		no_exec;
 	t_hash	*current_cmd;
 	t_hash	*tmp2;
 	t_hash	*hash_head;
@@ -220,5 +221,9 @@ void	make_lexer(t_main	*main);
 t_hash	*make_current_cmd(t_main *main);
 void	parser(t_main *main);
 int		parse_env(t_main *main, t_hash *head);
-
+/*
+REDIR
+*/
+int		is_redir(t_main *main);
+void	input(t_main *mini);
 #endif

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: kezekiel <kezekiel@student.42.fr>          +#+  +:+       +#+         #
+#    By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/06/01 17:55:47 by kezekiel          #+#    #+#              #
-#    Updated: 2022/06/28 16:54:19 by kezekiel         ###   ########.fr        #
+#    Updated: 2022/06/28 17:35:11 by ysachiko         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,7 @@ SRC	   = execute.c main2.c src/parser/parser.c  src/parser/list/list_head.c src/
 		 src/parser/usage/debug_shit.c	src/parser/usage/lexer_main_usage.c	src/env/init_env.c \
 		 src/parser/usage/parse_env.c	src/parser/usage/parse_env_usage.c 	src/parser/usage/parse_str_env.c\
 		 src/parser/usage/parser_usage.c	src/parser/quots.c 	src/parser/list_refactor.c \
-		 builtins.c	free.c	utils.c 	src/builtins/ft_echo.c	src/parser/current_cmd.c \
+		 builtins.c	free.c	utils.c 	src/builtins/ft_echo.c	src/parser/current_cmd.c 	src/redir/redir.c\
 
 OBJ = $(patsubst %.c,%.o,$(SRC))
 
@@ -30,7 +30,7 @@ LIBFT = libft
 
 FLAGS = -L $(LIBFT) -lft
 
-RDLN = -L /Users/kezekiel/.brew/Cellar/readline/8.1.2/lib -I /Users/kezekiel.brew/Cellar/readline/8.1.2/include/ -lreadline
+RDLN = -L /Users/ysachiko/.brew/Cellar/readline/8.1.2/lib -I /Users/ysachiko/.brew/Cellar/readline/8.1.2/include/ -lreadline
 
 all : $(NAME)
 
