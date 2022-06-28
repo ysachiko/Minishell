@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 17:14:21 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/28 18:29:01 by kezekiel         ###   ########.fr       */
+/*   Updated: 2022/06/28 20:25:40 by kezekiel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,6 +126,7 @@ int	main(int ac, char **av, char **env)
 
 	(void)ac;
 	(void)av;
+	signal(SIGQUIT, SIG_IGN);
 	g_exit_status = 0;
 	main = malloc(sizeof(t_main));
 	main->fd_in = dup(STDIN);
@@ -133,7 +134,6 @@ int	main(int ac, char **av, char **env)
 	bts = malloc(sizeof(t_bt));
 	init_bts(bts);
 	init_env(main, env);
-	signal(SIGQUIT, SIG_IGN);
 	main->exit_flag = 1;
 	while (main->exit_flag)
 	{
@@ -147,7 +147,7 @@ int	main(int ac, char **av, char **env)
 		}
 		signal(SIGINT, SIG_IGN);
 		if (!main->line)
-			exit(EXIT_FAILURE);
+			exit(0);
 		add_history(main->line);
 		display_ctrl_c(0);
 		make_lexer(main);

@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/12 14:37:23 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/28 18:18:05 by kezekiel         ###   ########.fr       */
+/*   Updated: 2022/06/28 20:17:37 by kezekiel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,14 @@ int	launch(char **args, t_main *all, char **env)
 	else if (child < 0)
 		perror("error forking");
 	else
-		waitpid(child, &status, 0);
-	g_exit_status = ft_wexitstatus(status);
+	{
+		waitpid(child, &g_exit_status, 0);
+		if (WIFEXITED(g_exit_status))
+			g_exit_status = WEXITSTATUS(g_exit_status);
+		else if (WIFSIGNALED(g_exit_status))
+			g_exit_status = 128 + WTERMSIG(g_exit_status);
+	}
+	//g_exit_status = ft_wexitstatus(status);
 	free_split(path);
 	return (g_exit_status);
 }
