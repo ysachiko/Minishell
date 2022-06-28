@@ -6,69 +6,13 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 17:14:21 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/28 17:23:15 by kezekiel         ###   ########.fr       */
+/*   Updated: 2022/06/28 18:29:01 by kezekiel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/parser.h"
 
 int	g_exit_status;
-
-void	handler(int sig)
-{
-	g_exit_status += sig;
-	if (sig == SIGINT)
-	{
-		g_exit_status = 130;
-		printf("\n");
-		rl_on_new_line();
-		rl_replace_line("", 0);
-		rl_redisplay();
-	}
-}
-
-void	handler2(int sig)
-{
-	g_exit_status += sig;
-	if (sig == SIGINT)
-	{
-		g_exit_status = 130;
-		printf("\n");
-		rl_on_new_line();
-		rl_replace_line("", 0);
-		rl_redisplay();
-	}
-}
-
-static int	check_input(char *input)
-{
-	while (*input)
-	{
-		if (*input == '|')
-		{
-			ft_putstr_fd("minishell: syntax error near \
-unexpected token `|'\n", STDERR_FILENO);
-			return (0);
-		}
-		if (*input == ' ' || *input == '\t')
-			input++;
-		else
-			return (1);
-	}
-	return (0);
-}
-
-void	display_ctrl_c(int display)
-{
-	struct termios	t;
-
-	tcgetattr(0, &t);
-	if (display == 0)
-		t.c_lflag |= ECHOCTL;
-	else
-		t.c_lflag &= ~ECHOCTL;
-	tcsetattr(0, TCSANOW, &t);
-}
 
 int	current_sep(t_main *main)
 {
@@ -106,7 +50,6 @@ void	minipipe(t_main *main, char **env)
 	{
 		dup2(fd[1], STDOUT);
 		close(fd[0]);
-
 		if (execve(cmd, args, env) == -1)
 			perror("exec failure");
 		close(fd[1]);
@@ -148,7 +91,7 @@ int	execute_cycle(t_main *main, char **env, t_bt *bts)
 	char	**args;
 
 	main->end_flag = 1;
-	while(main->end_flag)
+	while (main->end_flag)
 	{
 		parser(main);
 		if (current_sep(main) == PIPE)
@@ -175,32 +118,14 @@ int	execute_cycle(t_main *main, char **env, t_bt *bts)
 	return (0);
 }
 
-void	init_bts(t_bt *bts)
-{
-	bts->builtins[0] = ft_strdup("cd");
-	bts->builtins[1] = ft_strdup("export");
-	bts->builtins[2] = ft_strdup("unset");
-	bts->builtins[3] = ft_strdup("env");
-	bts->builtins[4] = ft_strdup("pwd");
-	bts->builtins[5] = ft_strdup("exit");
-	bts->builtins[6] = ft_strdup("echo");
-	bts->built[0] = &sh_cd;
-	bts->built[1] = &sh_export;
-	bts->built[2] = &sh_unset;
-	bts->built[3] = &sh_env;
-	bts->built[4] = &sh_pwd;
-	bts->built[5] = &sh_exit;
-	bts->built[6] = &sh_echo;
-}
-
 int	main(int ac, char **av, char **env)
 {
-	(void)ac;
-	(void)av;
 	char	**args;
 	t_main	*main;
 	t_bt	*bts;
 
+	(void)ac;
+	(void)av;
 	g_exit_status = 0;
 	main = malloc(sizeof(t_main));
 	main->fd_in = dup(STDIN);

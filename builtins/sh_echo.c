@@ -6,11 +6,11 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 17:54:41 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/10 18:22:21 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/28 18:13:47 by kezekiel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/parser.h"
+#include "../includes/parser.h"
 
 static int	args_size(char **args)
 {

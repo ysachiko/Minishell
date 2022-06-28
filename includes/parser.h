@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 16:36:19 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/28 17:22:15 by kezekiel         ###   ########.fr       */
+/*   Updated: 2022/06/28 18:31:31 by kezekiel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ typedef struct s_main
 	t_env	*env_list;
 }	t_main;
 
-typedef struct	s_bt
+typedef struct s_bt
 {
 	char	*builtins[7];
 	int		(*built[7])(char **, t_main *);
@@ -184,6 +184,7 @@ void	end_prog(char *err, int code, int mode);
 /*
 UTILS
 */
+int		check_input(char *input);
 char	**list_parser(t_hash *head);
 int		check_export(char *s);
 t_env	*search_env(t_env *head, char *key);
@@ -214,11 +215,21 @@ int		sh_pwd(char **args, t_main *all);
 int		sh_env(char **args, t_main *all);
 int		sh_echo(char **argv, t_main *all);
 /*
+INITS
+*/
+void	init_bts(t_bt *bts);
+/*
 CURRENT_CMD
 */
 void	make_lexer(t_main	*main);
 t_hash	*make_current_cmd(t_main *main);
 void	parser(t_main *main);
 int		parse_env(t_main *main, t_hash *head);
-
+/*
+SIGNALS
+*/
+void	handler(int sig);
+void	handler2(int sig);
+void	child_handler(int signum);
+void	display_ctrl_c(int display);
 #endif
