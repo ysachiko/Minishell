@@ -6,38 +6,36 @@
 /*   By: ysachiko <ysachiko@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 17:14:21 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/26 23:26:55 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/28 14:39:52 by kezekiel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/parser.h"
 
-
 int	g_exit_status;
 
-//SIGNALS
-void handler(int sig)
+void	handler(int sig)
 {
-	//exit_status += sig;
+	g_exit_status += sig;
 	if (sig == SIGINT)
 	{
-		//exit_status = 130;
+		g_exit_status = 130;
 		printf("\n");
 		rl_on_new_line();
-		rl_replace_line("",0);
+		rl_replace_line("", 0);
 		rl_redisplay();
 	}
 }
 
-void handler2(int sig)
+void	handler2(int sig)
 {
-	//exit_status += sig;
+	g_exit_status += sig;
 	if (sig == SIGINT)
 	{
-		//exit_status = 130;
+		g_exit_status = 130;
 		printf("\n");
 		rl_on_new_line();
-		rl_replace_line("",0);
+		rl_replace_line("", 0);
 		rl_redisplay();
 	}
 }
@@ -122,7 +120,7 @@ int	execute_cycle(t_main *main, char **env)
 	char	**args;
 
 	main->end_flag = 1;
-	while(main->end_flag)
+	while (main->end_flag)
 	{
 		parser(main);
 		if (current_sep(main))
@@ -147,10 +145,11 @@ int	execute_cycle(t_main *main, char **env)
 	return (0);
 }
 
-int main(int ac, char **av, char **env)
+int	main(int ac, char **av, char **env)
 {
-	char *line;
-	char **args;
+	(void)ac;
+	(void)av;
+	char	**args;
 	t_main	*main;
 
 	g_exit_status = 0;
@@ -160,7 +159,7 @@ int main(int ac, char **av, char **env)
 	init_env(main, env);
 	signal(SIGQUIT, SIG_IGN);
 	main->exit_flag = 1;
-	while(main->exit_flag)
+	while (main->exit_flag)
 	{
 		signal(SIGINT, handler);
 		display_ctrl_c(1);
@@ -168,7 +167,7 @@ int main(int ac, char **av, char **env)
 		if (main->line && !check_input(main->line))
 		{
 			free(main->line);
-			continue;
+			continue ;
 		}
 		signal(SIGINT, SIG_IGN);
 		if (!main->line)
@@ -177,11 +176,10 @@ int main(int ac, char **av, char **env)
 		display_ctrl_c(0);
 		make_lexer(main);
 		execute_cycle(main, env);
-		// debug_print_list(main->hash_head);
 		free_hash(main->hash_head);
 		free(main->line);
 	}
 	clean_env(main->env_list);
 	//clean_up();
-	return(g_exit_status);
+	return (g_exit_status);
 }

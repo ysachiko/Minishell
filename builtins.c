@@ -6,17 +6,14 @@
 /*   By: ysachiko <ysachiko@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/12 14:37:23 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/26 23:30:50 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/28 16:02:11 by kezekiel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/parser.h"
 
-char	*builtins[] = {"cd", "exit", "pwd", "env", "export", "unset", "echo"};
-int		(*built[])(char **, t_main *) = {&sh_cd, &sh_exit, &sh_pwd, &sh_env, &sh_export, &sh_unset, &sh_echo};
 
 //EXECUTE
-
 static int	ft_wexitstatus(int x)
 {
 	return ((x >> 8) & 0x000000ff);
@@ -25,14 +22,16 @@ static int	ft_wexitstatus(int x)
 int	execute(char **args, t_main *all, char **env)
 {
 	int	i;
-
+	char	*builtins[] = {"cd", "exit", "pwd", "env", "export", "unset", "echo"};
+	int		(*built[])(char **, t_main *) = {&sh_cd, &sh_exit, &sh_pwd, &sh_env, &sh_export, &sh_unset, &sh_echo};
+	
 	i = 0;
 	if (args[0] == NULL)
 		return (1);
-	while (i < num_builtins())
+	while (i < 7)
 	{
 		if (ft_strcmp(args[0], builtins[i]) == 0)
-			return  g_exit_status = (*built[i])(args,all);
+			return (g_exit_status = (*built[i])(args,all));
 		i++;
 	}
 	return (launch(args, all, env));
@@ -47,13 +46,13 @@ void	child_handler(int signum)
 	exit(130);
 }
 
-int launch(char **args, t_main *all, char **env)
+int	launch(char **args, t_main *all, char **env)
 {
 	pid_t	child;
-	int	status;
+	int		status;
 	char	**path;
 	char	*cmd;
-	
+
 	path = path_parser(all->env_list);
 	cmd = search_paths(path, args[0]);
 	child = fork();
@@ -68,23 +67,24 @@ int launch(char **args, t_main *all, char **env)
 	else if (child < 0)
 		perror("error forking");
 	else
-		waitpid(child, &status, WUNTRACED);
+		waitpid(child, &status, 0);
 	g_exit_status = ft_wexitstatus(status);
 	free_split(path);
 	return (g_exit_status);
 }
 
-int	num_builtins()
+/*int	num_builtins(void)
 {
 	return (sizeof(builtins) / sizeof(char *));
-}
+}*/
 
 int	sh_export(char **args, t_main *all)
 {
 	t_env	*tmp;
 	t_env	*tmp_2;
-	int	i;
-	int	ret;
+	int		i;
+	int		ret;
+	char	**vals;
 
 	ret = 0;
 	if (args[1])
@@ -96,20 +96,20 @@ int	sh_export(char **args, t_main *all)
 			{	
 				printf("export: '%s': not a valid identifier\n", args[i]);
 				ret = 1;
-				continue;
+				continue ;
 			}
-			char **vals = ft_split(args[i], '=');
+			vals = ft_split(args[i], '=');
 			if (!vals[1])
 			{
 				free_split(vals);
-				continue;
+				continue ;
 			}
 			tmp = search_env(all->env_list, vals[0]);
 			if (tmp)
 			{
 				tmp->value = vals[1];
 				free_split(vals);
-				continue;
+				continue ;
 			}
 			add_env(&(all->env_list), new_env(ft_strdup(vals[0]), \
 				ft_strdup(vals[1])));
@@ -117,7 +117,6 @@ int	sh_export(char **args, t_main *all)
 		}
 		return (ret);
 	}
-	// PUT IT IN SEPARATE FUNC ↓
 	tmp = copy_env(all->env_list);
 	sort_env(tmp);
 	while (tmp)
@@ -137,7 +136,7 @@ int	sh_unset(char **args, t_main *all)
 
 	if (!args[1])
 	{
-		printf("unset: not enough arguments\n");	// ERROR
+		printf("unset: not enough arguments\n");
 		return (1);
 	}
 	prev = NULL;
@@ -182,13 +181,12 @@ int	sh_pwd(char **args, t_main *all)
 		return (0);
 	pwd = getcwd(NULL, 0);
 	if (pwd == NULL)
-		return (50); // ERROR CODE AN STUFF
+		return (50);
 	printf("%s\n", pwd);
 	free(pwd);
 	return (0);
 }
 
-// DOPILIT'
 int	oldpwd(t_main *all, char *pwd)
 {
 	t_env	*tmp;
@@ -208,7 +206,6 @@ int	sh_cd(char **args, t_main *all)
 	t_env	*tmp;
 	t_env	*tmp2;
 	char	*pwd;
-
 
 	tmp2 = search_env(all->env_list, "PWD");
 	pwd = getcwd(NULL, 0);
@@ -245,7 +242,10 @@ int	sh_cd(char **args, t_main *all)
 	}
 	oldpwd(all, pwd);
 	if (chdir(args[1]) != 0)
+	{
 		perror("cd");
+		return (1);
+	}
 	tmp2->value = getcwd(NULL, 0);
 	free(pwd);
 	return (0);
@@ -271,8 +271,6 @@ int	ft_strisnum(const char *str)
 
 int	sh_exit(char **args, t_main *main)
 {
-	// STATUS == int(args[1])
-	// printf("\n %s %s %s \n", args[0], args[1], args[2]);
 	if (args[1] && args[2])
 	{
 		g_exit_status = 1;

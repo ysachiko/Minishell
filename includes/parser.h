@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 16:36:19 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/26 23:25:43 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/28 15:58:54 by kezekiel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,12 @@ typedef struct s_main
 	t_hash	*tmp;
 	t_env	*env_list;
 }	t_main;
+
+/*typedef struct	s_bt
+{
+	char	*builtins[] = {"cd", "exit", "pwd", "env", "export", "unset", "echo"};
+	int		(*built[])(char **, t_main *) = {&sh_cd, &sh_exit, &sh_pwd, &sh_env, &sh_export, &sh_unset, &sh_echo};
+}	t_bt;*/
 
 void	rl_replace_line(const char *text, int clear_undo);
 /*
@@ -198,11 +204,7 @@ char	*search_paths(char **paths, char *cmd);
 /*
 BUILT-INS
 */
-/*
-char *builtins[] = {"cd", "exit", "pwd", "env", "export", "unset", "echo"};
-int (*built[]) (char **, t_main *) = {&sh_cd, &sh_exit, &sh_pwd, &sh_env, &sh_export, &sh_unset, &sh_echo};
-*/
-int		num_builtins();
+int		num_builtins(void);
 int		sh_unset(char **args, t_main *all);
 int		sh_export(char **args, t_main *all);
 int		sh_cd(char **args, t_main *all);

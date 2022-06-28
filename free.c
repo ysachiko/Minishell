@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/12 14:42:51 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/24 17:47:47 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/28 14:30:43 by kezekiel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 void	end_prog(char *err, int code, int mode)
 {
-	//clear_exit
 	if (mode == 0 && err)
 		ft_putstr_fd(err, STDERR_FILENO);
 	else if (mode == 1)
