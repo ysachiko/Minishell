@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main2.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysachiko <ysachiko@student.21-school.ru    +#+  +:+       +#+        */
+/*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 17:14:21 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/28 14:39:52 by kezekiel         ###   ########.fr       */
+/*   Updated: 2022/06/28 16:21:46 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,20 +88,27 @@ int	current_sep(t_main *main)
 	return (0);
 }
 
-void	redir(t_main *main, char **env)
+void	minipipe(t_main *main, char **env)
 {
 	int		fd[2];
 	int		pid;
 	char	**args;
+	char	**path;
+	char	*cmd;
 
+	args = hash_parser(main->current_cmd);
+	path = path_parser(main->env_list);
+	cmd = search_paths(path, args[0]);
+	printf("\n%s\n", cmd);
 	pipe(fd);
 	pid = fork();
 	if (pid == 0)
 	{
 		dup2(fd[1], STDOUT);
 		close(fd[0]);
-		args = hash_parser(main->current_cmd);
-		execute(args, main, env);
+
+		if (execve(cmd, args, env) == -1)
+			perror("exec failure");
 		close(fd[1]);
 		return ;
 	}
@@ -115,22 +122,45 @@ void	redir(t_main *main, char **env)
 	}
 }
 
+void	input(t_main *mini)
+{
+	char	**args;
+
+	args = hash_parser(mini->current_cmd);
+	close(mini->fd_in);
+	mini->fd_in = open(args[1], O_RDONLY, S_IRWXU);
+	if (mini->fd_in == -1)
+	{
+		ft_putstr_fd("minishell: ", STDERR);
+		ft_putstr_fd(args[1], STDERR);
+		ft_putendl_fd(": No such file or directory", STDERR);
+		// mini->ret = 1;
+		// mini->no_exec = 1;
+		free(args);
+		return ;
+	}
+	free(args);
+	dup2(mini->fd_in, STDIN);
+}
+
 int	execute_cycle(t_main *main, char **env)
 {
 	char	**args;
 
 	main->end_flag = 1;
-	while (main->end_flag)
+	while(main->end_flag)
 	{
 		parser(main);
-		if (current_sep(main))
-			redir(main, env);
+		if (current_sep(main) == PIPE)
+			minipipe(main, env);
 		else if (!current_sep(main) && main->prev_sep)
 		{
+			close(STDOUT);
+			dup2(main->fd_out, STDOUT);
 			args = hash_parser(main->current_cmd);
 			execute(args, main, env);
-			dup2(main->fd_out, STDOUT);
-			// dup2(main->fd_in, STDIN);
+			close(STDIN);
+			dup2(main->fd_in, STDIN);
 			free(args);
 		}
 		else

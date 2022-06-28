@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: kezekiel <kezekiel@student.21-school.ru    +#+  +:+       +#+         #
+#    By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/06/01 17:55:47 by kezekiel          #+#    #+#              #
-#    Updated: 2022/06/28 13:45:13 by kezekiel         ###   ########.fr        #
+#    Updated: 2022/06/28 16:21:26 by ysachiko         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,7 +30,7 @@ LIBFT = libft
 
 FLAGS = -L $(LIBFT) -lft
 
-RDLN = -L /Users/kezekiel/.brew/Cellar/readline/8.1.2/lib -I /Users/kezekiel/.brew/Cellar/readline/8.1.2/include/ -lreadline
+RDLN = -L /Users/ysachiko/.brew/Cellar/readline/8.1.2/lib -I /Users/ysachiko.brew/Cellar/readline/8.1.2/include/ -lreadline
 
 all : $(NAME)
 
