@@ -6,7 +6,7 @@
 /*   By: kezekiel <kezekiel@student.21-schoo>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 18:15:41 by kezekiel          #+#    #+#             */
-/*   Updated: 2022/06/29 13:20:10 by kezekiel         ###   ########.fr       */
+/*   Updated: 2022/06/29 17:31:38 by kezekiel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,7 @@ int	sh_cd(char **args, t_main *all)
 			return (prev_dir(all, pwd, tmp2));
 	}
 	oldpwd(all, pwd);
+	free(tmp2->value);
 	if (chdir(args[1]) != 0)
 	{
 		perror("cd");

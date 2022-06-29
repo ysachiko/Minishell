@@ -6,7 +6,7 @@
 /*   By: kezekiel <kezekiel@student.21-schoo>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 18:17:58 by kezekiel          #+#    #+#             */
-/*   Updated: 2022/06/29 15:57:02 by kezekiel         ###   ########.fr       */
+/*   Updated: 2022/06/29 17:13:26 by kezekiel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,11 +82,12 @@ int	sh_export(char **args, t_main *all)
 	}
 	tmp = copy_env(all->env_list);
 	sort_env(tmp);
-	while (tmp)
+	tmp_2 = tmp;
+	while (tmp_2)
 	{
-		printf("%s=", tmp->key);
-		printf("%s\n", tmp->value);
-		tmp = tmp->next;
+		printf("%s=", tmp_2->key);
+		printf("%s\n", tmp_2->value);
+		tmp_2 = tmp_2->next;
 	}
 	clean_env(tmp);
 	return (0);
