@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 16:36:19 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/28 18:31:31 by kezekiel         ###   ########.fr       */
+/*   Updated: 2022/06/29 16:51:07 by kezekiel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,8 +67,8 @@ typedef struct s_main
 	char	*line;
 	int		current_symbol;
 	int		free_quote_flag;
-	int		in_double_quots;
-	int		in_single_quots;
+	int		dbl_qts;
+	int		sngl_qts;
 	int		end_flag;
 	int		fd_in;
 	int		fd_out;
@@ -232,4 +232,14 @@ void	handler(int sig);
 void	handler2(int sig);
 void	child_handler(int signum);
 void	display_ctrl_c(int display);
+/*
+CMD UTILS
+*/
+int		is_t(char c);
+int		get_sep_len(char *str, int i);
+char	*get_arg_sep(char *str, int i);
+char	*sep_after_arg(char *str, int i);
+int		m_str_refactor(t_main *main, char **str, int i);
+void	divide_str(char **str, t_main *main);
+
 #endif

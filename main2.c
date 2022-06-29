@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 17:14:21 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/28 20:25:40 by kezekiel         ###   ########.fr       */
+/*   Updated: 2022/06/29 15:58:04 by kezekiel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,8 +124,6 @@ int	main(int ac, char **av, char **env)
 	t_main	*main;
 	t_bt	*bts;
 
-	(void)ac;
-	(void)av;
 	signal(SIGQUIT, SIG_IGN);
 	g_exit_status = 0;
 	main = malloc(sizeof(t_main));

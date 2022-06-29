@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 18:42:54 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/09 19:24:30 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/29 16:52:08 by kezekiel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,12 +39,12 @@ int	is_empty(char *str)
 
 void	quote_refactor(t_hash *hash)
 {
-	int	in_single_quots;
-	int	in_double_quots;
+	int	sngl_qts;
+	int	dbl_qts;
 	int	i;
 
-	in_double_quots = 0;
-	in_single_quots = 0;
+	dbl_qts = 0;
+	sngl_qts = 0;
 	i = 0;
 	if (!ft_strchr(hash->value, '\'') && !ft_strchr(hash->value, '"'))
 		return ;
@@ -52,7 +52,7 @@ void	quote_refactor(t_hash *hash)
 	{
 		if (is_double_quote(hash->value[i]))
 		{
-			in_double_quots = 1;
+			dbl_qts = 1;
 			str_delete_symbol(hash, i);
 			while (is_double_quote(hash->value[i]))
 				i++;

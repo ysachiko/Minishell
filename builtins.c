@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/12 14:37:23 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/28 20:17:37 by kezekiel         ###   ########.fr       */
+/*   Updated: 2022/06/29 12:27:11 by kezekiel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,15 @@ int	execute(char **args, t_main *all, char **env, t_bt *bts)
 	return (launch(args, all, env));
 }
 
+void	wait_child(pid_t child)
+{
+	waitpid(child, &g_exit_status, 0);
+	if (WIFEXITED(g_exit_status))
+		g_exit_status = WEXITSTATUS(g_exit_status);
+	else if (WIFSIGNALED(g_exit_status))
+		g_exit_status = 128 + WTERMSIG(g_exit_status);
+}
+
 int	launch(char **args, t_main *all, char **env)
 {
 	pid_t	child;
@@ -54,14 +63,7 @@ int	launch(char **args, t_main *all, char **env)
 	else if (child < 0)
 		perror("error forking");
 	else
-	{
-		waitpid(child, &g_exit_status, 0);
-		if (WIFEXITED(g_exit_status))
-			g_exit_status = WEXITSTATUS(g_exit_status);
-		else if (WIFSIGNALED(g_exit_status))
-			g_exit_status = 128 + WTERMSIG(g_exit_status);
-	}
-	//g_exit_status = ft_wexitstatus(status);
+		wait_child(child);
 	free_split(path);
 	return (g_exit_status);
 }

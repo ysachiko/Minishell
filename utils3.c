@@ -6,11 +6,43 @@
 /*   By: kezekiel <kezekiel@student.21-schoo>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 18:24:13 by kezekiel          #+#    #+#             */
-/*   Updated: 2022/06/28 18:30:42 by kezekiel         ###   ########.fr       */
+/*   Updated: 2022/06/29 12:28:16 by kezekiel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/parser.h"
+
+t_env	*search_env(t_env *head, char *key)
+{
+	t_env	*tmp;
+
+	tmp = head;
+	while (tmp)
+	{
+		if (ft_strcmp(tmp->key, key) == 0)
+			return (tmp);
+		tmp = tmp->next;
+	}
+	return (NULL);
+}
+
+int	check_export(char *name)
+{
+	int	i;
+
+	if (!name)
+		return (0);
+	if (name && ft_isdigit(name[0]))
+		return (0);
+	i = 0;
+	while (name && name[i])
+	{
+		if (!ft_isalnum(name[i]) && name[i] != '_')
+			return (0);
+		i++;
+	}
+	return (1);
+}
 
 int	check_input(char *input)
 {
