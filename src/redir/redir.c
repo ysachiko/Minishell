@@ -6,48 +6,84 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 17:34:04 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/28 18:52:59 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/29 16:54:45 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/parser.h"
 
-int	is_redir(t_main *main)
+char	**before_sep_func(t_hash *cmd)
+{
+	t_hash	*tmp_2;
+	int		counter;
+	char	**before_sep;
+
+	counter = 0;
+	tmp_2 = cmd;
+	counter = ft_strlen_before_sep(cmd);
+	before_sep = malloc(sizeof(char *) * (counter + 1));
+	counter = 0;
+	while (!(tmp_2->key > 2 && tmp_2->key < 7))
+	{
+		before_sep[counter] = ft_strdup(tmp_2->value);
+		tmp_2 = tmp_2->next;
+		counter++;
+	}
+	before_sep[counter] = NULL;
+	return (before_sep);
+}
+
+char	**after_sep_func(t_hash *cmd)
+{
+	t_hash	*tmp;
+	t_hash	*tmp_2;
+	int		i;
+	char	**after_arg;
+
+	i = 0;
+	tmp = cmd;
+	while (!(tmp->key > 2 && tmp->key < 7) && tmp)
+		tmp = tmp->next;
+	if (tmp)
+		tmp = tmp->next;
+	tmp_2 = tmp;
+	i = ft_strlen_before_sep(tmp);
+	after_arg = malloc(sizeof(char *) * (i + 1));
+	i = 0;
+	while (tmp_2 && !(tmp_2->key > 2 && tmp_2->key < 7))
+	{
+		after_arg[i++] = ft_strdup(tmp_2->value);
+		tmp_2 = tmp_2->next;
+	}
+	after_arg[i] = NULL;
+	return (after_arg);
+}
+
+void	next_step(t_hash **cmd)
+{
+	while (*cmd && !((*cmd)->key > 2 && (*cmd)->key < 7))
+		*cmd = (*cmd)->next;
+	if (*cmd)
+		*cmd = (*cmd)->next;
+}
+
+void	clean_seps(char	**after_sep, char **before_sep)
+{
+	free_split(after_sep);
+	free_split(before_sep);
+	return ;
+}
+
+void	redir(t_main *main, char **env, t_bt *bts)
 {
 	t_hash	*tmp;
 
 	tmp = main->current_cmd;
+	main->no_exec = 0;
 	while (tmp)
 	{
-		if (tmp->key > 2 && tmp->key < 6)
-			return (1);
-		tmp = tmp->next;
+		if (cur_sep(tmp) == INPUT)
+			make_input(main, env, bts, tmp);
+		next_step(&tmp);
 	}
-	return (0);
 }
-
-void	input(t_main *mini)
-{
-	char	**args;
-
-	args = hash_parser(mini->current_cmd);
-	close(mini->fd_in);
-	mini->fd_in = open(args[1], O_RDONLY, S_IRWXU);
-	if (mini->fd_in == -1)
-	{
-		ft_putstr_fd("minishell: ", STDERR);
-		ft_putstr_fd(args[1], STDERR);
-		ft_putendl_fd(": No such file or directory", STDERR);
-		// mini->ret = 1;
-		mini->no_exec = 1;
-		free(args);
-		return ;
-	}
-	free(args);
-	dup2(mini->fd_in, STDIN);
-}
-
-// void	redir(t_main *main)
-// {
-
-// }

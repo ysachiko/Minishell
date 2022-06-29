@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 16:36:19 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/28 18:19:46 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/29 16:51:48 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,9 +72,12 @@ typedef struct s_main
 	int		end_flag;
 	int		fd_in;
 	int		fd_out;
+	int		in;
+	int		out;
 	int		prev_sep;
 	int		exit_flag;
 	int		no_exec;
+	char	**after_sep;
 	t_hash	*current_cmd;
 	t_hash	*tmp2;
 	t_hash	*hash_head;
@@ -82,7 +85,7 @@ typedef struct s_main
 	t_env	*env_list;
 }	t_main;
 
-typedef struct	s_bt
+typedef struct s_bt
 {
 	char	*builtins[7];
 	int		(*built[7])(char **, t_main *);
@@ -185,6 +188,7 @@ void	end_prog(char *err, int code, int mode);
 /*
 UTILS
 */
+int		check_input(char *input);
 char	**list_parser(t_hash *head);
 int		check_export(char *s);
 t_env	*search_env(t_env *head, char *key);
@@ -215,6 +219,10 @@ int		sh_pwd(char **args, t_main *all);
 int		sh_env(char **args, t_main *all);
 int		sh_echo(char **argv, t_main *all);
 /*
+INITS
+*/
+void	init_bts(t_bt *bts);
+/*
 CURRENT_CMD
 */
 void	make_lexer(t_main	*main);
@@ -222,8 +230,36 @@ t_hash	*make_current_cmd(t_main *main);
 void	parser(t_main *main);
 int		parse_env(t_main *main, t_hash *head);
 /*
+SIGNALS
+*/
+void	handler(int sig);
+void	handler2(int sig);
+void	child_handler(int signum);
+void	display_ctrl_c(int display);
+/*
 REDIR
 */
+char	**before_sep_func(t_hash *cmd);
+char	**after_sep_func(t_hash *cmd);
+void	next_step(t_hash **cmd);
+void	clean_seps(char	**after_sep, char **before_sep);
+void	redir(t_main *main, char **env, t_bt *bts);
+/*
+REDIR_USAGE
+*/
+void	ft_close(int fd);
+int		ft_str_arr_len(char **args);
+int		ft_strlen_before_sep(t_hash *cmd);
 int		is_redir(t_main *main);
-void	input(t_main *mini);
+int		cur_sep(t_hash *hash);
+/*
+INPUT
+*/
+void	input(t_main *mini, char *args);
+int		check_files(char **after_sep, t_main *main);
+void	execute_in_input(t_main *main, char **env, t_bt *bts ,char **before_sep);
+void	execute_or_exit(t_main *main, char **env, t_bt *bts ,char **before_sep);
+void	inpyt_cycle(t_main *main, char **env, t_bt *bts ,char **before_sep);
+void	make_input(t_main *main, char **env, t_bt *bts , t_hash *cmd);
+
 #endif

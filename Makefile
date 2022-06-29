@@ -6,7 +6,7 @@
 #    By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/06/01 17:55:47 by kezekiel          #+#    #+#              #
-#    Updated: 2022/06/28 17:35:11 by ysachiko         ###   ########.fr        #
+#    Updated: 2022/06/29 16:52:04 by ysachiko         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,8 @@ SRC	   = execute.c main2.c src/parser/parser.c  src/parser/list/list_head.c src/
 		 src/parser/usage/debug_shit.c	src/parser/usage/lexer_main_usage.c	src/env/init_env.c \
 		 src/parser/usage/parse_env.c	src/parser/usage/parse_env_usage.c 	src/parser/usage/parse_str_env.c\
 		 src/parser/usage/parser_usage.c	src/parser/quots.c 	src/parser/list_refactor.c \
-		 builtins.c	free.c	utils.c 	src/builtins/ft_echo.c	src/parser/current_cmd.c 	src/redir/redir.c\
+		 builtins.c	free.c	utils.c utils2.c utils3.c inits.c signals.c builtins/sh_echo.c builtins/sh_exit.c builtins/sh_unset.c builtins/sh_export.c src/parser/current_cmd.c \
+		builtins/sh_cd.c builtins/sh_stuff.c	src/redir/redir.c	src/redir/redir_usage.c	src/redir/input.c \
 
 OBJ = $(patsubst %.c,%.o,$(SRC))
 
