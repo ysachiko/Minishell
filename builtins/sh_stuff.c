@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   sh_stuff.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kezekiel <kezekiel@student.21-schoo>       +#+  +:+       +#+        */
+/*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 18:16:57 by kezekiel          #+#    #+#             */
-/*   Updated: 2022/06/29 13:29:58 by kezekiel         ###   ########.fr       */
+/*   Updated: 2022/06/29 20:53:00 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ int	sh_env(char **args, t_main *all)
 {
 	t_env	*tmp;
 
+	(void) args;
 	tmp = all->env_list;
 	while (tmp)
 	{
@@ -30,6 +31,7 @@ int	sh_pwd(char **args, t_main *all)
 {
 	char	*pwd;
 
+	(void) all;
 	if (*args == NULL)
 		return (0);
 	pwd = getcwd(NULL, 0);

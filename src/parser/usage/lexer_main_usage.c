@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 18:42:54 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/29 16:52:08 by kezekiel         ###   ########.fr       */
+/*   Updated: 2022/06/29 17:03:37 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,8 @@ int	parse_lexer_list(t_hash *head)
 			hash->key = INPUT;
 		else if (!ft_strcmp(hash->value, ">>"))
 			hash->key = APPEND;
+		else if (!ft_strcmp(hash->value, "<<"))
+			hash->key = HER;
 		else if (hash->prev == NULL || hash->prev->key >= TRUNC)
 			hash->key = CMD;
 		else

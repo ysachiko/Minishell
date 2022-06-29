@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils3.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kezekiel <kezekiel@student.21-schoo>       +#+  +:+       +#+        */
+/*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 18:24:13 by kezekiel          #+#    #+#             */
-/*   Updated: 2022/06/29 12:28:16 by kezekiel         ###   ########.fr       */
+/*   Updated: 2022/06/29 20:23:57 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ int	check_input(char *input)
 		{
 			ft_putstr_fd("minishell: syntax error near \
 unexpected token `|'\n", STDERR_FILENO);
+			g_exit_status = 2;
 			return (0);
 		}
 		if (*input == ' ' || *input == '\t')
@@ -72,4 +73,11 @@ void	display_ctrl_c(int display)
 	else
 		t.c_lflag &= ~ECHOCTL;
 	tcsetattr(0, TCSANOW, &t);
+}
+
+void	clean_up(t_main *main, t_bt *bts)
+{
+	clean_env(main->env_list);
+	free(main);
+	free(bts);
 }

@@ -3,19 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysachiko <ysachiko@student.21-school.ru    +#+  +:+       +#+        */
+/*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/12 14:37:23 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/29 19:03:35 by kezekiel         ###   ########.fr       */
+/*   Updated: 2022/06/29 20:48:03 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/parser.h"
 
-static int	ft_wexitstatus(int x)
-{
-	return ((x >> 8) & 0x000000ff);
-}
+// static int	ft_wexitstatus(int x)
+// {
+// 	return ((x >> 8) & 0x000000ff);
+// }
 
 int	execute(char **args, t_main *all, char **env, t_bt *bts)
 {
@@ -45,7 +45,6 @@ void	wait_child(pid_t child)
 int	launch(char **args, t_main *all, char **env)
 {
 	pid_t	child;
-	int		status;
 	char	**path;
 	char	*cmd;
 
@@ -60,7 +59,7 @@ int	launch(char **args, t_main *all, char **env)
 		{
 			printf("bash: %s: No such file or directory\n", args[0]);
 			g_exit_status = 127;
-		}	
+		}
 		exit(g_exit_status);
 	}
 	else if (child < 0)

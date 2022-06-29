@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 16:36:19 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/29 16:51:07 by kezekiel         ###   ########.fr       */
+/*   Updated: 2022/06/29 21:00:39 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,8 @@
 # define TRUNC 3
 # define APPEND 4
 # define INPUT 5
-# define PIPE 6
-# define END 7
+# define HER 6
+# define PIPE 7
 
 # define STDIN 0
 # define STDOUT 1
@@ -72,8 +72,12 @@ typedef struct s_main
 	int		end_flag;
 	int		fd_in;
 	int		fd_out;
+	int		in;
+	int		out;
 	int		prev_sep;
 	int		exit_flag;
+	int		no_exec;
+	char	**after_sep;
 	t_hash	*current_cmd;
 	t_hash	*tmp2;
 	t_hash	*hash_head;
@@ -88,6 +92,7 @@ typedef struct s_bt
 }	t_bt;
 
 void	rl_replace_line(const char *text, int clear_undo);
+void	child_builtin(t_main *main, char **env, t_bt *bts, char **args);
 /*
 PARSER.C
 */
@@ -195,6 +200,7 @@ t_env	*copy_env(t_env *head);
 void	sort_env(t_env *copy);
 char	**hash_parser(t_hash *head);
 int		lst_size(t_hash *lst);
+void	clean_up(t_main *main, t_bt *bts);
 /*
 EXECUTE
 */
@@ -233,13 +239,57 @@ void	handler2(int sig);
 void	child_handler(int signum);
 void	display_ctrl_c(int display);
 /*
+REDIR
+*/
+char	**before_sep_func(t_hash *cmd);
+char	**after_sep_func(t_hash *cmd);
+void	next_step(t_hash **cmd);
+void	clean_seps(char	**after_sep, char **before_sep);
+void	redir(t_main *main, char **env, t_bt *bts);
+/*
+REDIR_USAGE
+*/
+void	ft_close(int fd);
+int		ft_str_arr_len(char **args);
+int		ft_strlen_before_sep(t_hash *cmd);
+int		is_redir(t_main *main);
+int		cur_sep(t_hash *hash);
+/*
+INPUT
+*/
+void	input(t_main *mini, char *args);
+int		check_files(char **after_sep, t_main *main);
+void	execute_in_input(t_main *main, char **env, t_bt *bts, \
+			char **before_sep);
+void	execute_or_exit(t_main *main, char **env, t_bt *bts, char **before_sep);
+void	inpyt_cycle(t_main *main, char **env, t_bt *bts, char **before_sep);
+void	make_input(t_main *main, char **env, t_bt *bts, t_hash *cmd);
+/*
 CMD UTILS
 */
 int		is_t(char c);
 int		get_sep_len(char *str, int i);
 char	*get_arg_sep(char *str, int i);
 char	*sep_after_arg(char *str, int i);
-int		m_str_refactor(t_main *main, char **str, int i);
+int		m_str_refactor(char **str, int i);
 void	divide_str(char **str, t_main *main);
-
+void	null_smth(t_main *main, t_hash **tmp, t_hash **head);
+/*
+OUTPIT
+*/
+void	make_output(t_main *main, char **env, t_bt *bts, t_hash *cmd);
+/*
+APPEND
+*/
+void	append(t_main *main, char **after_arg);
+void	make_append(t_main *main, char **env, t_bt *bts, t_hash *cmd);
+void	execute_or_exit(t_main *main, char **env, t_bt *bts, char **before_sep);
+/*
+PIPE
+*/
+void	pipe_executor(t_main *main, char **env, t_bt *bts);
+void	minipipe(t_main *main, char **env, t_bt *bts);
+void	last_pipe(t_main *main, char **env, t_bt *bts);
+int		current_sep(t_main *main);
+int		is_builtin(char *str);
 #endif

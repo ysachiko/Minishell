@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 17:14:21 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/29 15:58:04 by kezekiel         ###   ########.fr       */
+/*   Updated: 2022/06/29 20:47:33 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,76 +14,21 @@
 
 int	g_exit_status;
 
-int	current_sep(t_main *main)
+void	child_builtin(t_main *main, char **env, t_bt *bts, char **args)
 {
-	t_hash	*tmp;
+	int	i;
 
-	tmp = main->current_cmd;
-	while (tmp->next)
-		tmp = tmp->next;
-	if (tmp->key == PIPE)
-		return (PIPE);
-	if (tmp->key == TRUNC)
-		return (TRUNC);
-	if (tmp->key == APPEND)
-		return (APPEND);
-	if (tmp->key == INPUT)
-		return (INPUT);
-	return (0);
-}
-
-void	minipipe(t_main *main, char **env)
-{
-	int		fd[2];
-	int		pid;
-	char	**args;
-	char	**path;
-	char	*cmd;
-
-	args = hash_parser(main->current_cmd);
-	path = path_parser(main->env_list);
-	cmd = search_paths(path, args[0]);
-	printf("\n%s\n", cmd);
-	pipe(fd);
-	pid = fork();
-	if (pid == 0)
+	i = 0;
+	(void) env;
+	while (i < 7)
 	{
-		dup2(fd[1], STDOUT);
-		close(fd[0]);
-		if (execve(cmd, args, env) == -1)
-			perror("exec failure");
-		close(fd[1]);
-		return ;
+		if (ft_strcmp(args[0], bts->builtins[i]) == 0)
+		{
+			g_exit_status = (bts->built[i])(args, main);
+			exit(g_exit_status);
+		}
+		i++;
 	}
-	else
-	{
-		wait(&pid);
-		dup2(fd[0], STDIN);
-		close(fd[1]);
-		close(fd[0]);
-		return ;
-	}
-}
-
-void	input(t_main *mini)
-{
-	char	**args;
-
-	args = hash_parser(mini->current_cmd);
-	close(mini->fd_in);
-	mini->fd_in = open(args[1], O_RDONLY, S_IRWXU);
-	if (mini->fd_in == -1)
-	{
-		ft_putstr_fd("minishell: ", STDERR);
-		ft_putstr_fd(args[1], STDERR);
-		ft_putendl_fd(": No such file or directory", STDERR);
-		// mini->ret = 1;
-		// mini->no_exec = 1;
-		free(args);
-		return ;
-	}
-	free(args);
-	dup2(mini->fd_in, STDIN);
 }
 
 int	execute_cycle(t_main *main, char **env, t_bt *bts)
@@ -95,17 +40,11 @@ int	execute_cycle(t_main *main, char **env, t_bt *bts)
 	{
 		parser(main);
 		if (current_sep(main) == PIPE)
-			minipipe(main, env);
+			minipipe(main, env, bts);
+		else if (is_redir(main))
+			redir(main, env, bts);
 		else if (!current_sep(main) && main->prev_sep)
-		{
-			close(STDOUT);
-			dup2(main->fd_out, STDOUT);
-			args = hash_parser(main->current_cmd);
-			execute(args, main, env, bts);
-			close(STDIN);
-			dup2(main->fd_in, STDIN);
-			free(args);
-		}
+			last_pipe(main, env, bts);
 		else
 		{
 			args = hash_parser(main->current_cmd);
@@ -118,21 +57,38 @@ int	execute_cycle(t_main *main, char **env, t_bt *bts)
 	return (0);
 }
 
+void	init_main(t_main *main, char **env, t_bt *bts)
+{
+	g_exit_status = 0;
+	main->exit_flag = 1;
+	main->no_exec = 0;
+	main->fd_in = dup(STDIN);
+	main->fd_out = dup(STDOUT);
+	init_bts(bts);
+	init_env(main, env);
+}
+
+void	execute_main(t_main *main, char **env, t_bt *bts)
+{
+	add_history(main->line);
+	display_ctrl_c(0);
+	make_lexer(main);
+	execute_cycle(main, env, bts);
+	free_hash(main->hash_head);
+	free(main->line);
+}
+
 int	main(int ac, char **av, char **env)
 {
-	char	**args;
 	t_main	*main;
 	t_bt	*bts;
 
 	signal(SIGQUIT, SIG_IGN);
-	g_exit_status = 0;
+	(void) ac;
+	(void) av;
 	main = malloc(sizeof(t_main));
-	main->fd_in = dup(STDIN);
-	main->fd_out = dup(STDOUT);
 	bts = malloc(sizeof(t_bt));
-	init_bts(bts);
-	init_env(main, env);
-	main->exit_flag = 1;
+	init_main(main, env, bts);
 	while (main->exit_flag)
 	{
 		signal(SIGINT, handler);
@@ -146,14 +102,7 @@ int	main(int ac, char **av, char **env)
 		signal(SIGINT, SIG_IGN);
 		if (!main->line)
 			exit(0);
-		add_history(main->line);
-		display_ctrl_c(0);
-		make_lexer(main);
-		execute_cycle(main, env, bts);
-		free_hash(main->hash_head);
-		free(main->line);
+		execute_main(main, env, bts);
 	}
-	clean_env(main->env_list);
-	//clean_up();
 	return (g_exit_status);
 }
