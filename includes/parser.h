@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 16:36:19 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/29 16:51:48 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/29 17:19:55 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,8 +67,8 @@ typedef struct s_main
 	char	*line;
 	int		current_symbol;
 	int		free_quote_flag;
-	int		in_double_quots;
-	int		in_single_quots;
+	int		dbl_qts;
+	int		sngl_qts;
 	int		end_flag;
 	int		fd_in;
 	int		fd_out;
@@ -257,9 +257,23 @@ INPUT
 */
 void	input(t_main *mini, char *args);
 int		check_files(char **after_sep, t_main *main);
-void	execute_in_input(t_main *main, char **env, t_bt *bts ,char **before_sep);
-void	execute_or_exit(t_main *main, char **env, t_bt *bts ,char **before_sep);
-void	inpyt_cycle(t_main *main, char **env, t_bt *bts ,char **before_sep);
-void	make_input(t_main *main, char **env, t_bt *bts , t_hash *cmd);
+void	execute_in_input(t_main *main, char **env, t_bt *bts, \
+			char **before_sep);
+void	execute_or_exit(t_main *main, char **env, t_bt *bts, char **before_sep);
+void	inpyt_cycle(t_main *main, char **env, t_bt *bts, char **before_sep);
+void	make_input(t_main *main, char **env, t_bt *bts, t_hash *cmd);
+/*
+CMD UTILS
+*/
+int		is_t(char c);
+int		get_sep_len(char *str, int i);
+char	*get_arg_sep(char *str, int i);
+char	*sep_after_arg(char *str, int i);
+int		m_str_refactor(t_main *main, char **str, int i);
+void	divide_str(char **str, t_main *main);
+/*
+OUTPIT
+*/
+void	make_output(t_main *main, char **env, t_bt *bts, t_hash *cmd);
 
 #endif

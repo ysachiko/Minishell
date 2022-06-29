@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/05 19:50:27 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/08 17:35:19 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/29 16:52:56 by kezekiel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,18 +31,18 @@ void	str_delete_symbol(t_hash *hash, int i)
 
 void	set_double_quote_flag_value(t_main *main)
 {
-	if (main->in_double_quots)
-		main->in_double_quots = 0;
+	if (main->dbl_qts)
+		main->dbl_qts = 0;
 	else
-		main->in_double_quots = 1;
+		main->dbl_qts = 1;
 }
 
 void	set_single_quote_flag_value(t_main *main)
 {
-	if (main->in_single_quots)
-		main->in_single_quots = 0;
+	if (main->sngl_qts)
+		main->sngl_qts = 0;
 	else
-		main->in_single_quots = 1;
+		main->sngl_qts = 1;
 }
 
 int	symbol_check(t_main *main, int counter)

@@ -6,7 +6,7 @@
 /*   By: kezekiel <kezekiel@student.21-schoo>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 18:07:21 by kezekiel          #+#    #+#             */
-/*   Updated: 2022/06/28 18:09:55 by kezekiel         ###   ########.fr       */
+/*   Updated: 2022/06/29 12:18:05 by kezekiel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,11 @@
 
 void	handler(int sig)
 {
-	g_exit_status += sig;
-	if (sig == SIGINT)
-	{
-		g_exit_status = 130;
-		printf("\n");
-		rl_on_new_line();
-		rl_replace_line("", 0);
-		rl_redisplay();
-	}
+	(void)sig;
+	printf("\n");
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
 }
 
 void	handler2(int sig)

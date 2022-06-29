@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 16:46:21 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/29 16:47:43 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/29 18:23:06 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	ft_str_arr_len(char **args)
 	int	i;
 
 	i = 0;
-	while (args[i])
+	while (args && args[i])
 	{
 		i++;
 	}

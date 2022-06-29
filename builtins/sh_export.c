@@ -6,11 +6,64 @@
 /*   By: kezekiel <kezekiel@student.21-schoo>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 18:17:58 by kezekiel          #+#    #+#             */
-/*   Updated: 2022/06/28 18:17:59 by kezekiel         ###   ########.fr       */
+/*   Updated: 2022/06/29 15:57:02 by kezekiel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/parser.h"
+
+static void	export_err(char **vals, int *ret)
+{
+	if (!vals[0])
+	{
+		printf("export: '=': not a valid identifier\n");
+		*ret = 1;
+		return ;
+	}
+	printf("export: '%s': not a valid identifier\n", vals[0]);
+	*ret = 1;
+	return ;
+}
+
+static void	export_positive(char **vals, t_main *all)
+{
+	t_env	*tmp;
+
+	tmp = search_env(all->env_list, vals[0]);
+	if (tmp)
+	{
+		if (tmp->value)
+			free(tmp->value);
+		tmp->value = ft_strdup(vals[1]);
+		free_split(vals);
+		return ;
+	}
+	add_env(&(all->env_list), new_env(ft_strdup(vals[0]), \
+					ft_strdup(vals[1])));
+	free_split(vals);
+}
+
+static void	export_loop(t_main *all, char **args, int *ret, int i)
+{
+	char	**vals;
+
+	while (args[++i])
+	{
+		vals = ft_split(args[i], '=');
+		if (!check_export(vals[0]))
+		{	
+			export_err(vals, ret);
+			free_split(vals);
+			continue ;
+		}
+		if (vals[1])
+		{
+			export_positive(vals, all);
+			continue ;
+		}
+		free_split(vals);
+	}
+}	
 
 int	sh_export(char **args, t_main *all)
 {
@@ -21,40 +74,10 @@ int	sh_export(char **args, t_main *all)
 	char	**vals;
 
 	ret = 0;
+	i = 0;
 	if (args[1])
-	{	
-		i = 0;
-		while (args[++i])
-		{
-			vals = ft_split(args[i], '=');
-			if (!check_export(vals[0]))
-			{	
-				if (!vals[0])
-				{
-					printf("export: '=': not a valid identifier\n");
-					ret = 1;
-					continue ;
-				}
-				printf("export: '%s': not a valid identifier\n", vals[0]);
-				ret = 1;
-				continue ;
-			}
-			if (!vals[1])
-			{
-				free_split(vals);
-				continue ;
-			}
-			tmp = search_env(all->env_list, vals[0]);
-			if (tmp)
-			{
-				tmp->value = ft_strdup(vals[1]);
-				free_split(vals);
-				continue ;
-			}
-			add_env(&(all->env_list), new_env(ft_strdup(vals[0]), \
-				ft_strdup(vals[1])));
-			free_split(vals);
-		}
+	{
+		export_loop(all, args, &ret, i);
 		return (ret);
 	}
 	tmp = copy_env(all->env_list);

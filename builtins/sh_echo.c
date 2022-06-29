@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 17:54:41 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/29 16:10:32 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/29 18:10:29 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,13 +39,13 @@ int	sh_echo(char **args, t_main *main)
 		}
 		while (args[i])
 		{
-			printf("%s", args[i]);
+			ft_putstr_fd(args[i], STDOUT);
 			if (args[i + 1] && args[i][0] != '\0')
-				printf(" ");
+				ft_putstr_fd(" ", STDOUT);
 			i++;
 		}
 	}
 	if (n_flag == 0)
-		printf("\n");
+		ft_putstr_fd("\n", STDOUT);
 	return (0);
 }

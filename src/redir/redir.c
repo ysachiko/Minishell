@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 17:34:04 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/29 16:54:45 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/29 17:09:50 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,8 @@ void	redir(t_main *main, char **env, t_bt *bts)
 	{
 		if (cur_sep(tmp) == INPUT)
 			make_input(main, env, bts, tmp);
+		if (cur_sep(tmp) == TRUNC)
+			make_output(main, env, bts, tmp);
 		next_step(&tmp);
 	}
 }
