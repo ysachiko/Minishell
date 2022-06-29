@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/12 14:37:23 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/29 12:27:11 by kezekiel         ###   ########.fr       */
+/*   Updated: 2022/06/29 19:03:35 by kezekiel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,11 @@ int	launch(char **args, t_main *all, char **env)
 		signal(SIGINT, child_handler);
 		signal(SIGQUIT, child_handler);
 		if (execve(cmd, args, env) == -1)
-			perror("exec failure");
-		exit(EXIT_FAILURE);
+		{
+			printf("bash: %s: No such file or directory\n", args[0]);
+			g_exit_status = 127;
+		}	
+		exit(g_exit_status);
 	}
 	else if (child < 0)
 		perror("error forking");
