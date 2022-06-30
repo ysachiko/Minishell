@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 16:46:21 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/29 18:23:06 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/30 16:49:46 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int	is_redir(t_main *main)
 	tmp = main->current_cmd;
 	while (tmp)
 	{
-		if (tmp->key > 2 && tmp->key < 6)
+		if (tmp->key > 2 && tmp->key < 7)
 			return (1);
 		tmp = tmp->next;
 	}

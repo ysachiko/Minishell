@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 16:36:19 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/30 16:34:11 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/30 16:52:09 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -268,8 +268,11 @@ int		check_files(char **after_sep, t_main *main);
 void	execute_in_input(t_main *main, char **env, t_bt *bts, \
 			char **before_sep);
 void	execute_or_exit(t_main *main, char **env, t_bt *bts, char **before_sep);
-void	inpyt_cycle(t_main *main, char **env, t_bt *bts, char **before_sep);
+void	input_cycle(t_main *main, char **env, t_bt *bts, char **before_sep);
 void	make_input(t_main *main, char **env, t_bt *bts, t_hash *cmd);
+
+void	make_heredoc(t_main *main, char **env, t_bt *bts, t_hash *cmd);
+
 /*
 CMD UTILS
 */
@@ -299,4 +302,9 @@ void	minipipe(t_main *main, char **env, t_bt *bts);
 void	last_pipe(t_main *main, char **env, t_bt *bts);
 int		current_sep(t_main *main);
 int		is_builtin(char *str);
+/*
+HEREDOC
+*/
+void	make_heredoc(t_main *main, char **env, t_bt *bts, t_hash *cmd);
+void	make_input(t_main *main, char **env, t_bt *bts, t_hash *cmd);
 #endif

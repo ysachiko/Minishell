@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 17:34:04 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/30 16:45:25 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/30 16:48:49 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,8 @@ void	redir(t_main *main, char **env, t_bt *bts)
 			make_output(main, env, bts, tmp);
 		if (cur_sep(tmp) == APPEND)
 			make_append(main, env, bts, tmp);
+		if (cur_sep(tmp) == HER)
+			make_heredoc(main, env, bts, tmp);
 		next_step(&tmp);
 	}
-
 }
