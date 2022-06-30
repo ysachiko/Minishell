@@ -6,7 +6,7 @@
 #    By: kezekiel <kezekiel@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/06/01 17:55:47 by kezekiel          #+#    #+#              #
-#    Updated: 2022/06/29 16:19:09 by kezekiel         ###   ########.fr        #
+#    Updated: 2022/06/29 20:29:08 by kezekiel         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME = minishell
 
 CC = clang
 
-CFLAGS = #-fsanitize=address
+CFLAGS = -g3 #-fsanitize=address
 
 INC = includes/parser.h libft/libft.h
 

@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/12 14:46:37 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/28 17:54:26 by kezekiel         ###   ########.fr       */
+/*   Updated: 2022/06/29 20:34:22 by kezekiel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,8 @@ void	push_node(t_env **head, char *key, char *value)
 	t_env	*new;
 
 	new = (t_env *)malloc(sizeof(t_env));
-	new->key = key;
-	new->value = value;
+	new->key = ft_strdup(key);
+	new->value = ft_strdup(value);
 	new->next = *head;
 	*head = new;
 }
