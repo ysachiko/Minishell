@@ -16,6 +16,7 @@ CC = clang
 
 CFLAGS = -g3 -Wall -Wextra -Werror #-fsanitize=address
 
+
 INC = includes/parser.h libft/libft.h
 
 SRC	   = execute.c main2.c src/parser/parser.c  src/parser/list/list_head.c src/parser/usage/check_add_realloc.c \
