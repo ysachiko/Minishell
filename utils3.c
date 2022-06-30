@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 18:24:13 by kezekiel          #+#    #+#             */
-/*   Updated: 2022/06/30 16:47:31 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/30 23:33:36 by kezekiel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,10 +48,10 @@ int	check_input(char *input)
 {
 	while (*input)
 	{
-		if (*input == '|')
+		if (*input == '|' || *input == '<' || *input == '>')
 		{
 			ft_putstr_fd("minishell: syntax error near \
-unexpected token `|'\n", STDERR_FILENO);
+unexpected token `newline'\n", STDERR_FILENO);
 			g_exit_status = 2;
 			return (0);
 		}
