@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+         #
+#    By: kezekiel <kezekiel@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/06/01 17:55:47 by kezekiel          #+#    #+#              #
-#    Updated: 2022/06/30 16:47:24 by ysachiko         ###   ########.fr        #
+#    Updated: 2022/06/30 17:09:55 by kezekiel         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME = minishell
 
 CC = clang
 
-CFLAGS = -g3 -Wall -Wextra -Werror #-fsanitize=address -g
+CFLAGS = -fsanitize=address -Wall -Wextra -Werror #-fsanitize=address -g
 
 INC = includes/parser.h libft/libft.h
 
@@ -32,7 +32,7 @@ LIBFT = libft
 
 FLAGS = -L $(LIBFT) -lft
 
-RDLN = -L /Users/ysachiko/.brew/Cellar/readline/8.1.2/lib -I /Users/ysachiko/.brew/Cellar/readline/8.1.2/include/ -lreadline
+RDLN = -L /Users/kezekiel/.brew/Cellar/readline/8.1.2/lib -I /Users/kezekiel/.brew/Cellar/readline/8.1.2/include/ -lreadline
 
 all : $(NAME)
 

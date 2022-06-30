@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/30 12:40:08 by kezekiel          #+#    #+#             */
-/*   Updated: 2022/06/30 16:51:08 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/30 17:57:03 by kezekiel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,11 +42,12 @@ void	heredoc(char *stop, char *name)
 {
 	char	*line;
 	int		fd;
-
-	fd = open(name, O_CREAT | O_EXCL | O_RDWR, 0644);
+	fd = open(name, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	//if (fd < 0)
+	signal(SIGINT, handler);
+	signal(SIGQUIT, SIG_IGN);	
 	line = readline("heredoc>");
-	while (ft_strcmp(line, stop) != 0)
+	while (line && ft_strcmp(line, stop) != 0)
 	{
 		line = ft_strjoin(line, "\n");
 		write(fd, line, ft_strlen(line));
@@ -73,11 +74,11 @@ void	make_heredoc(t_main *main, char **env, t_bt *bts, t_hash *cmd)
 		return (clean_seps(after, before));
 	heredoc(after[0], name);
 	if (!main->no_exec && (checker(after, main, name) == 0))
-		execute_or_exit(main, env, bts, before);
+		execute_or_exit(main, env, bts, main->cur_md);
 	else
 	{
 		main->after_sep = after;
-		input_cycle(main, env, bts, before);
+		input_cycle(main, env, bts, main->cur_md);
 	}
 	if (name)
 		unlink(name);
