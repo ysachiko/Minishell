@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 16:36:19 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/30 20:35:50 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/30 21:10:17 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -282,6 +282,7 @@ int		is_t(char c);
 int		get_sep_len(char *str, int i);
 char	*get_arg_sep(char *str, int i);
 char	*sep_after_arg(char *str, int i);
+void	clean_seps(char	**after_sep, char **before_sep);
 int		m_str_refactor(char **str, int i);
 void	divide_str(char **str, t_main *main);
 void	null_smth(t_main *main, t_hash **tmp, t_hash **head);
@@ -290,6 +291,7 @@ OUTPIT
 */
 void	make_output(t_main *main, t_hash *cmd);
 void	werror_killer(int ac, char **av);
+void	multi_args_input(t_main *main, char **after_sep);
 /*
 APPEND
 */
@@ -304,8 +306,5 @@ void	minipipe(t_main *main, char **env, t_bt *bts);
 void	last_pipe(t_main *main, char **env, t_bt *bts);
 int		current_sep(t_main *main);
 int		is_builtin(char *str);
-/*
-HEREDOC
-*/
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/30 12:40:08 by kezekiel          #+#    #+#             */
-/*   Updated: 2022/06/30 20:35:37 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/30 20:58:42 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,15 +52,19 @@ int	checker(char **after_sep, t_main *main, char *name)
 void	heredoc(char *stop, char *name, t_main *main)
 {
 	char	*line;
+	char	*tmp;
 	int		fd;
 
-	fd = open(name, O_RDWR | O_CREAT | O_TRUNC, 0644);
+	fd = open(name, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	signal(SIGINT, handler);
+	signal(SIGQUIT, SIG_IGN);
 	line = readline("heredoc>");
-	while (ft_strcmp(line, stop) != 0)
+	while (line && ft_strcmp(line, stop) != 0)
 	{
-		line = ft_strjoin(line, "\n");
+		tmp = ft_strjoin(line, "\n");
 		write(fd, line, ft_strlen(line));
 		free(line);
+		free(tmp);
 		line = readline("heredoc>");
 	}
 	input(main, name);

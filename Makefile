@@ -6,7 +6,7 @@
 #    By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/06/01 17:55:47 by kezekiel          #+#    #+#              #
-#    Updated: 2022/06/30 20:32:37 by ysachiko         ###   ########.fr        #
+#    Updated: 2022/06/30 21:17:45 by ysachiko         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,11 +14,11 @@ NAME = minishell
 
 CC = clang
 
-CFLAGS = -g3 -Wall -Wextra -Werror #-fsanitize=address -g
+CFLAGS = -Wall -Wextra -Werror #-fsanitize=address -g
 
 INC = includes/parser.h libft/libft.h
 
-SRC	   = execute.c main2.c src/parser/parser.c  src/parser/list/list_head.c src/parser/usage/check_add_realloc.c \
+SRC	   = execute.c main.c src/parser/parser.c  src/parser/list/list_head.c src/parser/usage/check_add_realloc.c \
 		 src/parser/usage/debug_shit.c	src/parser/usage/lexer_main_usage.c	src/env/init_env.c \
 		 src/parser/usage/parse_env.c	src/parser/usage/parse_env_usage.c 	src/parser/usage/parse_str_env.c\
 		 src/parser/usage/parser_usage.c	src/parser/quots.c 	src/parser/list_refactor.c \

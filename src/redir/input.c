@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 16:45:56 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/30 20:33:58 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/30 21:07:48 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,10 @@ int	check_files(char **after_sep, t_main *main)
 	if (main->echo)
 		input(main, after_sep[0]);
 	else if (main->cat && ft_str_arr_len(after_sep) > 1)
+	{
+		input(main, after_sep[0]);
 		input(main, after_sep[1]);
+	}
 	else if (main->cat && ft_str_arr_len(after_sep) == 1)
 		input(main, after_sep[0]);
 	else if (!main->cat && !main->echo)
@@ -94,13 +97,7 @@ void	make_input(t_main *main, t_hash *cmd)
 	if (check_files(after_sep, main) == 1 && !main->no_exec)
 		return (clean_seps(after_sep, before_sep));
 	else if (ft_str_arr_len(after_sep) > 2)
-	{
-		if (main->echo)
-			input(main, after_sep[0]);
-		if (main->cat)
-			input(main, after_sep[1]);
-		main->after_sep = after_sep;
-	}
+		multi_args_input(main, after_sep);
 	if (main->no_exec)
 		g_exit_status = 1;
 	clean_seps(after_sep, before_sep);

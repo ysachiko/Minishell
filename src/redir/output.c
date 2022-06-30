@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 17:08:31 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/30 20:36:12 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/30 21:10:06 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,15 @@ void	werror_killer(int ac, char **av)
 {
 	(void) ac;
 	(void) av;
+}
+
+void	multi_args_input(t_main *main, char **after_sep)
+{
+	if (main->echo)
+		input(main, after_sep[0]);
+	if (main->cat)
+		input(main, after_sep[1]);
+	main->after_sep = after_sep;
 }
 
 void	output(t_main *main, char **after_arg)
@@ -38,6 +47,13 @@ void	output(t_main *main, char **after_arg)
 		return ;
 	}
 	dup2(main->out, STDOUT);
+}
+
+void	clean_seps(char	**after_sep, char **before_sep)
+{
+	free_split(after_sep);
+	free_split(before_sep);
+	return ;
 }
 
 void	make_output(t_main *main, t_hash *cmd)

@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 17:34:04 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/30 20:35:01 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/30 21:09:55 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,11 +67,15 @@ void	next_step(t_hash **cmd)
 		*cmd = (*cmd)->next;
 }
 
-void	clean_seps(char	**after_sep, char **before_sep)
+void	execute_in_redir(t_main *main, char **env, t_bt *bts)
 {
-	free_split(after_sep);
-	free_split(before_sep);
-	return ;
+	if (!main->no_exec)
+		execute(main->cur_md, main, env, bts);
+	ft_close(main->out);
+	dup2(main->fd_out, STDOUT);
+	ft_close(main->in);
+	dup2(main->fd_in, STDIN);
+	free_split(main->cur_md);
 }
 
 void	redir(t_main *main, char **env, t_bt *bts)
@@ -82,6 +86,7 @@ void	redir(t_main *main, char **env, t_bt *bts)
 	tmp = main->current_cmd;
 	prev = 0;
 	main->cur_md = before_sep_func(tmp);
+	init_new_value(main);
 	while (tmp)
 	{
 		if (cur_sep(tmp) == INPUT)
@@ -95,10 +100,5 @@ void	redir(t_main *main, char **env, t_bt *bts)
 		prev = cur_sep(tmp);
 		next_step(&tmp);
 	}
-	if (!main->no_exec)
-		execute(main->cur_md, main, env, bts);
-	ft_close(main->out);
-	dup2(main->fd_out, STDOUT);
-	ft_close(main->in);
-	dup2(main->fd_in, STDIN);
+	execute_in_redir(main, env, bts);
 }
