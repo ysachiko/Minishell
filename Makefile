@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+         #
+#    By: kezekiel <kezekiel@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/06/01 17:55:47 by kezekiel          #+#    #+#              #
-#    Updated: 2022/06/29 20:45:54 by ysachiko         ###   ########.fr        #
+#    Updated: 2022/06/30 14:43:12 by kezekiel         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,7 @@ SRC	   = execute.c main2.c src/parser/parser.c  src/parser/list/list_head.c src/
 		 src/parser/usage/parser_usage.c	src/parser/quots.c 	src/parser/list_refactor.c \
 		 builtins.c	free.c	utils.c utils2.c utils3.c inits.c signals.c builtins/sh_echo.c builtins/sh_exit.c builtins/sh_unset.c builtins/sh_export.c \
 		src/parser/current_cmd.c src/parser/cmd_utils.c builtins/sh_cd.c builtins/sh_stuff.c src/redir/redir.c	src/redir/redir_usage.c	src/redir/input.c \
-		src/redir/output.c	src/redir/append.c pipe.c \
+		src/redir/output.c	src/redir/append.c src/redir/heredoc.c pipe.c \
 
 OBJ = $(patsubst %.c,%.o,$(SRC))
 
@@ -32,7 +32,7 @@ LIBFT = libft
 
 FLAGS = -L $(LIBFT) -lft
 
-RDLN = -L /Users/ysachiko/.brew/Cellar/readline/8.1.2/lib -I /Users/ysachiko/.brew/Cellar/readline/8.1.2/include/ -lreadline
+RDLN = -L /Users/kezekiel/.brew/Cellar/readline/8.1.2/lib -I /Users/kezekiel/.brew/Cellar/readline/8.1.2/include/ -lreadline
 
 all : $(NAME)
 

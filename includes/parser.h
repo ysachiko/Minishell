@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 16:36:19 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/29 21:00:39 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/30 15:31:24 by kezekiel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -264,6 +264,9 @@ void	execute_in_input(t_main *main, char **env, t_bt *bts, \
 void	execute_or_exit(t_main *main, char **env, t_bt *bts, char **before_sep);
 void	inpyt_cycle(t_main *main, char **env, t_bt *bts, char **before_sep);
 void	make_input(t_main *main, char **env, t_bt *bts, t_hash *cmd);
+
+void	make_heredoc(t_main *main, char **env, t_bt *bts, t_hash *cmd);
+
 /*
 CMD UTILS
 */

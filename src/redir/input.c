@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 16:45:56 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/29 20:13:15 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/30 15:32:06 by kezekiel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,10 @@ void	inpyt_cycle(t_main *main, char **env, t_bt *bts, char **before_sep)
 {
 	int	i;
 
-	i = 1;
+	if (cur_sep(main->current_cmd) == HER)
+		i = 1;
+	else
+		i = 0;
 	while (i < ft_str_arr_len(main->after_sep) && !main->no_exec)
 	{
 		input(main, main->after_sep[i]);
