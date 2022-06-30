@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   sh_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kezekiel <kezekiel@student.21-schoo>       +#+  +:+       +#+        */
+/*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 17:57:31 by kezekiel          #+#    #+#             */
-/*   Updated: 2022/06/28 18:14:21 by kezekiel         ###   ########.fr       */
+/*   Updated: 2022/06/29 19:44:57 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ int	sh_exit(char **args, t_main *main)
 		ft_putstr_fd("bash: exit: ", STDERR);
 		ft_putstr_fd(args[1], STDERR);
 		ft_putendl_fd(": numeric argument required", STDERR);
+		main->exit_flag = 0;
 	}
 	else if (args[1])
 	{
@@ -54,5 +55,5 @@ int	sh_exit(char **args, t_main *main)
 		g_exit_status = 0;
 		main->exit_flag = 0;
 	}
-	return (0);
+	return (g_exit_status);
 }

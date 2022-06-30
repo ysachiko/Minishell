@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kezekiel <kezekiel@student.21-schoo>       +#+  +:+       +#+        */
+/*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 16:03:11 by kezekiel          #+#    #+#             */
-/*   Updated: 2022/06/29 16:51:04 by kezekiel         ###   ########.fr       */
+/*   Updated: 2022/06/29 20:50:58 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ void	divide_str(char **str, t_main *main)
 		}
 		if (is_t((*str)[i]) && (!main->sngl_qts && !main->dbl_qts))
 		{
-			i = m_str_refactor(main, str, i);
+			i = m_str_refactor(str, i);
 		}
 		i++;
 	}

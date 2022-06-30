@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_echo.c                                          :+:      :+:    :+:   */
+/*   sh_echo.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 17:54:41 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/28 18:13:47 by kezekiel         ###   ########.fr       */
+/*   Updated: 2022/06/29 18:10:29 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,13 +39,13 @@ int	sh_echo(char **args, t_main *main)
 		}
 		while (args[i])
 		{
-			printf("%s", args[i]);
+			ft_putstr_fd(args[i], STDOUT);
 			if (args[i + 1] && args[i][0] != '\0')
-				printf(" ");
+				ft_putstr_fd(" ", STDOUT);
 			i++;
 		}
 	}
 	if (n_flag == 0)
-		printf("\n");
-	return (1);
+		ft_putstr_fd("\n", STDOUT);
+	return (0);
 }

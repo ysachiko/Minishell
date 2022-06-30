@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   sh_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kezekiel <kezekiel@student.21-schoo>       +#+  +:+       +#+        */
+/*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 18:15:41 by kezekiel          #+#    #+#             */
-/*   Updated: 2022/06/29 17:31:38 by kezekiel         ###   ########.fr       */
+/*   Updated: 2022/06/29 20:52:23 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,6 @@ int	prev_dir(t_main *all, char *pwd, t_env *tmp2)
 
 int	sh_cd(char **args, t_main *all)
 {
-	t_env	*tmp;
 	t_env	*tmp2;
 	char	*pwd;
 

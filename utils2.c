@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kezekiel <kezekiel@student.21-schoo>       +#+  +:+       +#+        */
+/*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 17:48:09 by kezekiel          #+#    #+#             */
-/*   Updated: 2022/06/29 12:32:51 by kezekiel         ###   ########.fr       */
+/*   Updated: 2022/06/29 20:48:29 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,8 +67,6 @@ void	sort_env(t_env *copy)
 {
 	t_env	*curr;
 	t_env	*tmp;
-	char	*tmp_key;
-	char	*tmp_value;
 
 	curr = copy;
 	if (!curr)
