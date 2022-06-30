@@ -6,11 +6,18 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 17:57:31 by kezekiel          #+#    #+#             */
-/*   Updated: 2022/06/29 19:44:57 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/30 14:10:40 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/parser.h"
+
+void	print_err(char *arg, char *arg2)
+{
+	ft_putstr_fd("bash: ", STDERR);
+	ft_putstr_fd(arg, STDERR);
+	ft_putendl_fd(arg2, STDERR);
+}
 
 int	ft_strisnum(const char *str)
 {
@@ -19,7 +26,7 @@ int	ft_strisnum(const char *str)
 	i = 0;
 	if (str == NULL)
 		return (0);
-	if (str[0] == '-')
+	if (str[0] == '-' || str[0] == '+')
 		i++;
 	while (str[i])
 	{
@@ -35,7 +42,7 @@ int	sh_exit(char **args, t_main *main)
 	if (args[1] && args[2])
 	{
 		g_exit_status = 1;
-		printf("bash: exit: too many arguments\n");
+		print_err("exit:", " too many arguments");
 	}
 	else if (args[1] && ft_strisnum(args[1]) == 0)
 	{

@@ -1,24 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   output.c                                           :+:      :+:    :+:   */
+/*   append.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/06/29 17:08:31 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/30 16:35:43 by ysachiko         ###   ########.fr       */
+/*   Created: 2022/06/29 19:55:13 by ysachiko          #+#    #+#             */
+/*   Updated: 2022/06/30 15:47:39 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/parser.h"
 
-void	werror_killer(int ac, char **av)
+void	execute_or_exit(t_main *main, char **env, t_bt *bts, char **before_sep)
 {
-	(void) ac;
-	(void) av;
+	if (!main->no_exec)
+		execute_in_input(main, env, bts, before_sep);
 }
 
-void	output(t_main *main, char **after_arg)
+void	append(t_main *main, char **after_arg)
 {
 	if (after_arg[0] == NULL)
 	{
@@ -28,10 +28,10 @@ void	output(t_main *main, char **after_arg)
 		g_exit_status = 258;
 		return ;
 	}
-	main->out = open(after_arg[0], O_CREAT | O_WRONLY | O_TRUNC, S_IRWXU);
+	main->out = open(after_arg[0], O_CREAT | O_WRONLY | O_APPEND, S_IRWXU);
 	if (main->out == -1)
 	{
-		ft_putstr_fd("bash: ", STDERR);
+		ft_putstr_fd("bash$ ", STDERR);
 		ft_putstr_fd(after_arg[0], STDERR);
 		ft_putendl_fd(": No such file or directory", STDERR);
 		main->no_exec = 1;
@@ -40,7 +40,7 @@ void	output(t_main *main, char **after_arg)
 	dup2(main->out, STDOUT);
 }
 
-void	make_output(t_main *main, char **env, t_bt *bts, t_hash *cmd)
+void	make_append(t_main *main, char **env, t_bt *bts, t_hash *cmd)
 {
 	char	**before_sep;
 	char	**after_sep;
@@ -58,10 +58,10 @@ void	make_output(t_main *main, char **env, t_bt *bts, t_hash *cmd)
 		return ;
 	}
 	main->no_exec = 0;
-	output(main, after_sep);
+	append(main, after_sep);
 	if (!main->no_exec)
 	{
-		execute(main->cur_md, main, env, bts);
+		execute(before_sep, main, env, bts);
 		ft_close(main->out);
 		dup2(main->fd_out, STDOUT);
 	}

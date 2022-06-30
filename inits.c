@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   inits.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kezekiel <kezekiel@student.21-schoo>       +#+  +:+       +#+        */
+/*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 18:28:48 by kezekiel          #+#    #+#             */
-/*   Updated: 2022/06/28 18:30:07 by kezekiel         ###   ########.fr       */
+/*   Updated: 2022/06/29 21:00:16 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,4 +28,10 @@ void	init_bts(t_bt *bts)
 	bts->built[4] = &sh_pwd;
 	bts->built[5] = &sh_exit;
 	bts->built[6] = &sh_echo;
+}
+
+void	null_smth(t_main *main, t_hash **tmp, t_hash **head)
+{
+	*tmp = main->tmp2;
+	*head = NULL;
 }

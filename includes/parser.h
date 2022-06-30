@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 16:36:19 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/29 17:19:55 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/30 16:34:11 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <fcntl.h>
+# include <dirent.h>
 
 // ERRORS
 # define ERROR_EXEC_BIN_INIT "Error: malloc in execute binaty cmd\n"
@@ -44,6 +45,9 @@
 # define STDIN 0
 # define STDOUT 1
 # define STDERR 2
+
+# define IS_DIRECTORY 126
+# define UNKNOWN_COMMAND 127
 
 extern int	g_exit_status;
 
@@ -78,6 +82,7 @@ typedef struct s_main
 	int		exit_flag;
 	int		no_exec;
 	char	**after_sep;
+	char	**cur_md;
 	t_hash	*current_cmd;
 	t_hash	*tmp2;
 	t_hash	*hash_head;
@@ -92,6 +97,7 @@ typedef struct s_bt
 }	t_bt;
 
 void	rl_replace_line(const char *text, int clear_undo);
+void	child_builtin(t_main *main, char **env, t_bt *bts, char **args);
 /*
 PARSER.C
 */
@@ -199,6 +205,8 @@ t_env	*copy_env(t_env *head);
 void	sort_env(t_env *copy);
 char	**hash_parser(t_hash *head);
 int		lst_size(t_hash *lst);
+void	clean_up(t_main *main, t_bt *bts);
+void	print_err(char *arg, char *arg2);
 /*
 EXECUTE
 */
@@ -269,11 +277,26 @@ int		is_t(char c);
 int		get_sep_len(char *str, int i);
 char	*get_arg_sep(char *str, int i);
 char	*sep_after_arg(char *str, int i);
-int		m_str_refactor(t_main *main, char **str, int i);
+int		m_str_refactor(char **str, int i);
 void	divide_str(char **str, t_main *main);
+void	null_smth(t_main *main, t_hash **tmp, t_hash **head);
 /*
 OUTPIT
 */
 void	make_output(t_main *main, char **env, t_bt *bts, t_hash *cmd);
-
+void	werror_killer(int ac, char **av);
+/*
+APPEND
+*/
+void	append(t_main *main, char **after_arg);
+void	make_append(t_main *main, char **env, t_bt *bts, t_hash *cmd);
+void	execute_or_exit(t_main *main, char **env, t_bt *bts, char **before_sep);
+/*
+PIPE
+*/
+void	pipe_executor(t_main *main, char **env, t_bt *bts);
+void	minipipe(t_main *main, char **env, t_bt *bts);
+void	last_pipe(t_main *main, char **env, t_bt *bts);
+int		current_sep(t_main *main);
+int		is_builtin(char *str);
 #endif

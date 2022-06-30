@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 17:14:21 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/29 19:42:13 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/30 16:05:43 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,48 +14,12 @@
 
 int	g_exit_status;
 
-int	current_sep(t_main *main)
-{
-	t_hash	*tmp;
-
-	tmp = main->current_cmd;
-	while (tmp->next)
-		tmp = tmp->next;
-	if (tmp->key == PIPE)
-		return (PIPE);
-	if (tmp->key == TRUNC)
-		return (TRUNC);
-	if (tmp->key == APPEND)
-		return (APPEND);
-	if (tmp->key == INPUT)
-		return (INPUT);
-	return (0);
-}
-
-int	is_builtin(char *str)
-{
-	if (!ft_strcmp(str, "echo"))
-		return (1);
-	if (!ft_strcmp(str, "cd"))
-		return (1);
-	if (!ft_strcmp(str, "unset"))
-		return (1);
-	if (!ft_strcmp(str, "env"))
-		return (1);
-	if (!ft_strcmp(str, "export"))
-		return (1);
-	if (!ft_strcmp(str, "pwd"))
-		return (1);
-	if (!ft_strcmp(str, "exit"))
-		return (1);
-	return (0);
-}
-
 void	child_builtin(t_main *main, char **env, t_bt *bts, char **args)
 {
 	int	i;
 
 	i = 0;
+	(void) env;
 	while (i < 7)
 	{
 		if (ft_strcmp(args[0], bts->builtins[i]) == 0)
@@ -65,75 +29,6 @@ void	child_builtin(t_main *main, char **env, t_bt *bts, char **args)
 		}
 		i++;
 	}
-}
-
-void	pipe_executor(t_main *main, char **env, t_bt *bts)
-{
-	char	**args;
-	char	**path;
-	char	*cmd;
-
-	args = hash_parser(main->current_cmd);
-	if (is_redir(main))
-	{
-		redir(main, env, bts);
-		exit(g_exit_status);
-	}
-	else if (is_builtin(args[0]))
-		child_builtin(main, env, bts, args);
-	else
-	{
-		path = path_parser(main->env_list);
-		cmd = search_paths(path, args[0]);
-		if (execve(cmd, args, env) == -1)
-			perror("exec failure");
-	}
-}
-
-void	minipipe(t_main *main, char **env, t_bt *bts)
-{
-	int		fd[2];
-	int		pid;
-	char	**args;
-	char	**path;
-	char	*cmd;
-
-	pipe(fd);
-	pid = fork();
-	if (pid == 0)
-	{
-		dup2(fd[1], STDOUT);
-		pipe_executor(main, env, bts);
-		close(fd[0]);
-		close(fd[1]);
-		return ;
-	}
-	else
-	{
-		wait(&pid);
-		dup2(fd[0], STDIN);
-		close(fd[1]);
-		close(fd[0]);
-		return ;
-	}
-}
-
-void	last_pipe(t_main *main, char **env, t_bt *bts)
-{
-	char	**args;
-
-	ft_close(STDOUT);
-	dup2(main->fd_out, STDOUT);
-	if (is_redir(main))
-		redir(main, env, bts);
-	else
-	{
-		args = hash_parser(main->current_cmd);
-		execute(args, main, env, bts);
-	}
-	ft_close(STDIN);
-	dup2(main->fd_in, STDIN);
-	free(args);
 }
 
 int	execute_cycle(t_main *main, char **env, t_bt *bts)
@@ -146,9 +41,9 @@ int	execute_cycle(t_main *main, char **env, t_bt *bts)
 		parser(main);
 		if (current_sep(main) == PIPE)
 			minipipe(main, env, bts);
-		else if (is_redir(main))
+		else if (is_redir(main) && main->prev_sep != PIPE)
 			redir(main, env, bts);
-		else if (!current_sep(main) && main->prev_sep)
+		else if (current_sep(main) != PIPE && main->prev_sep)
 			last_pipe(main, env, bts);
 		else
 		{
@@ -162,22 +57,47 @@ int	execute_cycle(t_main *main, char **env, t_bt *bts)
 	return (0);
 }
 
+void	init_main(t_main *main, char **env, t_bt *bts)
+{
+	g_exit_status = 0;
+	main->exit_flag = 1;
+	main->no_exec = 0;
+	main->fd_in = dup(STDIN);
+	main->fd_out = dup(STDOUT);
+	init_bts(bts);
+	init_env(main, env);
+}
+
+void	execute_main(t_main *main, char **env, t_bt *bts)
+{
+	add_history(main->line);
+	display_ctrl_c(0);
+	make_lexer(main);
+	execute_cycle(main, env, bts);
+	if (main->prev_sep == PIPE && !main->end_flag)
+	{
+		ft_close(STDOUT);
+		dup2(main->fd_out, STDOUT);
+		ft_close(STDIN);
+		dup2(main->fd_in, STDIN);
+		ft_putstr_fd("bash: ", STDERR);
+		ft_putendl_fd("syntax error: unexpected end of file", STDERR);
+		g_exit_status = 1;
+	}
+	free_hash(main->hash_head);
+	free(main->line);
+}
+
 int	main(int ac, char **av, char **env)
 {
-	char	**args;
 	t_main	*main;
 	t_bt	*bts;
 
 	signal(SIGQUIT, SIG_IGN);
-	g_exit_status = 0;
+	werror_killer(ac, av);
 	main = malloc(sizeof(t_main));
-	main->fd_in = dup(STDIN);
-	main->fd_out = dup(STDOUT);
 	bts = malloc(sizeof(t_bt));
-	init_bts(bts);
-	init_env(main, env);
-	main->exit_flag = 1;
-	main->no_exec = 0;
+	init_main(main, env, bts);
 	while (main->exit_flag)
 	{
 		signal(SIGINT, handler);
@@ -191,16 +111,8 @@ int	main(int ac, char **av, char **env)
 		signal(SIGINT, SIG_IGN);
 		if (!main->line)
 			exit(0);
-		add_history(main->line);
-		display_ctrl_c(0);
-		make_lexer(main);
-		execute_cycle(main, env, bts);
-		free_hash(main->hash_head);
-		free(main->line);
+		execute_main(main, env, bts);
 	}
-	clean_env(main->env_list);
-	//clean_up();
-	free(main);
-	free(bts);
+	clean_up(main, bts);
 	return (g_exit_status);
 }

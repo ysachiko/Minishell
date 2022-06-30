@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 16:45:56 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/29 18:01:00 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/30 16:45:29 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	input(t_main *mini, char *args)
 	mini->in = open(args, O_RDONLY, S_IRWXU);
 	if (mini->in == -1)
 	{
-		ft_putstr_fd("minishell: ", STDERR);
+		ft_putstr_fd("bash", STDERR);
 		ft_putstr_fd(args, STDERR);
 		ft_putendl_fd(": No such file or directory", STDERR);
 		mini->no_exec = 1;
@@ -30,8 +30,9 @@ int	check_files(char **after_sep, t_main *main)
 {
 	if (ft_str_arr_len(after_sep) == 0)
 	{
-		ft_putstr_fd("bash$ ", STDERR);
+		ft_putstr_fd("bash: ", STDERR);
 		ft_putendl_fd("syntax error near unexpected token `newline'", STDERR);
+		g_exit_status = 258;
 		return (1);
 	}
 	if (ft_str_arr_len(after_sep) == 1)
@@ -50,13 +51,7 @@ void	execute_in_input(t_main *main, char **env, t_bt *bts, char **before_sep)
 	dup2(main->fd_in, STDIN);
 }
 
-void	execute_or_exit(t_main *main, char **env, t_bt *bts, char **before_sep)
-{
-	if (!main->no_exec)
-		execute_in_input(main, env, bts, before_sep);
-}
-
-void	inpyt_cycle(t_main *main, char **env, t_bt *bts, char **before_sep)
+void	input_cycle(t_main *main, char **env, t_bt *bts, char **before_sep)
 {
 	int	i;
 
@@ -85,15 +80,21 @@ void	make_input(t_main *main, char **env, t_bt *bts, t_hash *cmd)
 	tmp = cmd;
 	after_sep = after_sep_func(tmp);
 	before_sep = before_sep_func(tmp);
-	main->no_exec = 0;
+	// main->no_exec = 0;
+	if (!after_sep[0] && !before_sep[0])
+	{
+		print_err("", "syntax error near unexpected token `newline'");
+		g_exit_status = 2;
+		return ;
+	}
 	if (check_files(after_sep, main) == 1 && !main->no_exec)
 		return (clean_seps(after_sep, before_sep));
 	else if (!main->no_exec && (check_files(after_sep, main) == 0))
-		execute_or_exit(main, env, bts, before_sep);
+		execute_or_exit(main, env, bts, main->cur_md);
 	else
 	{
 		main->after_sep = after_sep;
-		inpyt_cycle(main, env, bts, before_sep);
+		input_cycle(main, env, bts, main->cur_md);
 	}
 	if (main->no_exec)
 		g_exit_status = 1;

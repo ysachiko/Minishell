@@ -3,19 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysachiko <ysachiko@student.21-school.ru    +#+  +:+       +#+        */
+/*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/12 14:37:23 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/29 19:03:35 by kezekiel         ###   ########.fr       */
+/*   Updated: 2022/06/30 15:48:01 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/parser.h"
 
-static int	ft_wexitstatus(int x)
-{
-	return ((x >> 8) & 0x000000ff);
-}
+// static int	ft_wexitstatus(int x)
+// {
+// 	return ((x >> 8) & 0x000000ff);
+// }
 
 int	execute(char **args, t_main *all, char **env, t_bt *bts)
 {
@@ -42,10 +42,36 @@ void	wait_child(pid_t child)
 		g_exit_status = 128 + WTERMSIG(g_exit_status);
 }
 
+int	error_message(char *path)
+{
+	DIR	*folder;
+	int	fd;
+
+	fd = open(path, O_WRONLY);
+	folder = opendir(path);
+	ft_putstr_fd("minishell: ", STDERR);
+	ft_putstr_fd(path, STDERR);
+	if (ft_strchr(path, '/') == NULL)
+		ft_putendl_fd(": command not found", STDERR);
+	else if (fd == -1 && folder == NULL)
+		ft_putendl_fd(": No such file or directory", STDERR);
+	else if (fd == -1 && folder != NULL)
+		ft_putendl_fd(": is a directory", STDERR);
+	else if (fd != -1 && folder == NULL)
+		ft_putendl_fd(": Permission denied", STDERR);
+	if (ft_strchr(path, '/') == NULL || (fd == -1 && folder == NULL))
+		g_exit_status = UNKNOWN_COMMAND;
+	else
+		g_exit_status = IS_DIRECTORY;
+	if (folder)
+		closedir(folder);
+	ft_close(fd);
+	return (g_exit_status);
+}
+
 int	launch(char **args, t_main *all, char **env)
 {
 	pid_t	child;
-	int		status;
 	char	**path;
 	char	*cmd;
 
@@ -57,10 +83,7 @@ int	launch(char **args, t_main *all, char **env)
 		signal(SIGINT, child_handler);
 		signal(SIGQUIT, child_handler);
 		if (execve(cmd, args, env) == -1)
-		{
-			printf("bash: %s: No such file or directory\n", args[0]);
-			g_exit_status = 127;
-		}	
+			error_message(args[0]);
 		exit(g_exit_status);
 	}
 	else if (child < 0)

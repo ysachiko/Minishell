@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 18:24:13 by kezekiel          #+#    #+#             */
-/*   Updated: 2022/06/29 19:32:22 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/30 15:16:51 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,4 +73,11 @@ void	display_ctrl_c(int display)
 	else
 		t.c_lflag &= ~ECHOCTL;
 	tcsetattr(0, TCSANOW, &t);
+}
+
+void	clean_up(t_main *main, t_bt *bts)
+{
+	clean_env(main->env_list);
+	free(main);
+	free(bts);
 }

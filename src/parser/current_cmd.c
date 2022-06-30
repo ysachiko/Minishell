@@ -6,13 +6,13 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 17:48:46 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/29 17:03:39 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/29 21:00:01 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/parser.h"
 
-int	m_str_refactor(t_main *main, char **str, int i)
+int	m_str_refactor(char **str, int i)
 {
 	char	*arg;
 	char	*before_arg;
@@ -74,7 +74,7 @@ t_hash	*make_current_cmd(t_main *main)
 	t_hash	*head;
 	t_hash	*tmp;
 
-	tmp = main->tmp2;
+	null_smth(main, &tmp, &head);
 	if (tmp)
 	{
 		head = ft_lstnew_hash(tmp->key, ft_strdup(tmp->value));

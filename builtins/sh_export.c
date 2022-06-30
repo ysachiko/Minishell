@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   sh_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kezekiel <kezekiel@student.21-schoo>       +#+  +:+       +#+        */
+/*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 18:17:58 by kezekiel          #+#    #+#             */
-/*   Updated: 2022/06/29 17:13:26 by kezekiel         ###   ########.fr       */
+/*   Updated: 2022/06/30 14:47:41 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,11 @@ static void	export_err(char **vals, int *ret)
 {
 	if (!vals[0])
 	{
-		printf("export: '=': not a valid identifier\n");
+		print_err("=", ": not a valid identifier");
 		*ret = 1;
 		return ;
 	}
-	printf("export: '%s': not a valid identifier\n", vals[0]);
+	print_err(vals[0], ": not a valid identifier");
 	*ret = 1;
 	return ;
 }
@@ -51,7 +51,7 @@ static void	export_loop(t_main *all, char **args, int *ret, int i)
 	{
 		vals = ft_split(args[i], '=');
 		if (!check_export(vals[0]))
-		{	
+		{
 			export_err(vals, ret);
 			free_split(vals);
 			continue ;
@@ -63,7 +63,7 @@ static void	export_loop(t_main *all, char **args, int *ret, int i)
 		}
 		free_split(vals);
 	}
-}	
+}
 
 int	sh_export(char **args, t_main *all)
 {
@@ -71,7 +71,6 @@ int	sh_export(char **args, t_main *all)
 	t_env	*tmp_2;
 	int		i;
 	int		ret;
-	char	**vals;
 
 	ret = 0;
 	i = 0;

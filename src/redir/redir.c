@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 17:34:04 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/29 17:09:50 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/30 16:45:25 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ char	**after_sep_func(t_hash *cmd)
 	i = ft_strlen_before_sep(tmp);
 	after_arg = malloc(sizeof(char *) * (i + 1));
 	i = 0;
-	while (tmp_2 && !(tmp_2->key > 2 && tmp_2->key < 7))
+	while (tmp_2 && !(tmp_2->key > 2 && tmp_2->key < 8))
 	{
 		after_arg[i++] = ft_strdup(tmp_2->value);
 		tmp_2 = tmp_2->next;
@@ -77,15 +77,21 @@ void	clean_seps(char	**after_sep, char **before_sep)
 void	redir(t_main *main, char **env, t_bt *bts)
 {
 	t_hash	*tmp;
+	t_hash	*tmp_2;
 
 	tmp = main->current_cmd;
+	tmp_2 = main->current_cmd;
 	main->no_exec = 0;
+	main->cur_md = before_sep_func(tmp_2);
 	while (tmp)
 	{
 		if (cur_sep(tmp) == INPUT)
 			make_input(main, env, bts, tmp);
 		if (cur_sep(tmp) == TRUNC)
 			make_output(main, env, bts, tmp);
+		if (cur_sep(tmp) == APPEND)
+			make_append(main, env, bts, tmp);
 		next_step(&tmp);
 	}
+
 }
