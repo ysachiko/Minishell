@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 19:55:13 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/30 16:48:27 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/30 20:34:21 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	append(t_main *main, char **after_arg)
 	dup2(main->out, STDOUT);
 }
 
-void	make_append(t_main *main, char **env, t_bt *bts, t_hash *cmd)
+void	make_append(t_main *main, t_hash *cmd)
 {
 	char	**before_sep;
 	char	**after_sep;
@@ -57,13 +57,6 @@ void	make_append(t_main *main, char **env, t_bt *bts, t_hash *cmd)
 		g_exit_status = 2;
 		return ;
 	}
-	main->no_exec = 0;
 	append(main, after_sep);
-	if (!main->no_exec)
-	{
-		execute(before_sep, main, env, bts);
-		ft_close(main->out);
-		dup2(main->fd_out, STDOUT);
-	}
 	clean_seps(after_sep, before_sep);
 }

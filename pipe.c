@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 20:14:08 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/30 16:50:19 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/30 20:36:25 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,8 @@ void	pipe_executor(t_main *main, char **env, t_bt *bts)
 	args = hash_parser(main->current_cmd);
 	if (is_redir(main))
 	{
+		if (is_redir(main) == HER)
+			dup2(main->fd_out, STDOUT);
 		redir(main, env, bts);
 		exit(g_exit_status);
 	}
@@ -81,6 +83,7 @@ void	minipipe(t_main *main, char **env, t_bt *bts)
 	pid = fork();
 	if (pid == 0)
 	{
+		main->pipin = fd[1];
 		dup2(fd[1], STDOUT);
 		pipe_executor(main, env, bts);
 		close(fd[0]);

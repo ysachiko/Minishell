@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 17:34:04 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/30 16:48:49 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/30 20:35:01 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,22 +77,28 @@ void	clean_seps(char	**after_sep, char **before_sep)
 void	redir(t_main *main, char **env, t_bt *bts)
 {
 	t_hash	*tmp;
-	t_hash	*tmp_2;
+	int		prev;
 
 	tmp = main->current_cmd;
-	tmp_2 = main->current_cmd;
-	main->no_exec = 0;
-	main->cur_md = before_sep_func(tmp_2);
+	prev = 0;
+	main->cur_md = before_sep_func(tmp);
 	while (tmp)
 	{
 		if (cur_sep(tmp) == INPUT)
-			make_input(main, env, bts, tmp);
+			make_input(main, tmp);
 		if (cur_sep(tmp) == TRUNC)
-			make_output(main, env, bts, tmp);
+			make_output(main, tmp);
 		if (cur_sep(tmp) == APPEND)
-			make_append(main, env, bts, tmp);
+			make_append(main, tmp);
 		if (cur_sep(tmp) == HER)
-			make_heredoc(main, env, bts, tmp);
+			make_heredoc(main, tmp);
+		prev = cur_sep(tmp);
 		next_step(&tmp);
 	}
+	if (!main->no_exec)
+		execute(main->cur_md, main, env, bts);
+	ft_close(main->out);
+	dup2(main->fd_out, STDOUT);
+	ft_close(main->in);
+	dup2(main->fd_in, STDIN);
 }

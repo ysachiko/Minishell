@@ -6,11 +6,22 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/30 12:40:08 by kezekiel          #+#    #+#             */
-/*   Updated: 2022/06/30 16:51:08 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/30 20:35:37 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/parser.h"
+
+void	init_new_value(t_main *main)
+{
+	main->no_exec = 0;
+	main->echo = 0;
+	main->cat = 0;
+	if (!ft_strcmp(main->cur_md[0], "echo"))
+		main->echo = 1;
+	if (!ft_strcmp(main->cur_md[0], "cat"))
+		main->cat = 1;
+}
 
 int	check_line(char **after_sep)
 {
@@ -38,13 +49,12 @@ int	checker(char **after_sep, t_main *main, char *name)
 	return (0);
 }
 
-void	heredoc(char *stop, char *name)
+void	heredoc(char *stop, char *name, t_main *main)
 {
 	char	*line;
 	int		fd;
 
-	fd = open(name, O_CREAT | O_EXCL | O_RDWR, 0644);
-	//if (fd < 0)
+	fd = open(name, O_RDWR | O_CREAT | O_TRUNC, 0644);
 	line = readline("heredoc>");
 	while (ft_strcmp(line, stop) != 0)
 	{
@@ -53,11 +63,14 @@ void	heredoc(char *stop, char *name)
 		free(line);
 		line = readline("heredoc>");
 	}
+	input(main, name);
+	if (main->pipin)
+		dup2(main->pipin, STDOUT);
 	close(fd);
 	free(line);
 }
 
-void	make_heredoc(t_main *main, char **env, t_bt *bts, t_hash *cmd)
+void	make_heredoc(t_main *main, t_hash *cmd)
 {
 	char	**before;
 	char	**after;
@@ -71,14 +84,7 @@ void	make_heredoc(t_main *main, char **env, t_bt *bts, t_hash *cmd)
 	main->no_exec = 0;
 	if (check_line(after) == 1 && !main->no_exec)
 		return (clean_seps(after, before));
-	heredoc(after[0], name);
-	if (!main->no_exec && (checker(after, main, name) == 0))
-		execute_or_exit(main, env, bts, before);
-	else
-	{
-		main->after_sep = after;
-		input_cycle(main, env, bts, before);
-	}
+	heredoc(after[0], name, main);
 	if (name)
 		unlink(name);
 	if (main->no_exec)

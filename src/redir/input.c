@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 16:45:56 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/30 16:53:21 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/30 20:33:58 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	input(t_main *mini, char *args)
 	mini->in = open(args, O_RDONLY, S_IRWXU);
 	if (mini->in == -1)
 	{
-		ft_putstr_fd("bash", STDERR);
+		ft_putstr_fd("bash: ", STDERR);
 		ft_putstr_fd(args, STDERR);
 		ft_putendl_fd(": No such file or directory", STDERR);
 		mini->no_exec = 1;
@@ -35,10 +35,14 @@ int	check_files(char **after_sep, t_main *main)
 		g_exit_status = 258;
 		return (1);
 	}
-	if (ft_str_arr_len(after_sep) == 1)
+	if (main->echo)
 		input(main, after_sep[0]);
-	else if (ft_str_arr_len(after_sep) == 2)
+	else if (main->cat && ft_str_arr_len(after_sep) > 1)
 		input(main, after_sep[1]);
+	else if (main->cat && ft_str_arr_len(after_sep) == 1)
+		input(main, after_sep[0]);
+	else if (!main->cat && !main->echo)
+		input(main, after_sep[0]);
 	else
 		return (-1);
 	return (0);
@@ -51,7 +55,7 @@ void	execute_in_input(t_main *main, char **env, t_bt *bts, char **before_sep)
 	dup2(main->fd_in, STDIN);
 }
 
-void	input_cycle(t_main *main, char **env, t_bt *bts, char **before_sep)
+void	input_cycle(t_main *main)
 {
 	int	i;
 
@@ -64,17 +68,15 @@ void	input_cycle(t_main *main, char **env, t_bt *bts, char **before_sep)
 		input(main, main->after_sep[i]);
 		if (!main->no_exec)
 		{
-			execute(before_sep, main, env, bts);
-			ft_close(main->in);
 			g_exit_status = 1;
+			break ;
 		}
 		i++;
 	}
-	dup2(main->fd_in, STDIN);
 	return ;
 }
 
-void	make_input(t_main *main, char **env, t_bt *bts, t_hash *cmd)
+void	make_input(t_main *main, t_hash *cmd)
 {
 	char	**before_sep;
 	char	**after_sep;
@@ -83,7 +85,6 @@ void	make_input(t_main *main, char **env, t_bt *bts, t_hash *cmd)
 	tmp = cmd;
 	after_sep = after_sep_func(tmp);
 	before_sep = before_sep_func(tmp);
-	// main->no_exec = 0;
 	if (!after_sep[0] && !before_sep[0])
 	{
 		print_err("", "syntax error near unexpected token `newline'");
@@ -92,12 +93,13 @@ void	make_input(t_main *main, char **env, t_bt *bts, t_hash *cmd)
 	}
 	if (check_files(after_sep, main) == 1 && !main->no_exec)
 		return (clean_seps(after_sep, before_sep));
-	else if (!main->no_exec && (check_files(after_sep, main) == 0))
-		execute_or_exit(main, env, bts, main->cur_md);
-	else
+	else if (ft_str_arr_len(after_sep) > 2)
 	{
+		if (main->echo)
+			input(main, after_sep[0]);
+		if (main->cat)
+			input(main, after_sep[1]);
 		main->after_sep = after_sep;
-		input_cycle(main, env, bts, main->cur_md);
 	}
 	if (main->no_exec)
 		g_exit_status = 1;

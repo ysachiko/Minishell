@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 16:46:21 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/30 16:49:46 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/30 18:48:00 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ int	is_redir(t_main *main)
 	while (tmp)
 	{
 		if (tmp->key > 2 && tmp->key < 7)
-			return (1);
+			return (tmp->key);
 		tmp = tmp->next;
 	}
 	return (0);

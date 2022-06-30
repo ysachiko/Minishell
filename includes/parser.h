@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 16:36:19 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/30 16:52:09 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/30 20:35:50 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,9 @@ typedef struct s_main
 	int		prev_sep;
 	int		exit_flag;
 	int		no_exec;
+	int		echo;
+	int		cat;
+	int		pipin;
 	char	**after_sep;
 	char	**cur_md;
 	t_hash	*current_cmd;
@@ -268,11 +271,10 @@ int		check_files(char **after_sep, t_main *main);
 void	execute_in_input(t_main *main, char **env, t_bt *bts, \
 			char **before_sep);
 void	execute_or_exit(t_main *main, char **env, t_bt *bts, char **before_sep);
-void	input_cycle(t_main *main, char **env, t_bt *bts, char **before_sep);
-void	make_input(t_main *main, char **env, t_bt *bts, t_hash *cmd);
-
-void	make_heredoc(t_main *main, char **env, t_bt *bts, t_hash *cmd);
-
+void	input_cycle(t_main *main);
+void	make_input(t_main *main, t_hash *cmd);
+void	init_new_value(t_main *main);
+void	make_heredoc(t_main *main, t_hash *cmd);
 /*
 CMD UTILS
 */
@@ -286,13 +288,13 @@ void	null_smth(t_main *main, t_hash **tmp, t_hash **head);
 /*
 OUTPIT
 */
-void	make_output(t_main *main, char **env, t_bt *bts, t_hash *cmd);
+void	make_output(t_main *main, t_hash *cmd);
 void	werror_killer(int ac, char **av);
 /*
 APPEND
 */
 void	append(t_main *main, char **after_arg);
-void	make_append(t_main *main, char **env, t_bt *bts, t_hash *cmd);
+void	make_append(t_main *main, t_hash *cmd);
 void	execute_or_exit(t_main *main, char **env, t_bt *bts, char **before_sep);
 /*
 PIPE
@@ -305,6 +307,5 @@ int		is_builtin(char *str);
 /*
 HEREDOC
 */
-void	make_heredoc(t_main *main, char **env, t_bt *bts, t_hash *cmd);
-void	make_input(t_main *main, char **env, t_bt *bts, t_hash *cmd);
+
 #endif

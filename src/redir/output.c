@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/29 17:08:31 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/30 16:49:39 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/30 20:36:12 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	output(t_main *main, char **after_arg)
 	dup2(main->out, STDOUT);
 }
 
-void	make_output(t_main *main, char **env, t_bt *bts, t_hash *cmd)
+void	make_output(t_main *main, t_hash *cmd)
 {
 	char	**before_sep;
 	char	**after_sep;
@@ -57,13 +57,6 @@ void	make_output(t_main *main, char **env, t_bt *bts, t_hash *cmd)
 		g_exit_status = 2;
 		return ;
 	}
-	main->no_exec = 0;
 	output(main, after_sep);
-	if (!main->no_exec)
-	{
-		execute(main->cur_md, main, env, bts);
-		ft_close(main->out);
-		dup2(main->fd_out, STDOUT);
-	}
 	clean_seps(after_sep, before_sep);
 }
