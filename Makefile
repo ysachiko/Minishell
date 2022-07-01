@@ -6,7 +6,7 @@
 #    By: ysachiko <ysachiko@student.21-school.ru    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/06/01 17:55:47 by kezekiel          #+#    #+#              #
-#    Updated: 2022/06/26 15:19:38 by ysachiko         ###   ########.fr        #
+#    Updated: 2022/07/01 15:47:00 by ysachiko         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,15 +14,22 @@ NAME = minishell
 
 CC = clang
 
-CFLAGS = -g3 #-fsanitize=address -g
+CFLAGS = -Wall -Wextra -Werror 
 
 INC = includes/parser.h libft/libft.h
 
-SRC	   = execute.c main2.c src/parser/parser.c  src/parser/list/list_head.c src/parser/usage/check_add_realloc.c \
-		 src/parser/usage/debug_shit.c	src/parser/usage/lexer_main_usage.c	src/env/init_env.c \
-		 src/parser/usage/parse_env.c	src/parser/usage/parse_env_usage.c 	src/parser/usage/parse_str_env.c\
-		 src/parser/usage/parser_usage.c	src/parser/quots.c 	src/parser/list_refactor.c \
-		 builtins.c	free.c	utils.c 	src/builtins/ft_echo.c	src/parser/current_cmd.c \
+SRC	=	src/main/execute.c		src/main/main.c		src/main/builtins.c		src/main/pipe.c		src/main/signals.c \
+		src/env/init_env.c \
+		src/parser/parser.c							src/parser/list/list_head.c					src/parser/usage/check_add_realloc.c \
+		src/parser/usage/debug_shit.c				src/parser/usage/lexer_main_usage.c			src/parser/cmd_utils.c \
+		src/parser/usage/parse_env.c				src/parser/usage/parse_env_usage.c 			src/parser/usage/parse_str_env.c \
+		src/parser/usage/parser_usage.c				src/parser/quots.c 							src/parser/list_refactor.c \
+		src/parser/current_cmd.c \
+		src/utils/free.c		src/utils/utils.c	src/utils/utils2.c		src/utils/utils3.c	src/utils/inits.c \
+		builtins/sh_echo.c		builtins/sh_exit.c	builtins/sh_unset.c		builtins/sh_cd.c	builtins/sh_stuff.c \
+		builtins/sh_export.c \
+		src/redir/redir.c		src/redir/redir_usage.c						src/redir/input.c \
+		src/redir/output.c		src/redir/append.c							src/redir/heredoc.c  \
 
 OBJ = $(patsubst %.c,%.o,$(SRC))
 

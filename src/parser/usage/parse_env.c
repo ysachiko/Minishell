@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/03 20:35:45 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/24 17:54:19 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/29 16:52:36 by kezekiel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,21 +94,21 @@ void	env_str_refactor(t_main *main, t_hash *hash)
 	i = 0;
 	while (hash->value[i])
 	{
-		if (hash->value[i] == '"' && !main->in_single_quots)
+		if (hash->value[i] == '"' && !main->sngl_qts)
 		{
-			if (main->in_double_quots)
-				main->in_double_quots = 0;
+			if (main->dbl_qts)
+				main->dbl_qts = 0;
 			else
-				main->in_double_quots = 1;
+				main->dbl_qts = 1;
 		}
-		if (hash->value[i] == '\'' && !main->in_double_quots)
+		if (hash->value[i] == '\'' && !main->dbl_qts)
 		{
-			if (main->in_single_quots)
-				main->in_single_quots = 0;
+			if (main->sngl_qts)
+				main->sngl_qts = 0;
 			else
-				main->in_single_quots = 1;
+				main->sngl_qts = 1;
 		}
-		if (hash->value[i] == '$' && !main->in_single_quots)
+		if (hash->value[i] == '$' && !main->sngl_qts)
 		{
 			i = str_refactor(main, hash, i);
 		}

@@ -3,18 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ysachiko <ysachiko@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/12 14:42:51 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/24 17:47:47 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/07/01 15:34:17 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "includes/parser.h"
+#include "../../includes/parser.h"
 
 void	end_prog(char *err, int code, int mode)
 {
-	//clear_exit
 	if (mode == 0 && err)
 		ft_putstr_fd(err, STDERR_FILENO);
 	else if (mode == 1)

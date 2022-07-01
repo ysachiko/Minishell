@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 16:36:19 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/27 23:54:15 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/07/01 15:26:32 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@
 # include <signal.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <fcntl.h>
+# include <dirent.h>
 
 // ERRORS
 # define ERROR_EXEC_BIN_INIT "Error: malloc in execute binaty cmd\n"
@@ -37,12 +39,15 @@
 # define TRUNC 3
 # define APPEND 4
 # define INPUT 5
-# define PIPE 6
-# define END 7
+# define HER 6
+# define PIPE 7
 
 # define STDIN 0
 # define STDOUT 1
 # define STDERR 2
+
+# define IS_DIRECTORY 126
+# define UNKNOWN_COMMAND 127
 
 extern int	g_exit_status;
 
@@ -66,13 +71,21 @@ typedef struct s_main
 	char	*line;
 	int		current_symbol;
 	int		free_quote_flag;
-	int		in_double_quots;
-	int		in_single_quots;
+	int		dbl_qts;
+	int		sngl_qts;
 	int		end_flag;
 	int		fd_in;
 	int		fd_out;
+	int		in;
+	int		out;
 	int		prev_sep;
 	int		exit_flag;
+	int		no_exec;
+	int		echo;
+	int		cat;
+	int		pipin;
+	char	**after_sep;
+	char	**cur_md;
 	t_hash	*current_cmd;
 	t_hash	*tmp2;
 	t_hash	*hash_head;
@@ -80,7 +93,14 @@ typedef struct s_main
 	t_env	*env_list;
 }	t_main;
 
+typedef struct s_bt
+{
+	char	*builtins[7];
+	int		(*built[7])(char **, t_main *);
+}	t_bt;
+
 void	rl_replace_line(const char *text, int clear_undo);
+void	child_builtin(t_main *main, char **env, t_bt *bts, char **args);
 /*
 PARSER.C
 */
@@ -177,6 +197,7 @@ void	end_prog(char *err, int code, int mode);
 /*
 UTILS
 */
+int		check_input(char *input);
 char	**list_parser(t_hash *head);
 int		check_export(char *s);
 t_env	*search_env(t_env *head, char *key);
@@ -187,10 +208,12 @@ t_env	*copy_env(t_env *head);
 void	sort_env(t_env *copy);
 char	**hash_parser(t_hash *head);
 int		lst_size(t_hash *lst);
+void	clean_up(t_main *main, t_bt *bts);
+void	print_err(char *arg, char *arg2);
 /*
 EXECUTE
 */
-int		execute(char **args, t_main *all, char **env);
+int		execute(char **args, t_main *all, char **env, t_bt *bts);
 int		launch(char **args, t_main *all, char **env);
 char	**path_parser(t_env *all);
 char	*env_path(char **paths, char *cmd);
@@ -198,21 +221,18 @@ char	*search_paths(char **paths, char *cmd);
 /*
 BUILT-INS
 */
-/*
-char *builtins[] = {"cd", "exit", "pwd", "env", "export", "unset", "echo"};
-int (*built[]) (char **, t_main *) = {&sh_cd, &sh_exit, &sh_pwd, &sh_env, &sh_export, &sh_unset, &sh_echo};
-*/
-int		num_builtins();
+int		num_builtins(void);
 int		sh_unset(char **args, t_main *all);
 int		sh_export(char **args, t_main *all);
 int		sh_cd(char **args, t_main *all);
 int		sh_exit(char **args, t_main *all);
 int		sh_pwd(char **args, t_main *all);
 int		sh_env(char **args, t_main *all);
-/*
-ECHO
-*/
 int		sh_echo(char **argv, t_main *all);
+/*
+INITS
+*/
+void	init_bts(t_bt *bts);
 /*
 CURRENT_CMD
 */
@@ -220,5 +240,71 @@ void	make_lexer(t_main	*main);
 t_hash	*make_current_cmd(t_main *main);
 void	parser(t_main *main);
 int		parse_env(t_main *main, t_hash *head);
+/*
+SIGNALS
+*/
+void	handler(int sig);
+void	handler2(int sig);
+void	child_handler(int signum);
+void	display_ctrl_c(int display);
+/*
+REDIR
+*/
+char	**before_sep_func(t_hash *cmd);
+char	**after_sep_func(t_hash *cmd);
+void	next_step(t_hash **cmd);
+void	clean_seps(char	**after_sep, char **before_sep);
+void	redir(t_main *main, char **env, t_bt *bts);
+/*
+REDIR_USAGE
+*/
+void	ft_close(int fd);
+int		ft_str_arr_len(char **args);
+int		ft_strlen_before_sep(t_hash *cmd);
+int		is_redir(t_main *main);
+int		cur_sep(t_hash *hash);
+/*
+INPUT
+*/
+void	input(t_main *mini, char *args);
+int		check_files(char **after_sep, t_main *main);
+void	execute_in_input(t_main *main, char **env, t_bt *bts, \
+			char **before_sep);
+void	execute_or_exit(t_main *main, char **env, t_bt *bts, char **before_sep);
+void	input_cycle(t_main *main);
+void	make_input(t_main *main, t_hash *cmd);
+void	init_new_value(t_main *main);
+void	make_heredoc(t_main *main, t_hash *cmd);
+/*
+CMD UTILS
+*/
+int		is_t(char c);
+int		get_sep_len(char *str, int i);
+char	*get_arg_sep(char *str, int i);
+char	*sep_after_arg(char *str, int i);
+void	clean_seps(char	**after_sep, char **before_sep);
+int		m_str_refactor(char **str, int i);
+void	divide_str(char **str, t_main *main);
+void	null_smth(t_main *main, t_hash **tmp, t_hash **head);
+/*
+OUTPIT
+*/
+void	make_output(t_main *main, t_hash *cmd);
+void	werror_killer(int ac, char **av);
+void	multi_args_input(t_main *main, char **after_sep);
+/*
+APPEND
+*/
+void	append(t_main *main, char **after_arg);
+void	make_append(t_main *main, t_hash *cmd);
+void	execute_or_exit(t_main *main, char **env, t_bt *bts, char **before_sep);
+/*
+PIPE
+*/
+void	pipe_executor(t_main *main, char **env, t_bt *bts);
+void	minipipe(t_main *main, char **env, t_bt *bts);
+void	last_pipe(t_main *main, char **env, t_bt *bts);
+int		current_sep(t_main *main);
+int		is_builtin(char *str);
 
 #endif

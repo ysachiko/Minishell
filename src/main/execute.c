@@ -1,4 +1,16 @@
-#include "includes/parser.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   execute.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ysachiko <ysachiko@student.21-school.ru    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/06/28 14:28:53 by kezekiel          #+#    #+#             */
+/*   Updated: 2022/07/01 15:34:13 by ysachiko         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../../includes/parser.h"
 
 char	**path_parser(t_env *all)
 {
@@ -18,7 +30,7 @@ char	**path_parser(t_env *all)
 
 char	*env_path(char **paths, char *cmd)
 {
-	int	i;
+	int		i;
 	char	*tmp;
 	char	*path_cmd;
 
