@@ -1,5 +1,4 @@
 <h1 align="center">Minishell</h1>
-![hello_world](https://user-images.githubusercontent.com/71353141/176915773-927dacc5-7f3f-499c-8f2c-bf02d932e2b5.svg)
 
 <h3>This project was about creating a simple shell. <br>
 Like your own little <b>bash.<br>
