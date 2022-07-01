@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysachiko <ysachiko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ysachiko <ysachiko@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/30 12:40:08 by kezekiel          #+#    #+#             */
-/*   Updated: 2022/06/30 20:58:42 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/07/01 15:56:18 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void	heredoc(char *stop, char *name, t_main *main)
 	while (line && ft_strcmp(line, stop) != 0)
 	{
 		tmp = ft_strjoin(line, "\n");
-		write(fd, line, ft_strlen(line));
+		write(fd, tmp, ft_strlen(tmp));
 		free(line);
 		free(tmp);
 		line = readline("heredoc>");
