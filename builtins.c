@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/12 14:37:23 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/26 23:30:50 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/28 00:40:24 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,7 +179,7 @@ int	sh_pwd(char **args, t_main *all)
 	char	*pwd;
 
 	if (*args == NULL)
-		return (0);
+		return (1);
 	pwd = getcwd(NULL, 0);
 	if (pwd == NULL)
 		return (50); // ERROR CODE AN STUFF
@@ -262,7 +262,7 @@ int	ft_strisnum(const char *str)
 		i++;
 	while (str[i])
 	{
-		if (str[i] < '0' || str[i] > '9')
+		if ((str[i] < '0' || str[i] > '9') && str[i] != '+')
 			return (0);
 		i++;
 	}
@@ -271,8 +271,6 @@ int	ft_strisnum(const char *str)
 
 int	sh_exit(char **args, t_main *main)
 {
-	// STATUS == int(args[1])
-	// printf("\n %s %s %s \n", args[0], args[1], args[2]);
 	if (args[1] && args[2])
 	{
 		g_exit_status = 1;
@@ -295,5 +293,5 @@ int	sh_exit(char **args, t_main *main)
 		g_exit_status = 0;
 		main->exit_flag = 0;
 	}
-	return (0);
+	return (g_exit_status);
 }

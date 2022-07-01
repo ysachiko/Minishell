@@ -6,7 +6,7 @@
 /*   By: ysachiko <ysachiko@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/24 17:14:21 by ysachiko          #+#    #+#             */
-/*   Updated: 2022/06/26 23:26:55 by ysachiko         ###   ########.fr       */
+/*   Updated: 2022/06/28 00:02:54 by ysachiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,18 @@ int	current_sep(t_main *main)
 	return (0);
 }
 
+void	ft_close(int fd)
+{
+	if (fd > 0)
+		close(fd);
+}
+
+void	reset_std(t_main *mini)
+{
+	dup2(mini->fd_in, STDIN);
+	dup2(mini->fd_out, STDOUT);
+}
+
 void	redir(t_main *main, char **env)
 {
 	int		fd[2];
@@ -109,9 +121,9 @@ void	redir(t_main *main, char **env)
 	}
 	else
 	{
-		wait(&pid);
 		dup2(fd[0], STDIN);
 		close(fd[1]);
+		waitpid(pid, NULL, 0);
 		close(fd[0]);
 		return ;
 	}
@@ -131,8 +143,9 @@ int	execute_cycle(t_main *main, char **env)
 		{
 			args = hash_parser(main->current_cmd);
 			execute(args, main, env);
-			dup2(main->fd_out, STDOUT);
-			// dup2(main->fd_in, STDIN);
+			close(0);
+			close(1);
+			reset_std(main);
 			free(args);
 		}
 		else
