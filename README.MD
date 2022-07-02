@@ -81,7 +81,7 @@ Project was made with <a href="https://github.com/MSX646">MSX646 aka kezekiel</a
 
     make
 
-<h3>Use "make re" to compile minishell</h3>
+<h3>Use "make re" to re-compile minishell</h3>
 
     make re
 
